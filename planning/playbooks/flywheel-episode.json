@@ -1,0 +1,86 @@
+{
+  "playbook_id": "flywheel-episode",
+  "name": "Flywheel episode",
+  "description": "Speech long-form → 10–30 min YouTube chapters + flywheel-tagged vertical shorts. THP / build-in-public style.",
+  "module_order": [
+    "transcribe",
+    "detect_topics",
+    "plan_manifest",
+    "render",
+    "polish"
+  ],
+  "skills": [
+    "skills/detect_topics",
+    "skills/youtube_chunks",
+    "skills/youtube_shorts",
+    "skills/tiktok_shorts",
+    "skills/instagram_reels",
+    "skills/flywheel_series"
+  ],
+  "modules": {
+    "concat": { "enabled": false },
+    "transcribe": { "enabled": true, "vosk_words": false },
+    "detect_topics": { "enabled": true, "method": "heuristic", "pause_threshold_sec": 2.5 },
+    "plan_manifest": { "enabled": true, "planner": "cursor-agent" },
+    "compose_shorts": { "enabled": false },
+    "render": { "enabled": true, "trim_on_render": true },
+    "trim_silence": { "enabled": false },
+    "polish": { "enabled": true, "sfx": true, "zoom": false }
+  },
+  "chapters": {
+    "cut_mode": "contiguous",
+    "min_sec": 600,
+    "max_sec": 1800,
+    "default_trim": "light"
+  },
+  "shorts": {
+    "cut_mode": "contiguous",
+    "default_trim": "moderate"
+  },
+  "flywheel": {
+    "enabled": true,
+    "tag_shorts": true
+  },
+  "acts": [
+    {
+      "act_id": "hook",
+      "name": "Hook",
+      "stages": ["attract", "engage"],
+      "output": "shorts",
+      "skills": ["skills/youtube_shorts", "skills/tiktok_shorts"],
+      "cut_mode": "contiguous",
+      "default_trim": "aggressive",
+      "planning": "1–2 shorts per chapter: pain, curiosity, or question. Publish before chapter."
+    },
+    {
+      "act_id": "prove",
+      "name": "Prove",
+      "stages": ["trust"],
+      "output": "shorts",
+      "skills": ["skills/instagram_reels"],
+      "cut_mode": "contiguous",
+      "default_trim": "moderate",
+      "planning": "Story, transparency, or character beat. Optional per episode."
+    },
+    {
+      "act_id": "deliver",
+      "name": "Deliver",
+      "stages": ["service"],
+      "output": "chapters",
+      "skills": ["skills/youtube_chunks"],
+      "cut_mode": "contiguous",
+      "default_trim": "light",
+      "planning": "10–30 min self-contained chapter. Main value delivery."
+    },
+    {
+      "act_id": "close",
+      "name": "Close",
+      "stages": ["referral", "loop"],
+      "output": "shorts",
+      "skills": ["skills/youtube_shorts"],
+      "cut_mode": "contiguous",
+      "default_trim": "moderate",
+      "planning": "Proof/result + CTA to chapter or next episode. Publish after chapter."
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+faster-whisper
+ffmpeg-python
+moviepy
+vosk
+requests
+numpy
+scipy

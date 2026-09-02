@@ -1,0 +1,69 @@
+{
+  "version": "1.0",
+  "source": "content_pipeline/output/hikmat/hikmat_timeline_normalized.mp4",
+  "stem": "hikmat",
+  "series_id": "hikmat",
+  "planned_at": "2026-09-02T00:00:00Z",
+  "planner_model": "cursor-agent",
+  "content_type": "carpentry-timelapse",
+  "review": {
+    "status": "draft",
+    "notes": "Replace segment timestamps after watching master. flywheel_stage=n/a for all shorts."
+  },
+  "chapters": [],
+  "shorts": [
+    {
+      "id": "sh01",
+      "title": "Finished piece — full build montage",
+      "hook_type": "result-first",
+      "content_type": "carpentry-timelapse",
+      "flywheel_stage": "n/a",
+      "parent_chapter": "n/a",
+      "aspect": "9:16",
+      "target": "yt-shorts",
+      "min_len": 30,
+      "max_len": 60,
+      "segments": [
+        { "start": 580.0, "end": 585.0, "label": "result-hook", "clip_index": 11 },
+        { "start": 8.0, "end": 13.0, "label": "process", "clip_index": 1 },
+        { "start": 160.0, "end": 165.0, "label": "process", "clip_index": 4 },
+        { "start": 270.0, "end": 275.0, "label": "process", "clip_index": 5 },
+        { "start": 420.0, "end": 425.0, "label": "process", "clip_index": 7 },
+        { "start": 600.0, "end": 605.0, "label": "result-close", "clip_index": 11 }
+      ],
+      "rendered": false
+    },
+    {
+      "id": "sh02",
+      "title": "Fast cuts — TikTok timelapse",
+      "hook_type": "result-first",
+      "content_type": "carpentry-timelapse",
+      "flywheel_stage": "n/a",
+      "parent_chapter": "n/a",
+      "aspect": "9:16",
+      "target": "tiktok",
+      "min_len": 15,
+      "max_len": 60,
+      "segment_len_sec": 3.5,
+      "segments": [],
+      "rendered": false,
+      "notes": "Fill segments — tighter cuts than sh01"
+    },
+    {
+      "id": "sh_single_01",
+      "title": "Long session highlight — clip 11",
+      "hook_type": "result-first",
+      "content_type": "carpentry-timelapse",
+      "flywheel_stage": "n/a",
+      "parent_chapter": "n/a",
+      "aspect": "9:16",
+      "target": "instagram",
+      "min_len": 30,
+      "max_len": 90,
+      "start": 550.0,
+      "end": 605.0,
+      "rendered": false,
+      "notes": "Single-clip short — adjust after review"
+    }
+  ]
+}

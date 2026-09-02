@@ -1,0 +1,40 @@
+{
+  "playbook_id": "podcast-chapter",
+  "name": "Podcast single chapter",
+  "description": "One 10–20 min contiguous chapter from speech. Optional 1–2 shorts. No flywheel sequencing.",
+  "module_order": [
+    "transcribe",
+    "detect_topics",
+    "plan_manifest",
+    "render"
+  ],
+  "skills": [
+    "skills/detect_topics",
+    "skills/youtube_chunks",
+    "skills/youtube_shorts"
+  ],
+  "modules": {
+    "concat": { "enabled": false },
+    "transcribe": { "enabled": true, "vosk_words": false },
+    "detect_topics": { "enabled": true, "method": "heuristic" },
+    "plan_manifest": { "enabled": true, "planner": "cursor-agent" },
+    "compose_shorts": { "enabled": false },
+    "render": { "enabled": true, "trim_on_render": true },
+    "trim_silence": { "enabled": false },
+    "polish": { "enabled": false }
+  },
+  "chapters": {
+    "cut_mode": "contiguous",
+    "min_sec": 600,
+    "max_sec": 1200,
+    "default_trim": "light"
+  },
+  "shorts": {
+    "cut_mode": "contiguous",
+    "default_trim": "moderate"
+  },
+  "flywheel": {
+    "enabled": false,
+    "tag_shorts": false
+  }
+}

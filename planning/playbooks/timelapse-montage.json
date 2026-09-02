@@ -1,0 +1,38 @@
+{
+  "playbook_id": "timelapse-montage",
+  "name": "Timelapse montage",
+  "description": "Multi-clip silent/visual build → master timeline → supercut vertical shorts. No transcript pipeline.",
+  "module_order": [
+    "concat",
+    "compose_shorts",
+    "render"
+  ],
+  "skills": [
+    "projects/{project_id}/skills/montage_compose",
+    "projects/{project_id}/skills/youtube_shorts",
+    "projects/{project_id}/skills/tiktok_shorts",
+    "projects/{project_id}/skills/instagram_reels"
+  ],
+  "modules": {
+    "concat": { "enabled": true, "mode": "full" },
+    "transcribe": { "enabled": false },
+    "detect_topics": { "enabled": false },
+    "plan_manifest": { "enabled": false },
+    "compose_shorts": { "enabled": true, "method": "visual-montage" },
+    "render": { "enabled": true, "trim_on_render": false },
+    "trim_silence": { "enabled": false },
+    "polish": { "enabled": false, "sfx": false, "zoom": false }
+  },
+  "chapters": {
+    "cut_mode": "contiguous",
+    "default_trim": "off"
+  },
+  "shorts": {
+    "cut_mode": "supercut",
+    "default_trim": "off"
+  },
+  "flywheel": {
+    "enabled": false,
+    "tag_shorts": false
+  }
+}

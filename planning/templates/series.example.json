@@ -1,0 +1,25 @@
+{
+  "series_id": "build-in-public",
+  "theme": "onboarding",
+  "episode": 3,
+  "last_flywheel_stage": "service",
+  "next_flywheel_stage": "referral",
+  "published": [
+    {
+      "clip_id": "sh01",
+      "type": "short",
+      "manifest_stem": "example_stream_ep2",
+      "published_at": "2026-08-28T18:00:00Z",
+      "platform": "youtube-shorts"
+    },
+    {
+      "clip_id": "ch02",
+      "type": "chapter",
+      "manifest_stem": "example_stream_ep2",
+      "published_at": "2026-08-29T12:00:00Z",
+      "platform": "youtube"
+    }
+  ],
+  "notes": "Ep4 should pivot to pricing objections — tease at end of ep3 loop short",
+  "updated_at": "2026-08-29T12:00:00Z"
+}

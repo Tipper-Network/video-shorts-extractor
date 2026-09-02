@@ -1,0 +1,82 @@
+{
+  "version": "1.0",
+  "source": "content_pipeline/input/example_stream.mp4",
+  "stem": "example_stream",
+  "series_id": "build-in-public",
+  "episode": 3,
+  "planned_at": "2026-09-01T12:00:00Z",
+  "planner_model": "cursor-agent",
+  "review": {
+    "status": "draft",
+    "notes": "Human: verify ch02 end boundary"
+  },
+  "chapters": [
+    {
+      "id": "ch01",
+      "start": 1240.0,
+      "end": 2180.0,
+      "title": "Why most funnels leak at onboarding",
+      "theme": "onboarding",
+      "hook": "Problem setup in first 45s — retention drop stat",
+      "aspect": "16:9",
+      "target": "youtube",
+      "min_len": 600,
+      "max_len": 1800,
+      "rendered": false
+    },
+    {
+      "id": "ch02",
+      "start": 2180.0,
+      "end": 3920.0,
+      "title": "The 3-email sequence that fixed activation",
+      "theme": "email-automation",
+      "hook": "Before/after client result teaser",
+      "aspect": "16:9",
+      "target": "youtube",
+      "rendered": false
+    }
+  ],
+  "shorts": [
+    {
+      "id": "sh01",
+      "start": 1310.0,
+      "end": 1365.0,
+      "title": "The onboarding mistake killing your retention",
+      "flywheel_stage": "attract",
+      "parent_chapter": "ch01",
+      "cta": "Full 15-min breakdown — link in description",
+      "aspect": "9:16",
+      "target": "yt-shorts",
+      "min_len": 30,
+      "max_len": 60,
+      "publish_order": 1,
+      "rendered": false
+    },
+    {
+      "id": "sh02",
+      "start": 2050.0,
+      "end": 2105.0,
+      "title": "Would you fix onboarding or pricing first?",
+      "flywheel_stage": "engage",
+      "parent_chapter": "ch01",
+      "cta": "Comment below — full answer in the long video",
+      "aspect": "9:16",
+      "target": "yt-shorts",
+      "publish_order": 2,
+      "rendered": false
+    },
+    {
+      "id": "sh03",
+      "start": 3800.0,
+      "end": 3855.0,
+      "title": "Client went from 12% to 41% activation in 2 weeks",
+      "flywheel_stage": "referral",
+      "parent_chapter": "ch02",
+      "cta": "Case study walkthrough on the channel",
+      "aspect": "9:16",
+      "target": "yt-shorts",
+      "publish_order": 5,
+      "rendered": false
+    }
+  ]
+}

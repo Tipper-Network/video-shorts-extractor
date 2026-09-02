@@ -1,0 +1,41 @@
+ Order:
+   1. 20260609_104427.mp4  79.8s  1920x1080  [video] [hevc]
+   2. 20260609_120526.mp4  8.3s  1920x1080  [video] [no-audio, hevc]
+   3. 20260609_130550.mp4  37.3s  1920x1080  [video] [no-audio, hevc]
+   4. 20260609_131730.mp4  67.3s  1080x1920  [video] [portrait, hevc]
+   5. 20260609_135326.mp4  158.9s  1920x1080  [video] [no-audio, hevc]
+   6. 20260610_170726.mp4  39.7s  1920x1080  [video] [hevc]
+   7. 20260610_172456.mp4  54.3s  1920x1080  [video] [hevc]
+   8. 20260629_150318_1.mp4  16.1s  1920x1080  [video] [no-audio, hevc]
+   9. 20260704_161753_1.mp4  8.9s  1920x1080  [video] [hevc]
+  10. 20260730_115350.mp4  30.9s  1080x1920  [video] [portrait, hevc]
+  11. 20260730_115546.mp4  108.6s  1920x1080  [video] [hevc]
+Mode: full re-encode
+[1/11] encode 20260609_104427.mp4 (1920x1080, hevc, audio=yes)
+  → normalize 20260609_104427.mp4
+[2/11] encode 20260609_120526.mp4 (1920x1080, hevc, audio=no)
+  → normalize 20260609_120526.mp4 (+ silent audio)
+[3/11] encode 20260609_130550.mp4 (1920x1080, hevc, audio=no)
+  → normalize 20260609_130550.mp4 (+ silent audio)
+[4/11] encode 20260609_131730.mp4 (1080x1920, hevc, audio=yes)
+  → normalize 20260609_131730.mp4
+[5/11] encode 20260609_135326.mp4 (1920x1080, hevc, audio=no)
+  → normalize 20260609_135326.mp4 (+ silent audio)
+[6/11] encode 20260610_170726.mp4 (1920x1080, hevc, audio=yes)
+  → normalize 20260610_170726.mp4
+[7/11] encode 20260610_172456.mp4 (1920x1080, hevc, audio=yes)
+  → normalize 20260610_172456.mp4
+[8/11] encode 20260629_150318_1.mp4 (1920x1080, hevc, audio=no)
+  → normalize 20260629_150318_1.mp4 (+ silent audio)
+[9/11] encode 20260704_161753_1.mp4 (1920x1080, hevc, audio=yes)
+  → normalize 20260704_161753_1.mp4
+[10/11] encode 20260730_115350.mp4 (1080x1920, hevc, audio=yes)
+  → normalize 20260730_115350.mp4
+[11/11] encode 20260730_115546.mp4 (1920x1080, hevc, audio=yes)
+  → normalize 20260730_115546.mp4
+ Concatenating segments (re-encode for codec safety)...
+  → re-encode concat (ultrafast)
+duration=609.900000
+size=832368038
+ Clips: 11 | source total ~610.0s | output: output/hikmat/hikmat_timeline_normalized.mp4
+ Done.

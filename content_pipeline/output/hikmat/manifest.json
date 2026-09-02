@@ -1,0 +1,622 @@
+{
+  "version": "1.0",
+  "source": "content_pipeline/output/hikmat/hikmat_timeline_normalized.mp4",
+  "stem": "hikmat",
+  "series_id": "hikmat",
+  "planned_at": "2026-09-02T15:01:47Z",
+  "planner_model": "compose_shorts.py",
+  "content_type": "carpentry-timelapse",
+  "review": {
+    "status": "draft",
+    "notes": "Heuristic timestamps \u2014 review hooks and dead frames before publish."
+  },
+  "chapters": [],
+  "shorts": [
+    {
+      "id": "sh01",
+      "title": "Full build montage \u2014 YouTube",
+      "hook_type": "result-first",
+      "content_type": "carpentry-timelapse",
+      "flywheel_stage": "n/a",
+      "parent_chapter": "n/a",
+      "aspect": "9:16",
+      "target": "yt-shorts",
+      "min_len": 30,
+      "max_len": 60,
+      "segment_len_sec": 5.0,
+      "duration_est": 40.0,
+      "segments": [
+        {
+          "start": 593.81,
+          "end": 598.81,
+          "label": "result-hook",
+          "clip_index": 11
+        },
+        {
+          "start": 7.98,
+          "end": 12.98,
+          "label": "materials",
+          "clip_index": 1
+        },
+        {
+          "start": 91.83,
+          "end": 96.83,
+          "label": "materials",
+          "clip_index": 3
+        },
+        {
+          "start": 132.13,
+          "end": 137.13,
+          "label": "process",
+          "clip_index": 4
+        },
+        {
+          "start": 208.59,
+          "end": 213.59,
+          "label": "process",
+          "clip_index": 5
+        },
+        {
+          "start": 396.73,
+          "end": 401.73,
+          "label": "process",
+          "clip_index": 7
+        },
+        {
+          "start": 473.69,
+          "end": 478.69,
+          "label": "process",
+          "clip_index": 10
+        },
+        {
+          "start": 512.36,
+          "end": 517.36,
+          "label": "result-close",
+          "clip_index": 11
+        }
+      ],
+      "rendered": true,
+      "output_file": "content_pipeline/output/hikmat/shorts/sh01_Full_build_montage___YouTube.mp4"
+    },
+    {
+      "id": "sh02",
+      "title": "Early to late build \u2014 YouTube",
+      "hook_type": "result-first",
+      "content_type": "carpentry-timelapse",
+      "flywheel_stage": "n/a",
+      "parent_chapter": "n/a",
+      "aspect": "9:16",
+      "target": "yt-shorts",
+      "min_len": 30,
+      "max_len": 60,
+      "segment_len_sec": 5.0,
+      "duration_est": 40.0,
+      "segments": [
+        {
+          "start": 593.81,
+          "end": 598.81,
+          "label": "result-hook",
+          "clip_index": 11
+        },
+        {
+          "start": 7.98,
+          "end": 12.98,
+          "label": "materials",
+          "clip_index": 1
+        },
+        {
+          "start": 83.12,
+          "end": 88.1,
+          "label": "process",
+          "clip_index": 2
+        },
+        {
+          "start": 132.13,
+          "end": 137.13,
+          "label": "process",
+          "clip_index": 4
+        },
+        {
+          "start": 355.57,
+          "end": 360.57,
+          "label": "process",
+          "clip_index": 6
+        },
+        {
+          "start": 450.43,
+          "end": 455.43,
+          "label": "process",
+          "clip_index": 8
+        },
+        {
+          "start": 465.26,
+          "end": 470.26,
+          "label": "process",
+          "clip_index": 9
+        },
+        {
+          "start": 512.36,
+          "end": 517.36,
+          "label": "result-close",
+          "clip_index": 11
+        }
+      ],
+      "rendered": true,
+      "output_file": "content_pipeline/output/hikmat/shorts/sh02_Early_to_late_build___YouTube.mp4"
+    },
+    {
+      "id": "sh03",
+      "title": "Mid build focus \u2014 YouTube",
+      "hook_type": "result-first",
+      "content_type": "carpentry-timelapse",
+      "flywheel_stage": "n/a",
+      "parent_chapter": "n/a",
+      "aspect": "9:16",
+      "target": "yt-shorts",
+      "min_len": 30,
+      "max_len": 60,
+      "segment_len_sec": 5.0,
+      "duration_est": 40.0,
+      "segments": [
+        {
+          "start": 593.81,
+          "end": 598.81,
+          "label": "result-hook",
+          "clip_index": 11
+        },
+        {
+          "start": 91.83,
+          "end": 96.83,
+          "label": "materials",
+          "clip_index": 3
+        },
+        {
+          "start": 208.59,
+          "end": 213.59,
+          "label": "process",
+          "clip_index": 5
+        },
+        {
+          "start": 355.57,
+          "end": 360.57,
+          "label": "process",
+          "clip_index": 6
+        },
+        {
+          "start": 396.73,
+          "end": 401.73,
+          "label": "process",
+          "clip_index": 7
+        },
+        {
+          "start": 450.43,
+          "end": 455.43,
+          "label": "process",
+          "clip_index": 8
+        },
+        {
+          "start": 473.69,
+          "end": 478.69,
+          "label": "process",
+          "clip_index": 10
+        },
+        {
+          "start": 512.36,
+          "end": 517.36,
+          "label": "result-close",
+          "clip_index": 11
+        }
+      ],
+      "rendered": true,
+      "output_file": "content_pipeline/output/hikmat/shorts/sh03_Mid_build_focus___YouTube.mp4"
+    },
+    {
+      "id": "sh04",
+      "title": "Compact journey \u2014 YouTube",
+      "hook_type": "result-first",
+      "content_type": "carpentry-timelapse",
+      "flywheel_stage": "n/a",
+      "parent_chapter": "n/a",
+      "aspect": "9:16",
+      "target": "yt-shorts",
+      "min_len": 30,
+      "max_len": 60,
+      "segment_len_sec": 5.0,
+      "duration_est": 30.0,
+      "segments": [
+        {
+          "start": 593.81,
+          "end": 598.81,
+          "label": "result-hook",
+          "clip_index": 11
+        },
+        {
+          "start": 7.98,
+          "end": 12.98,
+          "label": "materials",
+          "clip_index": 1
+        },
+        {
+          "start": 208.59,
+          "end": 213.59,
+          "label": "process",
+          "clip_index": 5
+        },
+        {
+          "start": 396.73,
+          "end": 401.73,
+          "label": "process",
+          "clip_index": 7
+        },
+        {
+          "start": 512.36,
+          "end": 517.36,
+          "label": "process",
+          "clip_index": 11
+        },
+        {
+          "start": 512.36,
+          "end": 517.36,
+          "label": "result-close",
+          "clip_index": 11
+        }
+      ],
+      "rendered": true,
+      "output_file": "content_pipeline/output/hikmat/shorts/sh04_Compact_journey___YouTube.mp4"
+    },
+    {
+      "id": "sh05",
+      "title": "Fast timelapse \u2014 TikTok",
+      "hook_type": "result-first",
+      "content_type": "carpentry-timelapse",
+      "flywheel_stage": "n/a",
+      "parent_chapter": "n/a",
+      "aspect": "9:16",
+      "target": "tiktok",
+      "min_len": 15,
+      "max_len": 60,
+      "segment_len_sec": 3.5,
+      "duration_est": 28.0,
+      "segments": [
+        {
+          "start": 593.81,
+          "end": 597.31,
+          "label": "result-hook",
+          "clip_index": 11
+        },
+        {
+          "start": 7.98,
+          "end": 11.48,
+          "label": "materials",
+          "clip_index": 1
+        },
+        {
+          "start": 91.83,
+          "end": 95.33,
+          "label": "materials",
+          "clip_index": 3
+        },
+        {
+          "start": 208.59,
+          "end": 212.09,
+          "label": "process",
+          "clip_index": 5
+        },
+        {
+          "start": 396.73,
+          "end": 400.23,
+          "label": "process",
+          "clip_index": 7
+        },
+        {
+          "start": 465.26,
+          "end": 468.76,
+          "label": "process",
+          "clip_index": 9
+        },
+        {
+          "start": 473.69,
+          "end": 477.19,
+          "label": "process",
+          "clip_index": 10
+        },
+        {
+          "start": 512.36,
+          "end": 515.86,
+          "label": "result-close",
+          "clip_index": 11
+        }
+      ],
+      "rendered": true,
+      "output_file": "content_pipeline/output/hikmat/shorts/sh05_Fast_timelapse___TikTok.mp4"
+    },
+    {
+      "id": "sh06",
+      "title": "Rapid cuts \u2014 TikTok",
+      "hook_type": "result-first",
+      "content_type": "carpentry-timelapse",
+      "flywheel_stage": "n/a",
+      "parent_chapter": "n/a",
+      "aspect": "9:16",
+      "target": "tiktok",
+      "min_len": 15,
+      "max_len": 60,
+      "segment_len_sec": 3.5,
+      "duration_est": 24.5,
+      "segments": [
+        {
+          "start": 593.81,
+          "end": 597.31,
+          "label": "result-hook",
+          "clip_index": 11
+        },
+        {
+          "start": 83.12,
+          "end": 86.62,
+          "label": "process",
+          "clip_index": 2
+        },
+        {
+          "start": 132.13,
+          "end": 135.63,
+          "label": "process",
+          "clip_index": 4
+        },
+        {
+          "start": 355.57,
+          "end": 359.07,
+          "label": "process",
+          "clip_index": 6
+        },
+        {
+          "start": 450.43,
+          "end": 453.93,
+          "label": "process",
+          "clip_index": 8
+        },
+        {
+          "start": 473.69,
+          "end": 477.19,
+          "label": "process",
+          "clip_index": 10
+        },
+        {
+          "start": 512.36,
+          "end": 515.86,
+          "label": "result-close",
+          "clip_index": 11
+        }
+      ],
+      "rendered": true,
+      "output_file": "content_pipeline/output/hikmat/shorts/sh06_Rapid_cuts___TikTok.mp4"
+    },
+    {
+      "id": "sh07",
+      "title": "Dense build \u2014 TikTok",
+      "hook_type": "result-first",
+      "content_type": "carpentry-timelapse",
+      "flywheel_stage": "n/a",
+      "parent_chapter": "n/a",
+      "aspect": "9:16",
+      "target": "tiktok",
+      "min_len": 15,
+      "max_len": 60,
+      "segment_len_sec": 3.5,
+      "duration_est": 31.5,
+      "segments": [
+        {
+          "start": 593.81,
+          "end": 597.31,
+          "label": "result-hook",
+          "clip_index": 11
+        },
+        {
+          "start": 7.98,
+          "end": 11.48,
+          "label": "materials",
+          "clip_index": 1
+        },
+        {
+          "start": 132.13,
+          "end": 135.63,
+          "label": "process",
+          "clip_index": 4
+        },
+        {
+          "start": 208.59,
+          "end": 212.09,
+          "label": "process",
+          "clip_index": 5
+        },
+        {
+          "start": 355.57,
+          "end": 359.07,
+          "label": "process",
+          "clip_index": 6
+        },
+        {
+          "start": 396.73,
+          "end": 400.23,
+          "label": "process",
+          "clip_index": 7
+        },
+        {
+          "start": 450.43,
+          "end": 453.93,
+          "label": "process",
+          "clip_index": 8
+        },
+        {
+          "start": 465.26,
+          "end": 468.76,
+          "label": "process",
+          "clip_index": 9
+        },
+        {
+          "start": 512.36,
+          "end": 515.86,
+          "label": "result-close",
+          "clip_index": 11
+        }
+      ],
+      "rendered": true,
+      "output_file": "content_pipeline/output/hikmat/shorts/sh07_Dense_build___TikTok.mp4"
+    },
+    {
+      "id": "sh08",
+      "title": "Slow reveal \u2014 Reels",
+      "hook_type": "result-first",
+      "content_type": "carpentry-timelapse",
+      "flywheel_stage": "n/a",
+      "parent_chapter": "n/a",
+      "aspect": "9:16",
+      "target": "instagram",
+      "min_len": 30,
+      "max_len": 90,
+      "segment_len_sec": 6.0,
+      "duration_est": 35.0,
+      "segments": [
+        {
+          "start": 593.81,
+          "end": 598.81,
+          "label": "result-hook",
+          "clip_index": 11
+        },
+        {
+          "start": 7.98,
+          "end": 12.98,
+          "label": "materials",
+          "clip_index": 1
+        },
+        {
+          "start": 132.13,
+          "end": 137.13,
+          "label": "process",
+          "clip_index": 4
+        },
+        {
+          "start": 208.59,
+          "end": 213.59,
+          "label": "process",
+          "clip_index": 5
+        },
+        {
+          "start": 396.73,
+          "end": 401.73,
+          "label": "process",
+          "clip_index": 7
+        },
+        {
+          "start": 473.69,
+          "end": 478.69,
+          "label": "process",
+          "clip_index": 10
+        },
+        {
+          "start": 512.36,
+          "end": 517.36,
+          "label": "result-close",
+          "clip_index": 11
+        }
+      ],
+      "rendered": true,
+      "output_file": "content_pipeline/output/hikmat/shorts/sh08_Slow_reveal___Reels.mp4"
+    },
+    {
+      "id": "sh09",
+      "title": "Workshop story \u2014 Reels",
+      "hook_type": "result-first",
+      "content_type": "carpentry-timelapse",
+      "flywheel_stage": "n/a",
+      "parent_chapter": "n/a",
+      "aspect": "9:16",
+      "target": "instagram",
+      "min_len": 30,
+      "max_len": 90,
+      "segment_len_sec": 6.0,
+      "duration_est": 35.0,
+      "segments": [
+        {
+          "start": 593.81,
+          "end": 598.81,
+          "label": "result-hook",
+          "clip_index": 11
+        },
+        {
+          "start": 91.83,
+          "end": 96.83,
+          "label": "materials",
+          "clip_index": 3
+        },
+        {
+          "start": 355.57,
+          "end": 360.57,
+          "label": "process",
+          "clip_index": 6
+        },
+        {
+          "start": 396.73,
+          "end": 401.73,
+          "label": "process",
+          "clip_index": 7
+        },
+        {
+          "start": 450.43,
+          "end": 455.43,
+          "label": "process",
+          "clip_index": 8
+        },
+        {
+          "start": 473.69,
+          "end": 478.69,
+          "label": "process",
+          "clip_index": 10
+        },
+        {
+          "start": 512.36,
+          "end": 517.36,
+          "label": "result-close",
+          "clip_index": 11
+        }
+      ],
+      "rendered": true,
+      "output_file": "content_pipeline/output/hikmat/shorts/sh09_Workshop_story___Reels.mp4"
+    },
+    {
+      "id": "sh10",
+      "title": "Long session \u2014 main build clip",
+      "hook_type": "result-first",
+      "content_type": "carpentry-timelapse",
+      "flywheel_stage": "n/a",
+      "parent_chapter": "n/a",
+      "aspect": "9:16",
+      "target": "instagram",
+      "min_len": 30,
+      "max_len": 90,
+      "start": 216.53,
+      "end": 280.1,
+      "duration_est": 63.6,
+      "clip_index": 5,
+      "rendered": true,
+      "output_file": "content_pipeline/output/hikmat/shorts/sh10_Long_session___main_build_clip.mp4"
+    },
+    {
+      "id": "sh11",
+      "title": "Final session \u2014 result build",
+      "hook_type": "result-first",
+      "content_type": "carpentry-timelapse",
+      "flywheel_stage": "n/a",
+      "parent_chapter": "n/a",
+      "aspect": "9:16",
+      "target": "yt-shorts",
+      "min_len": 30,
+      "max_len": 60,
+      "start": 561.23,
+      "end": 604.67,
+      "duration_est": 43.4,
+      "clip_index": 11,
+      "rendered": true,
+      "output_file": "content_pipeline/output/hikmat/shorts/sh11_Final_session___result_build.mp4"
+    }
+  ]
+}

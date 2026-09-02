@@ -1,0 +1,59 @@
+{
+  "project_id": "hikmat",
+  "current_stage": "render_shorts",
+  "updated_at": "2026-09-02T15:09:54Z",
+  "history": [
+    {
+      "stage": "discover",
+      "status": "done",
+      "at": "2026-09-02T01:07:00Z",
+      "message": "11 MP4s + 2 JPGs in ~/Desktop/hikmat-project/"
+    },
+    {
+      "stage": "concat",
+      "status": "failed",
+      "at": "2026-09-02T01:39:00Z",
+      "message": "normalize mode stream-copied 5 HEVC clips \u2014 playback missing/corrupt sections",
+      "artifact": "output/hikmat/hikmat_timeline_normalized.mp4"
+    },
+    {
+      "stage": "concat",
+      "status": "started",
+      "at": "2026-09-02T02:10:00Z",
+      "message": "full re-encode all 11 clips to h264 \u2014 fixing missing videos"
+    },
+    {
+      "stage": "concat",
+      "status": "started",
+      "at": "2026-09-01T23:10:27Z",
+      "message": "mode=full, clips=11"
+    },
+    {
+      "stage": "concat",
+      "status": "done",
+      "at": "2026-09-01T23:25:09Z",
+      "message": "11 clips",
+      "artifact": "output/hikmat/hikmat_timeline_normalized.mp4"
+    },
+    {
+      "stage": "plan_shorts",
+      "status": "done",
+      "at": "2026-09-02T15:02:01Z",
+      "message": "11 shorts: 9 montages + 2 single-clip",
+      "artifact": "output/hikmat/manifest.json"
+    },
+    {
+      "stage": "render_shorts",
+      "status": "started",
+      "at": "2026-09-02T15:02:01Z",
+      "message": "rendering 11 draft shorts"
+    },
+    {
+      "stage": "render_shorts",
+      "status": "done",
+      "at": "2026-09-02T15:09:54Z",
+      "message": "11 draft shorts rendered",
+      "artifact": "output/hikmat/shorts/"
+    }
+  ]
+}

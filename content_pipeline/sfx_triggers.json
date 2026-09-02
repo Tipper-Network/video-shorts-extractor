@@ -1,0 +1,7 @@
+{
+  "important": { "query": "pop notification", "synthetic": "pop" },
+  "money": { "query": "cash register coin", "synthetic": "cha_ching" },
+  "wrong": { "query": "buzzer wrong answer", "synthetic": "buzzer" },
+  "correct": { "query": "ding success", "synthetic": "ding" },
+  "stop": { "query": "whoosh transition", "synthetic": "whoosh" }
+}

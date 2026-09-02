@@ -1,0 +1,116 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "content-pipeline/manifest",
+  "title": "Stream Processing Manifest",
+  "description": "Contract between plan and render stages. Source of truth for all clips from one input video.",
+  "type": "object",
+  "required": ["version", "source", "stem"],
+  "properties": {
+    "version": { "type": "string", "const": "1.0" },
+    "source": { "type": "string" },
+    "stem": { "type": "string" },
+    "series_id": { "type": "string" },
+    "episode": { "type": "integer", "minimum": 1 },
+    "content_type": { "type": "string" },
+    "planned_at": { "type": "string", "format": "date-time" },
+    "planner_model": { "type": "string" },
+    "render": {
+      "type": "object",
+      "properties": {
+        "default_trim": { "enum": ["off", "light", "moderate", "aggressive"] },
+        "trim_on_render": { "type": "boolean" }
+      }
+    },
+    "chapters": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/chapter" },
+      "default": []
+    },
+    "shorts": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/short" },
+      "default": []
+    },
+    "review": {
+      "type": "object",
+      "properties": {
+        "status": { "enum": ["draft", "approved", "rejected"] },
+        "reviewed_by": { "type": "string" },
+        "reviewed_at": { "type": "string", "format": "date-time" },
+        "notes": { "type": "string" }
+      }
+    }
+  },
+  "definitions": {
+    "segment": {
+      "type": "object",
+      "required": ["start", "end"],
+      "properties": {
+        "start": { "type": "number", "minimum": 0 },
+        "end": { "type": "number", "minimum": 0 },
+        "label": { "type": "string" },
+        "clip_index": { "type": "integer" }
+      }
+    },
+    "chapter": {
+      "type": "object",
+      "required": ["id", "title", "theme", "aspect", "target"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^ch[0-9]{2,}$" },
+        "cut_mode": {
+          "enum": ["contiguous", "supercut"],
+          "default": "contiguous",
+          "description": "contiguous=single slice; supercut=segments[] montage"
+        },
+        "start": { "type": "number", "minimum": 0 },
+        "end": { "type": "number", "minimum": 0 },
+        "segments": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/segment" },
+          "description": "Required when cut_mode=supercut"
+        },
+        "title": { "type": "string", "minLength": 1 },
+        "theme": { "type": "string" },
+        "hook": { "type": "string" },
+        "aspect": { "enum": ["16:9"], "default": "16:9" },
+        "target": { "type": "string", "default": "youtube" },
+        "trim": { "enum": ["off", "light", "moderate", "aggressive"] },
+        "min_len": { "type": "integer", "default": 600 },
+        "max_len": { "type": "integer", "default": 1800 },
+        "rendered": { "type": "boolean", "default": false },
+        "output_file": { "type": "string" }
+      }
+    },
+    "short": {
+      "type": "object",
+      "required": ["id", "title", "aspect", "target"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^sh[0-9]{2,}$" },
+        "cut_mode": { "enum": ["contiguous", "supercut"], "default": "contiguous" },
+        "start": { "type": "number", "minimum": 0 },
+        "end": { "type": "number", "minimum": 0 },
+        "segments": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/segment" }
+        },
+        "title": { "type": "string", "minLength": 1 },
+        "hook_type": { "type": "string" },
+        "content_type": { "type": "string" },
+        "flywheel_stage": {
+          "enum": ["attract", "engage", "trust", "service", "referral", "loop", "n/a"]
+        },
+        "parent_chapter": { "type": "string" },
+        "cta": { "type": "string" },
+        "aspect": { "enum": ["9:16"], "default": "9:16" },
+        "target": { "enum": ["yt-shorts", "tiktok", "instagram"], "default": "yt-shorts" },
+        "trim": { "enum": ["off", "light", "moderate", "aggressive"] },
+        "min_len": { "type": "integer" },
+        "max_len": { "type": "integer" },
+        "publish_order": { "type": "integer" },
+        "overflow_ok": { "type": "boolean", "default": false },
+        "rendered": { "type": "boolean", "default": false },
+        "output_file": { "type": "string" }
+      }
+    }
+  }
+}

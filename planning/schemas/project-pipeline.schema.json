@@ -1,0 +1,123 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "content-pipeline/project-pipeline",
+  "title": "Playbook / Project Pipeline Configuration",
+  "description": "Playbook templates live in planning/playbooks/. Projects reference playbook_id + optional overrides.",
+  "type": "object",
+  "properties": {
+    "playbook_id": {
+      "type": "string",
+      "description": "References planning/playbooks/{playbook_id}.json"
+    },
+    "project_id": { "type": "string" },
+    "name": { "type": "string" },
+    "description": { "type": "string" },
+    "module_order": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Ordered module names for agent orchestration"
+    },
+    "workflow": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Deprecated alias for module_order"
+    },
+    "skills": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Skill paths agent reads when planning"
+    },
+    "overrides": {
+      "type": "object",
+      "description": "Project-only overrides merged onto playbook base"
+    },
+    "modules": {
+      "type": "object",
+      "properties": {
+        "concat": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "mode": { "enum": ["draft", "normalize", "full"] }
+          }
+        },
+        "transcribe": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "vosk_words": { "type": "boolean", "default": false }
+          }
+        },
+        "detect_topics": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "method": { "enum": ["heuristic", "agent-only"] },
+            "pause_threshold_sec": { "type": "number", "default": 2.5 }
+          }
+        },
+        "plan_manifest": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "planner": { "type": "string", "default": "cursor-agent" }
+          }
+        },
+        "compose_shorts": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "method": { "type": "string" }
+          }
+        },
+        "render": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "trim_on_render": { "type": "boolean", "default": true }
+          }
+        },
+        "trim_silence": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" }
+          }
+        },
+        "polish": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "sfx": { "type": "boolean" },
+            "zoom": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "chapters": {
+      "type": "object",
+      "properties": {
+        "cut_mode": {
+          "enum": ["contiguous", "supercut"],
+          "description": "contiguous=one start/end slice; supercut=segments[] stitched"
+        },
+        "min_sec": { "type": "number", "default": 600 },
+        "max_sec": { "type": "number", "default": 1800 },
+        "default_trim": { "enum": ["off", "light", "moderate", "aggressive"] }
+      }
+    },
+    "shorts": {
+      "type": "object",
+      "properties": {
+        "cut_mode": { "enum": ["contiguous", "supercut"] },
+        "default_trim": { "enum": ["off", "light", "moderate", "aggressive"] }
+      }
+    },
+    "flywheel": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "tag_shorts": { "type": "boolean" }
+      }
+    }
+  }
+}

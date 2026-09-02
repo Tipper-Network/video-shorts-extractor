@@ -1,0 +1,10 @@
+{
+  "project_id": "hikmat",
+  "playbook_id": "timelapse-montage",
+  "description": "Carpentry timelapse — hikmat instance of timelapse-montage playbook",
+  "overrides": {
+    "modules": {
+      "concat": { "enabled": true, "mode": "full" }
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "content-pipeline/series",
+  "title": "Flywheel Series State",
+  "description": "Persistent state for thematic and flywheel continuity across episodes.",
+  "type": "object",
+  "required": ["series_id", "theme", "episode", "last_flywheel_stage"],
+  "properties": {
+    "series_id": {
+      "type": "string",
+      "description": "Unique slug, e.g. build-in-public"
+    },
+    "theme": {
+      "type": "string",
+      "description": "Current overarching topic thread"
+    },
+    "episode": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "last_flywheel_stage": {
+      "enum": ["attract", "engage", "trust", "service", "referral", "loop"]
+    },
+    "next_flywheel_stage": {
+      "enum": ["attract", "engage", "trust", "service", "referral", "loop"],
+      "description": "Hint for planner; auto-advances after publish"
+    },
+    "published": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["clip_id", "type", "published_at"],
+        "properties": {
+          "clip_id": { "type": "string" },
+          "type": { "enum": ["chapter", "short"] },
+          "manifest_stem": { "type": "string" },
+          "published_at": { "type": "string", "format": "date-time" },
+          "platform": { "type": "string" }
+        }
+      },
+      "default": []
+    },
+    "notes": {
+      "type": "string",
+      "description": "Human context for next episode planning"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+publish_order,clip_id,type,flywheel_stage,title,platform,scheduled_date,parent_chapter,output_file,status
+1,sh01,short,attract,"The onboarding mistake killing your retention",youtube-shorts,2026-09-02,ch01,,planned
+2,sh02,short,engage,"Would you fix onboarding or pricing first?",youtube-shorts,2026-09-03,ch01,,planned
+3,sh04,short,trust,"Why I almost quit this client project",youtube-shorts,2026-09-04,ch01,,planned
+4,sh05,short,service,"One email that doubled activation",youtube-shorts,2026-09-05,ch01,,planned
+5,ch01,chapter,,Why most funnels leak at onboarding,youtube,2026-09-06,,,planned
+6,sh03,short,referral,"Client went from 12% to 41% activation",youtube-shorts,2026-09-07,ch02,,planned
+7,sh06,short,loop,"Next week: the pricing objection framework",youtube-shorts,2026-09-08,ch02,,planned

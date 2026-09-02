@@ -1,0 +1,6 @@
+{
+  "project_id": "{name}",
+  "playbook_id": "flywheel-episode",
+  "description": "Optional — override playbook defaults for this project only",
+  "overrides": {}
+}
