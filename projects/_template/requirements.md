@@ -10,6 +10,15 @@ Copy this folder to `projects/{your-project-id}/` and fill in with the agent.
 | Playbook | Set `playbook_id` in `pipeline.json` |
 | Input | `projects/{name}/input/` — **drop raw video here** |
 
+## Instruction files
+
+Link persistent briefs here (saved from Gemini or written in-session):
+
+| File | Purpose |
+|------|---------|
+| `shorts_instructions.md` | Optional — vertical shorts brief |
+| `youtube_instructions.md` | Optional — YouTube chapter brief |
+
 ## Goal
 
 > What are we making? (master timeline, chapters, shorts, etc.)

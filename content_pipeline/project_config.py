@@ -71,8 +71,35 @@ def list_playbooks() -> list[str]:
     return sorted(p.stem for p in PLAYBOOKS_DIR.glob("*.json") if p.name != "README.md")
 
 
+def find_project_dir(project_id: str) -> Path:
+    """Resolve project folder by slug or pipeline.json project_id."""
+    direct = PROJECTS_DIR / project_id
+    if (direct / "pipeline.json").exists() or direct.is_dir():
+        if (direct / "pipeline.json").exists():
+            return direct
+
+    if not PROJECTS_DIR.exists():
+        return direct
+
+    for path in sorted(PROJECTS_DIR.iterdir()):
+        if not path.is_dir() or path.name.startswith("_"):
+            continue
+        pipeline_file = path / "pipeline.json"
+        if not pipeline_file.exists():
+            if path.name == project_id:
+                return path
+            continue
+        try:
+            data = json.loads(pipeline_file.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            continue
+        if data.get("project_id") == project_id:
+            return path
+    return direct
+
+
 def pipeline_path(project_id: str) -> Path:
-    return PROJECTS_DIR / project_id / "pipeline.json"
+    return find_project_dir(project_id) / "pipeline.json"
 
 
 def load_pipeline(project_id: str) -> dict[str, Any]:

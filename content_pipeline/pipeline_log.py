@@ -49,15 +49,21 @@ def format_duration(seconds: float) -> str:
 
 
 def log_path(project_id: str) -> Path:
-    return PROJECTS_DIR / project_id / "pipeline.log.json"
+    from project_config import find_project_dir
+
+    return find_project_dir(project_id) / "pipeline.log.json"
 
 
 def timing_log_path(project_id: str) -> Path:
-    return PROJECTS_DIR / project_id / "pipeline.timing.log"
+    from project_config import find_project_dir
+
+    return find_project_dir(project_id) / "pipeline.timing.log"
 
 
 def progress_path(project_id: str) -> Path:
-    return PROJECTS_DIR / project_id / "pipeline.progress.json"
+    from project_config import find_project_dir
+
+    return find_project_dir(project_id) / "pipeline.progress.json"
 
 
 def load_log(project_id: str) -> dict[str, Any]:

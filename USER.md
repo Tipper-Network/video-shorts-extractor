@@ -44,4 +44,4 @@ Stable directives for content creation sessions. One directive per entry.
 
 <!-- observed: 2026-09-02 | status: active -->
 
-- **hikmat** — [`projects/hikmat/requirements.md`](content_pipeline/projects/hikmat/requirements.md) · edit base: `output/hikmat/hikmat_timeline_normalized.mp4`
+- **Origin Story** — [`projects/0. the origin story/brief.md`](projects/0.%20the%20origin%20story/brief.md) · transcript done; manifest validation next

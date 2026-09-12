@@ -212,7 +212,7 @@ def build_manifest(clip_map: dict, pool: list[dict]) -> dict:
         },
         "review": {
             "status": "draft",
-            "notes": "Platform-separated deliverables under output/hikmat/deliverables/.",
+            "notes": "Platform-separated deliverables under output/deliverables/{platform}/.",
         },
         "chapters": [],
         "shorts": shorts,

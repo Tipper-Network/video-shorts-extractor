@@ -67,8 +67,8 @@ Track status here. Update checkboxes as phases ship.
 
 ## Current Priority
 
-**Hikmat integration test** — exercise platform on real footage; fix gaps (silence trim, stills).  
-Track in [`capability-matrix.md`](capability-matrix.md). Project requirements in [`../content_pipeline/projects/hikmat/requirements.md`](../content_pipeline/projects/hikmat/requirements.md).
+**Origin Story flywheel** — transcribe → manifest validation → render shorts + chapters.  
+Track in [`capability-matrix.md`](capability-matrix.md). Project brief: [`../projects/0. the origin story/brief.md`](../projects/0.%20the%20origin%20story/brief.md).
 
 ## Decision Log
 

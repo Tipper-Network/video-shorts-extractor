@@ -32,8 +32,8 @@ Layer modules to build flywheel sequences: transcribe → detect topics → plan
 
 ```bash
 # Generic runner (checks pipeline.json enabled flag)
-python3 content_pipeline/run_module.py --project hikmat --module render \
-  -- --manifest output/hikmat/manifest.json
+python3 content_pipeline/run_module.py --project origin-story --module render \
+  -- --manifest "projects/0. the origin story/output/plan/manifest.json"
 
 # Direct call (always works)
 python3 content_pipeline/detect_topics.py \

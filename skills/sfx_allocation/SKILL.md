@@ -32,9 +32,9 @@ python3 content_pipeline/process_stream.py --mode transcribe --input clip.mp4 --
 
 # Apply SFX + zoom
 python3 content_pipeline/auto-edit.py \
-  --input content_pipeline/output/hikmat/hikmat_timeline.mp4 \
-  --output content_pipeline/output/hikmat/hikmat_polished.mp4 \
-  --words content_pipeline/subtitles/hikmat_timeline.words.json
+  --input projects/my-video/output/master/timeline_normalized.mp4 \
+  --output projects/my-video/output/master/timeline_polished.mp4 \
+  --words projects/my-video/output/transcript/words.json
 ```
 
 ## Adding Triggers

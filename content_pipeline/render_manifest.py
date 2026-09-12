@@ -37,6 +37,21 @@ def short_output_path(deliverables_dir: Path, short: dict) -> Path:
     return subdir / name
 
 
+def chapter_output_path(deliverables_dir: Path, chapter: dict) -> Path:
+    """Route chapter renders to deliverables/{platform}/."""
+    platform = chapter.get("platform") or PLATFORM_SUBDIRS.get(chapter.get("target", "youtube"), "youtube")
+    subdir = deliverables_dir / platform
+    subdir.mkdir(parents=True, exist_ok=True)
+    if chapter.get("output_name"):
+        name = chapter["output_name"]
+    else:
+        safe = "".join(c if c.isalnum() or c in "-_" else "_" for c in chapter["title"][:40])
+        name = f"{chapter['id']}_{safe}.mp4"
+    if not name.endswith(".mp4"):
+        name = f"{name}.mp4"
+    return subdir / name
+
+
 def resolve_source(manifest: dict, project_id: str | None = None) -> Path:
     source = Path(manifest["source"])
     if source.is_absolute() and source.exists():
@@ -91,8 +106,6 @@ def render_manifest(
     out_dir = paths.root if paths else WORKSPACE_ROOT / "projects" / stem
     plan_dir = paths.plan_dir if paths else out_dir / "output" / "plan"
     deliverables_dir = paths.deliverables_dir if paths else out_dir / "output" / "deliverables"
-    chapters_dir = out_dir / "chapters"
-    chapters_dir.mkdir(parents=True, exist_ok=True)
 
     manifest_trim_default = manifest.get("render", {}).get("default_trim")
     rendered = []
@@ -128,9 +141,9 @@ def render_manifest(
             if progress:
                 progress.update(item_idx, item=chapter["id"], message=chapter["title"][:50])
 
-            safe_title = "".join(c if c.isalnum() or c in "-_" else "_" for c in chapter["title"][:40])
-            out_file = chapters_dir / f"{chapter['id']}_{safe_title}.mp4"
-            print(f" Chapter {chapter['id']}: {chapter['title']} [{chapter.get('cut_mode', 'contiguous')}]")
+            out_file = chapter_output_path(deliverables_dir, chapter)
+            rel = out_file.relative_to(WORKSPACE_ROOT)
+            print(f" Chapter {chapter['id']}: {chapter['title']} → {rel} [{chapter.get('cut_mode', 'contiguous')}]")
 
             trim_level = "off"
             if trim_enabled:

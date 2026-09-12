@@ -224,11 +224,11 @@ shorts/  9:16 flywheel-tagged
 ls planning/playbooks/*.json
 
 # Run one module for a project (playbook gates enabled modules)
-python3 content_pipeline/run_module.py --project hikmat --module render -- \
-  --manifest output/hikmat/manifest.json
+python3 content_pipeline/run_module.py --project origin-story --module render -- \
+  --manifest "projects/0. the origin story/output/plan/manifest.json"
 
 # Agent loads playbook via project
-# projects/hikmat/pipeline.json → playbook_id: timelapse-montage
+# projects/0. the origin story/pipeline.json → playbook_id: flywheel-shorts
 ```
 
 ---

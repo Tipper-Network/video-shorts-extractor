@@ -65,8 +65,11 @@ def main() -> None:
 
     if args.project and "--project" not in args.extra:
         # pass project to scripts that support it
-        if args.module in ("concat", "trim_silence", "detect_topics", "render"):
+        if args.module in ("concat", "trim_silence", "detect_topics", "render", "transcribe"):
             cmd.extend(["--project", args.project])
+
+    if args.module == "transcribe" and args.project and "--input" not in args.extra:
+        pass  # auto-detect single video in project input/
 
     print(f" Module: {args.module} — {info['description']}")
     result = subprocess.run(cmd, cwd=BASE_DIR)

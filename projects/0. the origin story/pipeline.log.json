@@ -1,0 +1,24 @@
+{
+  "project_id": "origin-story",
+  "current_stage": "transcribe",
+  "updated_at": "2026-09-12T08:24:56Z",
+  "totals": {
+    "transcribe": 646.0
+  },
+  "history": [
+    {
+      "stage": "transcribe",
+      "status": "started",
+      "at": "2026-09-12T08:14:10Z",
+      "message": "0. Origin story.mp4"
+    },
+    {
+      "stage": "transcribe",
+      "status": "done",
+      "at": "2026-09-12T08:24:56Z",
+      "message": "0. Origin story.mp4",
+      "duration_seconds": 646.0,
+      "duration_human": "10m 46s"
+    }
+  ]
+}

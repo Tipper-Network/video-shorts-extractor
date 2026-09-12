@@ -3,7 +3,7 @@
 Transcribe local video — planning is done by Cursor agent, not a local LLM.
 
 Modes:
-  transcribe (default) — extract audio + Whisper segments + optional Vosk words
+  transcribe (default) — extract audio + Whisper segments + transcript.txt + optional Vosk words
   render               — ffmpeg cut from manifest or inline --start/--end
 """
 
@@ -15,6 +15,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from project_paths import load_project_paths
 from transcribe import (
     AUDIO_DIR,
     SUB_DIR,
@@ -25,11 +26,49 @@ from transcribe import (
 )
 
 BASE_DIR = Path(__file__).resolve().parent
+WORKSPACE_ROOT = BASE_DIR.parent
 INPUT_DIR = BASE_DIR / "input"
 OUTPUT_DIR = BASE_DIR / "output"
 
 for d in [INPUT_DIR, AUDIO_DIR, SUB_DIR, OUTPUT_DIR]:
     d.mkdir(parents=True, exist_ok=True)
+
+
+def find_input_video(project_id: str | None, input_name: str | None) -> tuple[Path, str]:
+    """Locate source video in project input/ or legacy input/."""
+    if project_id:
+        paths = load_project_paths(project_id)
+        paths.ensure_dirs()
+        if input_name:
+            video = paths.input_dir / input_name
+            if not video.exists():
+                print(f" File not found: {video}")
+                sys.exit(1)
+            return video, video.stem
+
+        candidates = sorted(
+            p
+            for p in paths.input_dir.iterdir()
+            if p.suffix.lower() in {".mp4", ".mkv", ".mov", ".webm"}
+        )
+        if len(candidates) == 1:
+            return candidates[0], candidates[0].stem
+        if len(candidates) > 1:
+            print(" Multiple videos in input/ — pass --input filename:")
+            for c in candidates:
+                print(f"   {c.name}")
+            sys.exit(1)
+        print(f" No video in {paths.input_dir}")
+        sys.exit(1)
+
+    if not input_name:
+        print(" Transcribe mode requires --input (or --project with one video in input/)")
+        sys.exit(1)
+    video_path = INPUT_DIR / input_name
+    if not video_path.exists():
+        print(f" File not found: {video_path}")
+        sys.exit(1)
+    return video_path, video_path.stem
 
 
 def cut_video(input_video: Path, start: float, end: float, aspect: str, output_path: Path) -> None:
@@ -58,7 +97,7 @@ def render_from_manifest(manifest_path: Path) -> None:
 
     source = Path(manifest["source"])
     if not source.is_absolute():
-        source = BASE_DIR.parent / source
+        source = WORKSPACE_ROOT / source
     if not source.exists():
         print(f" Source not found: {source}")
         sys.exit(1)
@@ -85,7 +124,8 @@ def render_from_manifest(manifest_path: Path) -> None:
 def main():
     parser = argparse.ArgumentParser(description="Content pipeline — transcribe or render")
     parser.add_argument("--mode", choices=["transcribe", "render"], default="transcribe")
-    parser.add_argument("--input", help="Video filename inside input/ (transcribe mode)")
+    parser.add_argument("--project", help="Project ID — reads/writes under projects/{id}/")
+    parser.add_argument("--input", help="Video filename inside project input/ or input/")
     parser.add_argument("--manifest", help="Path to manifest.json (render mode)")
     parser.add_argument("--start", type=float, help="Manual cut start (render fallback)")
     parser.add_argument("--end", type=float, help="Manual cut end (render fallback)")
@@ -93,6 +133,7 @@ def main():
     parser.add_argument("--output-name", default="clip.mp4", help="Output filename for manual render")
     parser.add_argument("--vosk", action="store_true", help="Also run Vosk word-level transcript")
     parser.add_argument("--vosk-model", help="Path to Vosk model directory")
+    parser.add_argument("--model", default="small", help="Whisper model size (default: small)")
     args = parser.parse_args()
 
     if args.mode == "render":
@@ -102,34 +143,51 @@ def main():
         if not args.input or args.start is None or args.end is None:
             print(" Render mode requires --manifest OR (--input + --start + --end)")
             sys.exit(1)
-        video_path = INPUT_DIR / args.input
-        if not video_path.exists():
-            print(f" File not found: {video_path}")
-            sys.exit(1)
-        cut_video(video_path, args.start, args.end, args.aspect, OUTPUT_DIR / args.output_name)
+        video_path, _ = find_input_video(args.project, args.input)
+        out = OUTPUT_DIR / args.output_name
+        if args.project:
+            paths = load_project_paths(args.project)
+            out = paths.deliverables_dir / "youtube" / args.output_name
+            out.parent.mkdir(parents=True, exist_ok=True)
+        cut_video(video_path, args.start, args.end, args.aspect, out)
         return
 
-    if not args.input:
-        print(" Transcribe mode requires --input")
-        sys.exit(1)
+    video_path, base_name = find_input_video(args.project, args.input)
 
-    video_path = INPUT_DIR / args.input
-    if not video_path.exists():
-        print(f" File not found: {video_path}")
-        sys.exit(1)
+    from contextlib import nullcontext
 
-    base_name = video_path.stem
-    audio_path = AUDIO_DIR / f"{base_name}.wav"
-    segments_path = SUB_DIR / f"{base_name}.json"
-    words_path = SUB_DIR / f"{base_name}.words.json"
+    if args.project:
+        from pipeline_log import StageTimer
 
-    extract_audio(video_path, audio_path)
-    transcribe_whisper(audio_path, segments_path)
+        paths = load_project_paths(args.project)
+        paths.ensure_dirs()
+        audio_path = paths.audio_cache_dir / f"{base_name}.wav"
+        segments_path = paths.segments_json_path()
+        words_path = paths.words_json_path()
+        transcript_txt = paths.transcript_txt_path()
+        timer_ctx = StageTimer(args.project, "transcribe", message=video_path.name)
+    else:
+        paths = None
+        audio_path = AUDIO_DIR / f"{base_name}.wav"
+        segments_path = SUB_DIR / f"{base_name}.json"
+        words_path = SUB_DIR / f"{base_name}.words.json"
+        transcript_txt = SUB_DIR / f"{base_name}.txt"
+        timer_ctx = nullcontext()
 
-    if args.vosk:
-        transcribe_vosk_words(audio_path, words_path, model_path=args.vosk_model)
+    with timer_ctx:
+        extract_audio(video_path, audio_path)
+        transcribe_whisper(
+            audio_path,
+            segments_path,
+            model_size=args.model,
+            transcript_txt_path=transcript_txt,
+        )
 
-    print(" Transcription complete. Planning cuts → use Cursor agent + manifest.json")
+        if args.vosk:
+            transcribe_vosk_words(audio_path, words_path, model_path=args.vosk_model)
+
+    print(f" Transcript: {transcript_txt}")
+    print(" Planning cuts → use Cursor agent + manifest.json")
 
 
 if __name__ == "__main__":

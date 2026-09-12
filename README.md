@@ -28,13 +28,13 @@ Platform-ready output
 
 ## Projects vs platform
 
-| | Platform | Project (e.g. hikmat) |
-|---|----------|------------------------|
+| | Platform | Project (e.g. origin-story) |
+|---|----------|------------------------------|
 | **Question** | *How* do we edit? | *What* does this video need? |
-| **Lives in** | `skills/`, `content_pipeline/*.py` | `projects/hikmat/requirements.md` |
+| **Lives in** | `skills/`, `content_pipeline/*.py` | `projects/{name}/requirements.md` |
 | **Tested via** | [`planning/capability-matrix.md`](planning/capability-matrix.md) | Each new project folder |
 
-See [`content_pipeline/projects/README.md`](content_pipeline/projects/README.md).
+See [`projects/README.md`](projects/README.md).
 
 ## Stack
 
@@ -61,18 +61,13 @@ See [`content_pipeline/projects/README.md`](content_pipeline/projects/README.md)
 ```bash
 pip install -r content_pipeline/requirements.txt
 
-# Concat a clip folder (e.g. hikmat)
-python3 content_pipeline/concat_clips.py \
-  --source-dir ~/Desktop/hikmat-project \
-  --series hikmat
-
-# Transcribe
-python3 content_pipeline/process_stream.py \
-  --mode transcribe --input hikmat/hikmat_timeline.mp4 --vosk
+# Transcribe (writes output/transcript/transcript.txt)
+python3 content_pipeline/run_module.py --module transcribe --project origin-story
 
 # Render from agent-written manifest
 python3 content_pipeline/render_manifest.py \
-  --manifest content_pipeline/output/my_stream/manifest.json
+  --manifest "projects/0. the origin story/output/plan/manifest.json" \
+  --project origin-story
 ```
 
 ## Optional env vars
@@ -81,4 +76,4 @@ Copy `content_pipeline/.env.example` — Freesound/Pixabay keys improve SFX qual
 
 ## Active projects
 
-- **hikmat** — [`projects/hikmat/requirements.md`](content_pipeline/projects/hikmat/requirements.md) · raw: `~/Desktop/hikmat-project/`
+- **Origin Story** — [`projects/0. the origin story/brief.md`](projects/0.%20the%20origin%20story/brief.md) · source in `projects/0. the origin story/input/`

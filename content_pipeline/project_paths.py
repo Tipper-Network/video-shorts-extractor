@@ -11,7 +11,9 @@ PROJECTS_ROOT = WORKSPACE_ROOT / "projects"
 
 
 def project_root(project_id: str) -> Path:
-    return PROJECTS_ROOT / project_id
+    from project_config import find_project_dir
+
+    return find_project_dir(project_id)
 
 
 class ProjectPaths:
@@ -32,6 +34,12 @@ class ProjectPaths:
         self.cache_dir = self._resolve(paths.get("cache_dir", "output/cache/normalized"))
         self.deliverables_dir = self._resolve(
             paths.get("deliverables_dir", "output/deliverables")
+        )
+        self.transcript_dir = self._resolve(
+            paths.get("transcript_dir", "output/transcript")
+        )
+        self.audio_cache_dir = self._resolve(
+            paths.get("audio_cache_dir", "output/cache/audio")
         )
 
     def _resolve(self, raw: str | Path) -> Path:
@@ -56,6 +64,15 @@ class ProjectPaths:
         """Resolve a path that may be project-relative."""
         return self._resolve(relative)
 
+    def transcript_txt_path(self) -> Path:
+        return self.transcript_dir / "transcript.txt"
+
+    def segments_json_path(self) -> Path:
+        return self.transcript_dir / "segments.json"
+
+    def words_json_path(self) -> Path:
+        return self.transcript_dir / "words.json"
+
     def ensure_dirs(self) -> None:
         for path in (
             self.input_dir,
@@ -63,6 +80,8 @@ class ProjectPaths:
             self.plan_dir,
             self.logs_dir,
             self.cache_dir,
+            self.transcript_dir,
+            self.audio_cache_dir,
             self.deliverables_dir,
             self.deliverables_dir / "youtube",
             self.deliverables_dir / "tiktok",

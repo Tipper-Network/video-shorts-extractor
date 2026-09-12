@@ -43,8 +43,9 @@ def transcribe_whisper(
     audio_path: Path,
     transcript_json_path: Path,
     model_size: str = "small",
+    transcript_txt_path: Path | None = None,
 ) -> list[dict]:
-    """Full segment transcript via Faster-Whisper."""
+    """Full segment transcript via Faster-Whisper. Always writes segments JSON + transcript.txt."""
     print(" Running Faster-Whisper transcription...")
     model = WhisperModel(model_size, device="cpu", compute_type="int8")
     segments, _info = model.transcribe(str(audio_path), beam_size=5)
@@ -54,12 +55,49 @@ def transcribe_whisper(
         for seg in segments
     ]
 
-    transcript_json_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(transcript_json_path, "w", encoding="utf-8") as f:
-        json.dump(segments_data, f, indent=2, ensure_ascii=False)
-
-    print(f" Saved {len(segments_data)} segments → {transcript_json_path}")
+    txt_path = transcript_txt_path or transcript_json_path.parent / "transcript.txt"
+    export_transcripts(
+        segments_data,
+        segments_json_path=transcript_json_path,
+        transcript_txt_path=txt_path,
+    )
     return segments_data
+
+
+def format_timestamp(seconds: float) -> str:
+    """Format seconds as H:MM:SS or MM:SS."""
+    total = int(round(seconds))
+    hours, rem = divmod(total, 3600)
+    minutes, secs = divmod(rem, 60)
+    if hours:
+        return f"{hours}:{minutes:02d}:{secs:02d}"
+    return f"{minutes:02d}:{secs:02d}"
+
+
+def write_transcript_txt(segments: list[dict], txt_path: Path) -> Path:
+    """Write full human-readable transcript with timestamps (always produced on transcribe)."""
+    txt_path.parent.mkdir(parents=True, exist_ok=True)
+    lines = [
+        f"[{format_timestamp(seg['start'])} → {format_timestamp(seg['end'])}] {seg['text']}"
+        for seg in segments
+        if seg.get("text")
+    ]
+    txt_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print(f" Saved transcript text → {txt_path} ({len(lines)} lines)")
+    return txt_path
+
+
+def export_transcripts(
+    segments: list[dict],
+    *,
+    segments_json_path: Path,
+    transcript_txt_path: Path,
+) -> None:
+    """Persist segment JSON + full timestamped transcript.txt."""
+    segments_json_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(segments_json_path, "w", encoding="utf-8") as f:
+        json.dump(segments, f, indent=2, ensure_ascii=False)
+    write_transcript_txt(segments, transcript_txt_path)
 
 
 def transcribe_vosk_words(

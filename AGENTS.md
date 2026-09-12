@@ -16,6 +16,15 @@ Turn raw footage into publishable, platform-ready content:
 
 Use runtime-provided context first (`AGENTS.md`, `SOUL.md`, `USER.md`, recent `memory/`, `MEMORY.md`).
 
+When working on a **named project**, read its on-disk brief before planning or regenerating frameworks:
+
+1. `projects/{folder}/brief.md` and `requirements.md`
+2. Any `*_instructions.md` in that folder (e.g. `shorts_instructions.md`, `youtube_instructions.md`)
+3. `output/transcript/transcript.txt` if it exists (do not re-transcribe to plan cuts)
+4. `output/plan/manifest.json` — update in place; do not recreate from scratch unless asked
+
+Resolve project folder via `project_id` in `pipeline.json` (folder name may differ, e.g. `0. the origin story` → `origin-story`).
+
 Reread files only when the user asks, context is missing, or you need deeper detail.
 
 ## Memory
@@ -48,7 +57,7 @@ Before building custom tooling, check for maintained open-source options (ffmpeg
 
 ## External vs Internal
 
-**Safe freely:** read files, explore, organize, run local pipeline scripts, work within this workspace and linked input folders (e.g. `~/Desktop/hikmat-project/`).
+**Safe freely:** read files, explore, organize, run local pipeline scripts, work within this workspace (`projects/{name}/input/`, etc.).
 
 **Ask first:** publishing to social platforms, sending emails, anything public, anything uncertain.
 
@@ -70,7 +79,7 @@ Before building custom tooling, check for maintained open-source options (ffmpeg
 | **Flywheel visuals** | [`planning/flywheel-strategies-visual.md`](planning/flywheel-strategies-visual.md) |
 | Architecture | [`planning/pipeline-architecture.md`](planning/pipeline-architecture.md) |
 | THP strategy (external) | `~/Desktop/The-Hard-Port-stuff/The Hard Port/the-hard-port-os/` |
-| Platform rules | [`skills/`](skills/) |
+| **Projects (one folder per job)** | [`projects/`](projects/README.md) |
 
 ## Planning Model
 
@@ -81,9 +90,7 @@ Transcription and render stay scripted (Whisper, FFmpeg). Planning is interactiv
 ## Local Notes
 
 ```markdown
-- Projects root: projects/{name}/ — input, output, config, skills all in one folder
-- Hikmat: projects/hikmat/ — see projects/hikmat/FOLDERS.md
-- THP content scripts: ~/Desktop/The-Hard-Port-stuff/The Hard Port/the-hard-port-os/content/youtube/
-- SFX keys (optional): FREESOUND_API_KEY, PIXABAY_API_KEY — see content_pipeline/.env.example
-- Vosk model: VOSK_MODEL_PATH for word-level SFX triggers
+- Projects root: projects/{name}/ — input, output, config, *_instructions.md, skills
+- Agent reads: brief.md → requirements.md → *_instructions.md → transcript.txt → manifest.json
+- Origin Story: projects/0. the origin story/ (project_id: origin-story)
 ```

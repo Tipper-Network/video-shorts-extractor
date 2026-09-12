@@ -37,11 +37,17 @@ THP defines *what* to say. This workspace defines *how* to cut and render.
 
 ## Active Projects
 
-### hikmat
+### Origin Story (`origin-story`)
 
-- Raw clips: `~/Desktop/hikmat-project/` (11 clips)
-- Timeline: `content_pipeline/output/hikmat/hikmat_timeline.mp4` — **concat done**
-- Next: transcribe → agent storyline review → polish
+- Folder: `projects/0. the origin story/`
+- Source: `input/0. Origin story.mp4`
+- Transcript: `output/transcript/transcript.txt` (done)
+- Next: validate manifest timestamps → render batch 1
+
+### hikmat (archived)
+
+- First integration project — timelapse montage, deliverables rendered.
+- Assets and config lived under `projects/hikmat/`; no external `~/Desktop/hikmat-project/` dependency.
 
 ## THP Cross-References
 
