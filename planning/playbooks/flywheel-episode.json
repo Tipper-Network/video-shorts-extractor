@@ -1,7 +1,10 @@
 {
   "playbook_id": "flywheel-episode",
+  "strategy": "flywheel-episode",
   "name": "Flywheel episode",
-  "description": "Speech long-form → 10–30 min YouTube chapters + flywheel-tagged vertical shorts. THP / build-in-public style.",
+  "description": "Strategy B: A 10–30 min YouTube chapter IS the service delivery. Flywheel shorts tease, support, and close around it. Publish: pre-shorts → chapter → post-shorts.",
+  "primary_output": "chapters_and_shorts",
+  "conclusion": "Viewer follows shorts into the full chapter for payoff; post-shorts cement trust and loop to next episode.",
   "module_order": [
     "transcribe",
     "detect_topics",
@@ -9,6 +12,43 @@
     "render",
     "polish"
   ],
+  "technical_modules": {
+    "transcribe": { "enabled": true, "vosk_words": false },
+    "detect_topics": { "enabled": true, "method": "heuristic", "pause_threshold_sec": 2.5 },
+    "compose_shorts": { "enabled": false },
+    "render": { "enabled": true, "trim_on_render": true, "render_chapters": true },
+    "trim_silence": { "enabled": false },
+    "polish": { "enabled": true, "sfx": true, "zoom": false }
+  },
+  "narrative_modules": {
+    "plan_chapter": {
+      "enabled": true,
+      "focus": "chapter_first",
+      "skills": ["skills/detect_topics", "skills/youtube_chunks"],
+      "notes": "One self-contained 10–30 min contiguous chapter per topic. Service = full delivery here."
+    },
+    "plan_shorts_around_chapter": {
+      "enabled": true,
+      "skills": [
+        "skills/youtube_shorts",
+        "skills/tiktok_shorts",
+        "skills/instagram_reels",
+        "skills/flywheel_series"
+      ],
+      "notes": "Shorts tease parent chapter. parent_chapter required. publish_order wraps chapter."
+    },
+    "plan_flywheel_sequence": { "enabled": false }
+  },
+  "modules": {
+    "concat": { "enabled": false },
+    "transcribe": { "enabled": true, "vosk_words": false },
+    "detect_topics": { "enabled": true, "method": "heuristic", "pause_threshold_sec": 2.5 },
+    "plan_manifest": { "enabled": true, "planner": "cursor-agent", "focus": "chapter_first_then_shorts" },
+    "compose_shorts": { "enabled": false },
+    "render": { "enabled": true, "trim_on_render": true },
+    "trim_silence": { "enabled": false },
+    "polish": { "enabled": true, "sfx": true, "zoom": false }
+  },
   "skills": [
     "skills/detect_topics",
     "skills/youtube_chunks",
@@ -17,17 +57,8 @@
     "skills/instagram_reels",
     "skills/flywheel_series"
   ],
-  "modules": {
-    "concat": { "enabled": false },
-    "transcribe": { "enabled": true, "vosk_words": false },
-    "detect_topics": { "enabled": true, "method": "heuristic", "pause_threshold_sec": 2.5 },
-    "plan_manifest": { "enabled": true, "planner": "cursor-agent" },
-    "compose_shorts": { "enabled": false },
-    "render": { "enabled": true, "trim_on_render": true },
-    "trim_silence": { "enabled": false },
-    "polish": { "enabled": true, "sfx": true, "zoom": false }
-  },
   "chapters": {
+    "enabled": true,
     "cut_mode": "contiguous",
     "min_sec": 600,
     "max_sec": 1800,
@@ -35,52 +66,44 @@
   },
   "shorts": {
     "cut_mode": "contiguous",
-    "default_trim": "moderate"
+    "default_trim": "moderate",
+    "require_parent_chapter": true
   },
   "flywheel": {
     "enabled": true,
-    "tag_shorts": true
+    "tag_shorts": true,
+    "sequence_is_product": false,
+    "chapter_is_service_delivery": true
   },
   "acts": [
     {
       "act_id": "hook",
-      "name": "Hook",
       "stages": ["attract", "engage"],
       "output": "shorts",
-      "skills": ["skills/youtube_shorts", "skills/tiktok_shorts"],
-      "cut_mode": "contiguous",
       "default_trim": "aggressive",
-      "planning": "1–2 shorts per chapter: pain, curiosity, or question. Publish before chapter."
+      "planning": "Pre-chapter shorts. Tease problem/question. publish_order before chapter."
     },
     {
       "act_id": "prove",
-      "name": "Prove",
       "stages": ["trust"],
       "output": "shorts",
-      "skills": ["skills/instagram_reels"],
-      "cut_mode": "contiguous",
       "default_trim": "moderate",
-      "planning": "Story, transparency, or character beat. Optional per episode."
+      "planning": "Optional trust short before chapter drop."
     },
     {
       "act_id": "deliver",
-      "name": "Deliver",
       "stages": ["service"],
       "output": "chapters",
-      "skills": ["skills/youtube_chunks"],
-      "cut_mode": "contiguous",
       "default_trim": "light",
-      "planning": "10–30 min self-contained chapter. Main value delivery."
+      "planning": "THE chapter — 10–30 min full value. Center of publish sequence."
     },
     {
       "act_id": "close",
-      "name": "Close",
       "stages": ["referral", "loop"],
       "output": "shorts",
-      "skills": ["skills/youtube_shorts"],
-      "cut_mode": "contiguous",
       "default_trim": "moderate",
-      "planning": "Proof/result + CTA to chapter or next episode. Publish after chapter."
+      "planning": "Post-chapter shorts. Proof + CTA back to chapter + tease next episode."
     }
-  ]
+  ],
+  "publish_pattern": ["short", "short", "chapter", "short", "short"]
 }

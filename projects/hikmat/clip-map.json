@@ -1,5 +1,5 @@
 {
-  "source": "content_pipeline/output/hikmat/hikmat_timeline_normalized.mp4",
+  "source": "output/master/timeline_normalized.mp4",
   "total_duration_sec": 609.9,
   "sort_rule": "filename timestamp YYYYMMDD_HHMMSS ascending",
   "clips": [
@@ -129,5 +129,19 @@
       "candidate_offsets": [0.1, 0.5, 0.85],
       "note": "likely best result-hook source — review end of clip first"
     }
-  ]
+  ],
+  "stills": [
+    {
+      "file": "20260730_115835.jpg",
+      "label": "result-a",
+      "sort_key": "20260730_115835"
+    },
+    {
+      "file": "20260731_121250.jpg",
+      "label": "result-b",
+      "sort_key": "20260731_121250",
+      "note": "preferred money shot — use for reveal"
+    }
+  ],
+  "source_dir": "input"
 }

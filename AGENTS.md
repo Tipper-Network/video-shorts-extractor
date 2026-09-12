@@ -66,7 +66,8 @@ Before building custom tooling, check for maintained open-source options (ffmpeg
 | Setup & dirs | [`instructions.md`](instructions.md) |
 | Orchestrator | [`SKILL.md`](SKILL.md) |
 | **Playbooks (visuals + design)** | [`planning/playbooks.md`](planning/playbooks.md) |
-| **Flywheel acts (narrative vs technical)** | [`planning/flywheel-acts.md`](planning/flywheel-acts.md) |
+| **Flywheel strategies (2 models)** | [`planning/flywheel-strategies.md`](planning/flywheel-strategies.md) |
+| **Flywheel visuals** | [`planning/flywheel-strategies-visual.md`](planning/flywheel-strategies-visual.md) |
 | Architecture | [`planning/pipeline-architecture.md`](planning/pipeline-architecture.md) |
 | THP strategy (external) | `~/Desktop/The-Hard-Port-stuff/The Hard Port/the-hard-port-os/` |
 | Platform rules | [`skills/`](skills/) |
@@ -80,7 +81,8 @@ Transcription and render stay scripted (Whisper, FFmpeg). Planning is interactiv
 ## Local Notes
 
 ```markdown
-- Raw hikmat clips: ~/Desktop/hikmat-project/
+- Projects root: projects/{name}/ — input, output, config, skills all in one folder
+- Hikmat: projects/hikmat/ — see projects/hikmat/FOLDERS.md
 - THP content scripts: ~/Desktop/The-Hard-Port-stuff/The Hard Port/the-hard-port-os/content/youtube/
 - SFX keys (optional): FREESOUND_API_KEY, PIXABAY_API_KEY — see content_pipeline/.env.example
 - Vosk model: VOSK_MODEL_PATH for word-level SFX triggers

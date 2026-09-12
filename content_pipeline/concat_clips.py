@@ -352,6 +352,7 @@ def concat_normalize(
     preset: str,
     force: bool = False,
     reencode_all: bool = False,
+    progress=None,
 ) -> None:
     label = "full re-encode" if reencode_all else "normalize (as needed)"
     print(f"Mode: {label}", flush=True)
@@ -381,6 +382,11 @@ def concat_normalize(
             )
             segments.append(info.path)
 
+        if progress:
+            progress.update(i, item=info.path.name, message=f"clip {i}/{len(clip_infos)}")
+
+    if progress:
+        progress.update(len(clip_infos), item="join", message="concatenating segments")
     print(" Concatenating segments (re-encode for codec safety)...", flush=True)
     concat_reencode(segments, output_path, preset)
 
@@ -520,22 +526,27 @@ def main() -> None:
     from contextlib import nullcontext
 
     timer_ctx = nullcontext()
+    stage_timer = None
     if args.project:
         from pipeline_log import StageTimer
-        timer_ctx = StageTimer(
+        stage_timer = StageTimer(
             args.project,
             "concat",
             message=f"mode={args.mode}, clips={len(clip_infos)}",
             artifact=str(output_path),
+            total=len(clip_infos) + 1,
+            unit="clip",
         )
+        timer_ctx = stage_timer
 
     with timer_ctx:
+        progress = stage_timer.progress if stage_timer else None
         if args.mode == "draft":
             if any(i.is_image for i in clip_infos):
                 print(" Stills detected — using normalize path for image segments.", flush=True)
                 concat_normalize(
                     clip_infos, output_path, cache_dir, args.preset,
-                    force=args.force, reencode_all=False,
+                    force=args.force, reencode_all=False, progress=progress,
                 )
             else:
                 concat_draft(clips, output_path, args.preset)
@@ -544,6 +555,7 @@ def main() -> None:
                 clip_infos, output_path, cache_dir, args.preset,
                 force=args.force,
                 reencode_all=(args.mode == "full"),
+                progress=progress,
             )
 
         print_summary(output_path, clip_infos)

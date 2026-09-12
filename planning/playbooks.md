@@ -2,7 +2,7 @@
 
 **Goal:** Multiple reusable **playbooks**. Each playbook defines which **modules** to run, which **skills** apply, and in what order — so every project/video type gets a designed production recipe.
 
-Related: [`modular-pipeline.md`](modular-pipeline.md) · [`flywheel-acts.md`](flywheel-acts.md) · [`playbooks/README.md`](playbooks/README.md) (catalog) · [`../content_pipeline/modules/README.md`](../content_pipeline/modules/README.md)
+Related: [`modular-pipeline.md`](modular-pipeline.md) · [`flywheel-strategies.md`](flywheel-strategies.md) · [`flywheel-strategies-visual.md`](flywheel-strategies-visual.md) · [`playbooks/README.md`](playbooks/README.md)
 
 ---
 
@@ -174,11 +174,12 @@ Or copy the full playbook into `projects/{name}/pipeline.json` and customize inl
 
 ## Playbook catalog
 
-| Playbook ID | Use case | Module order |
-|-------------|----------|--------------|
-| [`flywheel-episode`](playbooks/flywheel-episode.json) | Speech long-form + marketing shorts | transcribe → detect_topics → plan → render → polish |
-| [`timelapse-montage`](playbooks/timelapse-montage.json) | Silent/visual build log | concat → compose_shorts → render |
-| [`podcast-chapter`](playbooks/podcast-chapter.json) | One 10–20 min chapter, minimal shorts | transcribe → detect_topics → plan → render |
+| Playbook ID | Strategy | Primary output |
+|-------------|----------|----------------|
+| [`flywheel-shorts`](playbooks/flywheel-shorts.json) | Shorts queue = flywheel journey | ordered `shorts[]` |
+| [`flywheel-episode`](playbooks/flywheel-episode.json) | Chapter + wrapper shorts | `chapters[]` + `shorts[]` |
+| [`timelapse-montage`](playbooks/timelapse-montage.json) | Visual timelapse (no speech) | supercut shorts |
+| [`podcast-chapter`](playbooks/podcast-chapter.json) | Single deep-dive | one chapter |
 
 Add new playbooks to [`playbooks/`](playbooks/) — don't fork module code.
 

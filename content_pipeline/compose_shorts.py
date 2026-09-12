@@ -9,12 +9,32 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
-PROJECTS_DIR = BASE_DIR / "projects"
+WORKSPACE_ROOT = BASE_DIR.parent
+PROJECTS_ROOT = WORKSPACE_ROOT / "projects"
+
+ALL_VIDEO_CLIPS = list(range(1, 12))
 
 
 def load_clip_map(path: Path) -> dict:
     with open(path, encoding="utf-8") as f:
         return json.load(f)
+
+
+def resolve_source_dir(clip_map: dict, project_id: str = "hikmat") -> Path:
+    from project_paths import load_project_paths
+
+    paths = load_project_paths(project_id)
+    if paths.input_dir.exists():
+        for pattern in ("*.mp4", "*.jpg", "*.jpeg", "*.png"):
+            if any(paths.input_dir.glob(pattern)):
+                return paths.input_dir
+
+    raw = clip_map.get("source_dir", "input")
+    return paths.resolve(raw)
+
+
+def resolve_still_path(clip_map: dict, still: dict) -> Path:
+    return resolve_source_dir(clip_map) / still["file"]
 
 
 def segment_label(clip_index: int, offset: float) -> str:
@@ -53,30 +73,6 @@ def build_pool(clip_map: dict, segment_len: float = 5.0) -> list[dict]:
     return pool
 
 
-def pick(pool: list[dict], clip_index: int, label: str | None = None) -> dict | None:
-    matches = [s for s in pool if s["clip_index"] == clip_index]
-    if label:
-        matches = [s for s in matches if s["label"] == label]
-    if not matches:
-        matches = [s for s in pool if s["clip_index"] == clip_index]
-    return matches[0] if matches else None
-
-
-def hook_segment(pool: list[dict]) -> dict:
-    for preferred in ("result-hook", "result-close", "process"):
-        seg = pick(pool, 11, preferred)
-        if seg:
-            return {**seg, "label": "result-hook"}
-    raise ValueError("No hook segment found in clip 11")
-
-
-def close_segment(pool: list[dict], hook: dict) -> dict:
-    for seg in pool:
-        if seg["clip_index"] == 11 and seg["id"] != hook["id"]:
-            return {**seg, "label": "result-close"}
-    return {**hook, "label": "result-close"}
-
-
 def trim_segment(seg: dict, segment_len: float) -> dict:
     duration = seg["end"] - seg["start"]
     if duration <= segment_len:
@@ -85,33 +81,97 @@ def trim_segment(seg: dict, segment_len: float) -> dict:
     return {**seg, "end": round(end, 2), "duration": round(segment_len, 2)}
 
 
-def compose_montage(
+def pick_build_segment(pool: list[dict], clip_index: int, segment_len: float) -> dict:
+    """One process slice per clip. Clip 11 ends on final action (0.5), not result (0.85)."""
+    clip_segs = [s for s in pool if s["clip_index"] == clip_index]
+    if not clip_segs:
+        raise ValueError(f"No pool segment for clip {clip_index}")
+
+    if clip_index == 11:
+        preferred_offsets = [0.5, 0.1, 0.85]
+    else:
+        preferred_offsets = [0.5, 0.1, 0.85, 0.3, 0.7, 0.4]
+
+    for off in preferred_offsets:
+        for seg in clip_segs:
+            if abs(seg["offset"] - off) < 0.05:
+                return trim_segment(seg, segment_len)
+    return trim_segment(clip_segs[0], segment_len)
+
+
+def still_segment(clip_map: dict, still: dict, duration: float, label: str) -> dict:
+    path = resolve_still_path(clip_map, still)
+    return {
+        "type": "image",
+        "path": str(path),
+        "duration": duration,
+        "label": label,
+        "file": still["file"],
+    }
+
+
+def result_stills(clip_map: dict) -> tuple[dict, dict]:
+    stills = clip_map.get("stills") or []
+    if not stills:
+        raise ValueError("clip-map.json needs stills[] for reveal/return")
+    ordered = sorted(stills, key=lambda s: s.get("sort_key", s["file"]))
+    reveal = ordered[-1]
+    return_still = ordered[-2] if len(ordered) > 1 else ordered[-1]
+    return reveal, return_still
+
+
+SHORT_FORM_STYLE = "reveal-build"
+
+
+def style_fields() -> dict:
+    return {
+        "short_form_style": SHORT_FORM_STYLE,
+        "hook_type": "result-first",
+        "cut_mode": "supercut",
+    }
+
+
+def compose_full_montage(
+    clip_map: dict,
     pool: list[dict],
     short_id: str,
     title: str,
+    platform: str,
     target: str,
-    clip_indices: list[int],
     segment_len: float,
     min_len: int,
     max_len: int,
 ) -> dict:
-    hook = trim_segment(hook_segment(pool), segment_len)
-    body: list[dict] = []
-    for idx in clip_indices:
-        seg = pick(pool, idx)
-        if seg and seg["id"] not in {hook["id"], *(b["id"] for b in body)}:
-            body.append(trim_segment(seg, segment_len))
-
-    body.sort(key=lambda s: s["start"])
-    close = trim_segment(close_segment(pool, hook), segment_len)
-
-    segments = [hook, *body, close]
-    total = sum(s["end"] - s["start"] for s in segments)
+    """
+    Reveal-Build with full clip coverage:
+      REVEAL  — best result still
+      BUILD   — one segment per video clip (1→11), ascending
+      RETURN  — second result still (or same if only one)
+    """
+    reveal_still, return_still = result_stills(clip_map)
+    reveal = still_segment(clip_map, reveal_still, segment_len, "reveal")
+    body = [
+        {
+            "start": seg["start"],
+            "end": seg["end"],
+            "label": "build",
+            "clip_index": seg["clip_index"],
+        }
+        for seg in (
+            pick_build_segment(pool, idx, segment_len) for idx in ALL_VIDEO_CLIPS
+        )
+    ]
+    close = still_segment(clip_map, return_still, segment_len, "return")
+    segments = [reveal, *body, close]
+    total = segment_len * len(segments)
 
     return {
         "id": short_id,
         "title": title,
-        "hook_type": "result-first",
+        **style_fields(),
+        "platform": platform,
+        "output_kind": "montage",
+        "output_name": "reveal-build.mp4",
         "content_type": "carpentry-timelapse",
         "flywheel_stage": "n/a",
         "parent_chapter": "n/a",
@@ -121,103 +181,38 @@ def compose_montage(
         "max_len": max_len,
         "segment_len_sec": segment_len,
         "duration_est": round(total, 1),
-        "segments": [
-            {
-                "start": s["start"],
-                "end": s["end"],
-                "label": s["label"],
-                "clip_index": s["clip_index"],
-            }
-            for s in segments
-        ],
-        "rendered": False,
-    }
-
-
-def single_clip_short(
-    short_id: str,
-    title: str,
-    target: str,
-    clip: dict,
-    start_ratio: float,
-    end_ratio: float,
-    min_len: int,
-    max_len: int,
-) -> dict:
-    start = clip["master_start"] + clip["duration"] * start_ratio
-    end = clip["master_start"] + clip["duration"] * end_ratio
-    return {
-        "id": short_id,
-        "title": title,
-        "hook_type": "result-first",
-        "content_type": "carpentry-timelapse",
-        "flywheel_stage": "n/a",
-        "parent_chapter": "n/a",
-        "aspect": "9:16",
-        "target": target,
-        "min_len": min_len,
-        "max_len": max_len,
-        "start": round(start, 2),
-        "end": round(end, 2),
-        "duration_est": round(end - start, 1),
-        "clip_index": clip["index"],
+        "segments": segments,
         "rendered": False,
     }
 
 
 def build_manifest(clip_map: dict, pool: list[dict]) -> dict:
-    clips = {c["index"]: c for c in clip_map["clips"]}
-
+    # One reveal-build montage per platform — same segments, different segment_len only.
     montage_specs = [
-        ("sh01", "Full build montage — YouTube", "yt-shorts", [1, 3, 4, 5, 7, 10], 5.0, 30, 60),
-        ("sh02", "Early to late build — YouTube", "yt-shorts", [1, 2, 4, 6, 8, 9], 5.0, 30, 60),
-        ("sh03", "Mid build focus — YouTube", "yt-shorts", [3, 5, 6, 7, 8, 10], 5.0, 30, 60),
-        ("sh04", "Compact journey — YouTube", "yt-shorts", [1, 5, 7, 11], 5.0, 30, 60),
-        ("sh05", "Fast timelapse — TikTok", "tiktok", [1, 3, 5, 7, 9, 10], 3.5, 15, 60),
-        ("sh06", "Rapid cuts — TikTok", "tiktok", [2, 4, 6, 8, 10], 3.5, 15, 60),
-        ("sh07", "Dense build — TikTok", "tiktok", [1, 4, 5, 6, 7, 8, 9], 3.5, 15, 60),
-        ("sh08", "Slow reveal — Reels", "instagram", [1, 4, 5, 7, 10], 6.0, 30, 90),
-        ("sh09", "Workshop story — Reels", "instagram", [3, 6, 7, 8, 10], 6.0, 30, 90),
+        ("yt_full", "Reveal-Build", "youtube", "yt-shorts", 5.0, 30, 90),
+        ("tiktok_full", "Reveal-Build", "tiktok", "tiktok", 3.5, 15, 90),
+        ("reels_full", "Reveal-Build", "reels", "instagram", 5.0, 30, 90),
     ]
 
-    shorts = [compose_montage(pool, *spec) for spec in montage_specs]
-
-    shorts.append(
-        single_clip_short(
-            "sh10",
-            "Long session — main build clip",
-            "instagram",
-            clips[5],
-            0.15,
-            0.55,
-            30,
-            90,
-        )
-    )
-    shorts.append(
-        single_clip_short(
-            "sh11",
-            "Final session — result build",
-            "yt-shorts",
-            clips[11],
-            0.55,
-            0.95,
-            30,
-            60,
-        )
-    )
+    shorts = [
+        compose_full_montage(clip_map, pool, *spec) for spec in montage_specs
+    ]
 
     return {
-        "version": "1.0",
+        "version": "1.2",
         "source": clip_map["source"],
         "stem": "hikmat",
         "series_id": "hikmat",
         "planned_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "planner_model": "compose_shorts.py",
         "content_type": "carpentry-timelapse",
+        "short_form_style": SHORT_FORM_STYLE,
+        "output_layout": {
+            "montage": "deliverables/{platform}/reveal-build.mp4",
+        },
         "review": {
             "status": "draft",
-            "notes": "Heuristic timestamps — review hooks and dead frames before publish.",
+            "notes": "Platform-separated deliverables under output/hikmat/deliverables/.",
         },
         "chapters": [],
         "shorts": shorts,
@@ -228,21 +223,28 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Build hikmat segment pool + montage manifest")
     parser.add_argument(
         "--clip-map",
-        default=str(PROJECTS_DIR / "hikmat" / "clip-map.json"),
+        default=str(PROJECTS_ROOT / "hikmat" / "clip-map.json"),
         help="Path to clip-map.json",
     )
     parser.add_argument(
         "--output-dir",
-        default=str(BASE_DIR / "output" / "hikmat"),
-        help="Output directory for segment-pool.json and manifest.json",
+        help="Plan output directory (default: output/{project}/plan from clip-map stem)",
     )
+    parser.add_argument("--project", default="hikmat", help="Project ID for default paths")
     args = parser.parse_args()
 
     clip_map = load_clip_map(Path(args.clip_map))
     pool = build_pool(clip_map)
     manifest = build_manifest(clip_map, pool)
 
-    out_dir = Path(args.output_dir)
+    if args.output_dir:
+        out_dir = Path(args.output_dir)
+    else:
+        from project_paths import load_project_paths
+
+        paths = load_project_paths(args.project)
+        paths.ensure_dirs()
+        out_dir = paths.plan_dir
     out_dir.mkdir(parents=True, exist_ok=True)
 
     pool_path = out_dir / "segment-pool.json"
@@ -266,8 +268,9 @@ def main() -> None:
     print(f" Manifest: {manifest_path} ({len(manifest['shorts'])} shorts)")
     for short in manifest["shorts"]:
         dur = short.get("duration_est", "?")
+        segs = len(short.get("segments") or [])
         kind = "montage" if short.get("segments") else "single"
-        print(f"   {short['id']}  {dur}s  [{kind}]  {short['title']}")
+        print(f"   {short['id']}  {dur}s  [{kind} x{segs}]  {short['title']}")
 
 
 if __name__ == "__main__":

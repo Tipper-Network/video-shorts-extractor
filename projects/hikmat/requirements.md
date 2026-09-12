@@ -13,8 +13,8 @@ Project-specific edit requirements. Platform code/skills are shared; this file i
 |-------|-------|
 | Project ID | `hikmat` |
 | Series JSON | `content_pipeline/series/hikmat.json` |
-| Source folder | `~/Desktop/hikmat-project/` |
-| Output folder | `content_pipeline/output/hikmat/` |
+| Source folder | `projects/hikmat/input/` |
+| Output folder | `projects/hikmat/output/` — see [`FOLDERS.md`](FOLDERS.md) |
 
 ## Goal
 
@@ -117,8 +117,9 @@ _None confirmed yet._ Review after watching edit base.
 
 | Artifact | Path |
 |----------|------|
-| Edit base | `content_pipeline/output/hikmat/hikmat_timeline_normalized.mp4` |
-| Normalized cache | `content_pipeline/output/hikmat/normalized/` |
+| Edit base | `output/master/timeline_normalized.mp4` |
+| Edit plan | `output/plan/manifest.json` |
+| Deliverables | `output/deliverables/{youtube,tiktok,reels}/` |
 
 ## Workflow
 
@@ -135,9 +136,9 @@ Planning docs: [`content-strategy.md`](content-strategy.md) · [`clip-map.json`]
 |------|-------|--------|----------|
 | Concat → one big video | 1 | **done** | `hikmat_timeline_normalized.mp4` (~610s) |
 | Master review (hook + dead zones) | 2 | optional | adjust manifest timestamps |
-| Segment pool | 2 | **done** | `output/hikmat/segment-pool.json` (28 candidates) |
-| Montage manifest | 2 | **done** | `output/hikmat/manifest.json` (11 shorts) |
-| Render shorts (9:16) | 2 | **done** | `output/hikmat/shorts/` (11 drafts) |
-| Pick winners + tweak timestamps | 2 | **next** | review manifest |
+| Segment pool | 2 | **done** | `output/plan/segment-pool.json` |
+| Montage manifest | 2 | **done** | `output/plan/manifest.json` |
+| Render Reveal-Build shorts | 2 | **in progress** | `shorts/` — style `reveal-build` |
+| Pick winners + tweak timestamps | 2 | next | start with sh01 |
 | Stills insert | — | deferred | |
 | Polish (music/text overlay) | 2 | pending | optional pass 2 |

@@ -1,7 +1,7 @@
 {
   "project_id": "hikmat",
   "current_stage": "render_shorts",
-  "updated_at": "2026-09-02T15:09:54Z",
+  "updated_at": "2026-09-02T17:03:44Z",
   "history": [
     {
       "stage": "discover",
@@ -54,6 +54,45 @@
       "at": "2026-09-02T15:09:54Z",
       "message": "11 draft shorts rendered",
       "artifact": "output/hikmat/shorts/"
+    },
+    {
+      "stage": "render_shorts",
+      "status": "started",
+      "at": "2026-09-02T16:54:01Z",
+      "message": "manifest.json"
+    },
+    {
+      "stage": "render_shorts",
+      "status": "done",
+      "at": "2026-09-02T16:55:59Z",
+      "message": "manifest.json",
+      "artifact": "output/hikmat",
+      "duration_seconds": 118.1,
+      "duration_human": "1m 58s"
+    },
+    {
+      "stage": "render_shorts",
+      "status": "started",
+      "at": "2026-09-02T16:56:05Z",
+      "message": "manifest.json"
+    },
+    {
+      "stage": "render_shorts",
+      "status": "started",
+      "at": "2026-09-02T16:59:26Z",
+      "message": "manifest.json"
+    },
+    {
+      "stage": "render_shorts",
+      "status": "done",
+      "at": "2026-09-02T17:03:44Z",
+      "message": "manifest.json",
+      "artifact": "output/hikmat",
+      "duration_seconds": 257.6,
+      "duration_human": "4m 18s"
     }
-  ]
+  ],
+  "totals": {
+    "render_shorts": 375.7
+  }
 }

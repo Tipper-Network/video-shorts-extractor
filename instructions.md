@@ -25,42 +25,30 @@ pip install -r content_pipeline/requirements.txt
 
 ```text
 ~/Desktop/workspace/
-├── README.md                         # Human entry point
-├── SKILL.md                          # Master orchestrator (agent routing)
-├── instructions.md                   # This file — setup & layout
-├── content_pipeline/                 # Core pipeline
-│   ├── process_stream.py             # transcribe or render modes
-│   ├── concat_clips.py               # chronological multi-clip assembly
-│   ├── render_manifest.py            # batch render from manifest
-│   ├── auto-edit.py                  # SFX + dynamic zoom (MoviePy)
-│   ├── sfx_resolver.py               # on-demand SFX (API / synthetic)
-│   ├── transcribe.py                 # Whisper + Vosk shared module
-│   ├── sfx_triggers.json             # word → SFX mapping
-│   ├── .env.example                  # optional API keys
-│   ├── input/                        # Drop raw MP4s here
-│   ├── audio/                        # Extracted 16kHz WAV
-│   ├── subtitles/                    # Transcript JSON
-│   ├── output/                       # Rendered clips
-│   └── series/                       # Series state JSON (flywheel continuity)
-├── planning/                         # Design hub
-│   ├── vision.md                     # North star + flywheel stages
-│   ├── pipeline-architecture.md      # Plan → review → render
-│   ├── roadmap.md                    # Build phases
-│   ├── agents/                       # Role docs (planner, renderer, QA)
-│   ├── instincts/                    # Editing guardrails
-│   ├── schemas/                      # manifest.json + series.json
-│   └── templates/                    # Example manifests
-└── skills/                           # Platform + pipeline rules
-    ├── youtube_chunks/               # 10–30 min 16:9 chapters
-    ├── youtube_shorts/               # 30–60s 9:16 teasers
-    ├── tiktok_shorts/                # 15–60s fast-paced 9:16
-    ├── instagram_reels/              # 30–90s visual story 9:16
-    ├── dynamic_zoom/                 # Periodic zoom in/out
-    ├── sfx_allocation/               # Word-triggered SFX
-    ├── plan_stream/                  # Multi-clip planner (planned)
-    ├── render_manifest/              # Batch renderer (planned)
-    └── flywheel_series/              # Series continuity (planned)
+├── projects/                         # ONE FOLDER PER JOB (input + output + config)
+│   ├── README.md
+│   ├── _template/                    # Copy to start a new project
+│   └── hikmat/
+│       ├── input/                    # Drop raw footage here
+│       ├── output/
+│       │   ├── master/
+│       │   ├── plan/
+│       │   ├── deliverables/
+│       │   ├── logs/
+│       │   └── cache/
+│       ├── requirements.md
+│       ├── pipeline.json
+│       └── skills/
+├── content_pipeline/                 # Shared scripts only (no project data)
+│   ├── concat_clips.py
+│   ├── compose_shorts.py
+│   ├── render_manifest.py
+│   └── project_paths.py
+├── planning/                         # Playbooks, architecture, schemas
+└── skills/                           # Platform-wide editing rules
 ```
+
+See [`projects/README.md`](projects/README.md).
 
 ## 3. Separation from THP
 
@@ -73,12 +61,12 @@ pip install -r content_pipeline/requirements.txt
 
 Do not merge THP strategy docs into this repo. Link to them; implement the tooling here.
 
-## 4. External Input Folders
+## 4. Starting a project
 
-Project-specific raw footage can live outside `input/`:
-
-```text
-~/Desktop/hikmat-project/    # Example: chronological clip collection
+```bash
+cp -r projects/_template projects/my-video
+# Drop source files in projects/my-video/input/
+# Fill requirements.md, set playbook_id in pipeline.json
 ```
 
-Copy or symlink into `content_pipeline/input/` before processing, or extend scripts to accept `--source-dir`.
+Scripts resolve paths via `content_pipeline/project_paths.py` from `projects/{name}/`.

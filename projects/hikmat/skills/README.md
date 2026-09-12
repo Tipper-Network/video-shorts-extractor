@@ -6,6 +6,7 @@ Adapted platform rules for **carpentry timelapse** shorts. These override generi
 
 | Platform skill (generic) | Hikmat override |
 |--------------------------|-----------------|
+| — | [`reveal_build.md`](reveal_build.md) — **Reveal-Build style** |
 | [`skills/youtube_shorts/`](../../../../skills/youtube_shorts/SKILL.md) | [`youtube_shorts.md`](youtube_shorts.md) |
 | [`skills/tiktok_shorts/`](../../../../skills/tiktok_shorts/SKILL.md) | [`tiktok_shorts.md`](tiktok_shorts.md) |
 | [`skills/instagram_reels/`](../../../../skills/instagram_reels/SKILL.md) | [`instagram_reels.md`](instagram_reels.md) |

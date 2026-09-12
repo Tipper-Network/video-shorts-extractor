@@ -8,15 +8,18 @@ Raw streams (2+ hours) contain multiple standalone topics buried in one file. Ma
 
 ## Goal
 
-Drop one long video → get:
+Drop one long video → choose a **flywheel strategy**:
 
-1. **Themed chapters** (10–30 min, 16:9) — each a complete discussion on one subject
-2. **Short-form clips** (9:16) — sequenced to move viewers through a relationship flywheel
-3. **Series continuity** — posts connect thematically so viewers return for the next beat
+1. **flywheel-shorts** — ordered shorts queue is the product; mine stages from source; post back-to-back
+2. **flywheel-episode** — 10–30 min chapter delivers service; shorts tease and close around it
+
+Both use the same stage vocabulary (`attract` → `loop`) with different modules and conclusions.
+
+See [`flywheel-strategies.md`](flywheel-strategies.md).
 
 ## Flywheel Stages
 
-Each short (or post) advances the viewer one step. Loop restarts with new long-form content.
+Shorts are the **flywheel product** — each advances the viewer one step. A long source video may also be published as library/SEO, but the **ordered shorts queue** is the trust-building journey.
 
 | Stage | Purpose | Viewer state after |
 |-------|---------|-------------------|

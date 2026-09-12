@@ -1,3 +1,8 @@
+# Large media — keep out of git
+projects/*/input/**
+projects/*/output/**
+!projects/*/input/README.md
+!projects/_template/**
 content_pipeline/.cache/
 content_pipeline/.env
 .env

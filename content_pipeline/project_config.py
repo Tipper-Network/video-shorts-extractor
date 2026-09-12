@@ -7,8 +7,9 @@ from pathlib import Path
 from typing import Any
 
 BASE_DIR = Path(__file__).resolve().parent
-PROJECTS_DIR = BASE_DIR / "projects"
-PLAYBOOKS_DIR = BASE_DIR.parent / "planning" / "playbooks"
+WORKSPACE_ROOT = BASE_DIR.parent
+PROJECTS_DIR = WORKSPACE_ROOT / "projects"
+PLAYBOOKS_DIR = WORKSPACE_ROOT / "planning" / "playbooks"
 
 DEFAULT_PIPELINE: dict[str, Any] = {
     "project_id": "",

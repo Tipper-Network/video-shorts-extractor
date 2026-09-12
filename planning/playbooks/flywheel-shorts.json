@@ -1,0 +1,102 @@
+{
+  "playbook_id": "flywheel-shorts",
+  "strategy": "flywheel-shorts",
+  "name": "Flywheel shorts",
+  "description": "Strategy A: The flywheel IS an ordered queue of shorts extracted from long source. Post back-to-back to walk viewers through attract→loop and build trust. Long-form export optional.",
+  "primary_output": "shorts",
+  "conclusion": "Viewer completes the short sequence with rising trust; full long video is optional follow-up.",
+  "module_order": [
+    "transcribe",
+    "detect_topics",
+    "plan_manifest",
+    "render",
+    "polish"
+  ],
+  "technical_modules": {
+    "transcribe": { "enabled": true, "vosk_words": false },
+    "detect_topics": { "enabled": true, "method": "heuristic", "pause_threshold_sec": 2.5 },
+    "compose_shorts": { "enabled": false },
+    "render": { "enabled": true, "trim_on_render": true, "render_chapters": false },
+    "trim_silence": { "enabled": false },
+    "polish": { "enabled": false, "sfx": true, "zoom": false }
+  },
+  "narrative_modules": {
+    "plan_flywheel_sequence": {
+      "enabled": true,
+      "focus": "shorts_first",
+      "skills": [
+        "skills/detect_topics",
+        "skills/youtube_shorts",
+        "skills/tiktok_shorts",
+        "skills/instagram_reels",
+        "skills/flywheel_series"
+      ],
+      "notes": "Map script moments → stages. publish_order = narrative spine. No chapter required."
+    },
+    "plan_chapter": { "enabled": false }
+  },
+  "modules": {
+    "concat": { "enabled": false },
+    "transcribe": { "enabled": true, "vosk_words": false },
+    "detect_topics": { "enabled": true, "method": "heuristic", "pause_threshold_sec": 2.5 },
+    "plan_manifest": { "enabled": true, "planner": "cursor-agent", "focus": "flywheel_shorts_first" },
+    "compose_shorts": { "enabled": false },
+    "render": { "enabled": true, "trim_on_render": true },
+    "trim_silence": { "enabled": false },
+    "polish": { "enabled": false, "sfx": true, "zoom": false }
+  },
+  "skills": [
+    "skills/detect_topics",
+    "skills/youtube_shorts",
+    "skills/tiktok_shorts",
+    "skills/instagram_reels",
+    "skills/flywheel_series"
+  ],
+  "chapters": {
+    "enabled": false,
+    "cut_mode": "contiguous",
+    "default_trim": "light"
+  },
+  "shorts": {
+    "cut_mode": "contiguous",
+    "default_trim": "moderate",
+    "supercut_allowed": true
+  },
+  "flywheel": {
+    "enabled": true,
+    "tag_shorts": true,
+    "sequence_is_product": true,
+    "target_stages": ["attract", "engage", "trust", "service", "referral", "loop"]
+  },
+  "acts": [
+    {
+      "act_id": "hook",
+      "stages": ["attract", "engage"],
+      "output": "shorts",
+      "default_trim": "aggressive",
+      "planning": "Extract 1–2 shorts. publish_order 1–2."
+    },
+    {
+      "act_id": "prove",
+      "stages": ["trust"],
+      "output": "shorts",
+      "default_trim": "moderate",
+      "planning": "Extract credibility/story short."
+    },
+    {
+      "act_id": "serve",
+      "stages": ["service"],
+      "output": "shorts",
+      "default_trim": "moderate",
+      "planning": "Extract actionable beat — 30–60s taste of value, NOT the full long video."
+    },
+    {
+      "act_id": "close",
+      "stages": ["referral", "loop"],
+      "output": "shorts",
+      "default_trim": "moderate",
+      "planning": "Extract proof + tease next. Final publish_order slots."
+    }
+  ],
+  "publish_pattern": ["short", "short", "short", "short", "short", "short"]
+}

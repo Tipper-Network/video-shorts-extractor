@@ -2,30 +2,29 @@
 
 Reusable production recipes. Copy or reference via `playbook_id` in a project's `pipeline.json`.
 
-| ID | File | Best for |
+**Flywheel strategies (peer models):** [`../flywheel-strategies.md`](../flywheel-strategies.md) · [`../flywheel-strategies-visual.md`](../flywheel-strategies-visual.md)
+
+| ID | File | Strategy |
 |----|------|----------|
-| `flywheel-episode` | [flywheel-episode.json](flywheel-episode.json) | THP / speech — chapters + flywheel shorts |
-| `timelapse-montage` | [timelapse-montage.json](timelapse-montage.json) | Silent build logs — supercut shorts |
-| `podcast-chapter` | [podcast-chapter.json](podcast-chapter.json) | Single deep-dive chapter, light social |
+| `flywheel-shorts` | [flywheel-shorts.json](flywheel-shorts.json) | Shorts queue = product; mine long source |
+| `flywheel-episode` | [flywheel-episode.json](flywheel-episode.json) | Chapter = service; shorts wrap it |
+| `timelapse-montage` | [timelapse-montage.json](timelapse-montage.json) | Silent visual montage (hikmat) |
+| `podcast-chapter` | [podcast-chapter.json](podcast-chapter.json) | Single library chapter, no flywheel |
 
 ## Add a playbook
 
 ```bash
-cp planning/playbooks/podcast-chapter.json planning/playbooks/my-new-playbook.json
-# Edit playbook_id, module_order, skills[], modules
+cp planning/playbooks/flywheel-shorts.json planning/playbooks/my-playbook.json
+# Edit playbook_id, module_order, technical_modules, narrative_modules, acts
 ```
 
 ## Wire to a project
 
-In `content_pipeline/projects/{name}/pipeline.json`:
-
 ```json
 {
   "project_id": "my-project",
-  "playbook_id": "flywheel-episode"
+  "playbook_id": "flywheel-shorts"
 }
 ```
 
-Or inline the full playbook (no `playbook_id`) — see hikmat.
-
-See [`../playbooks.md`](../playbooks.md) for visuals and design guide.
+See [`../playbooks.md`](../playbooks.md) for architecture visuals.

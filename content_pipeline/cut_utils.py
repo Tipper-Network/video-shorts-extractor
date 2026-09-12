@@ -88,6 +88,52 @@ def concat_parts(parts: list[Path], output_path: Path) -> None:
     list_file.unlink(missing_ok=True)
 
 
+def still_to_video(image_path: Path, duration: float, aspect: str, output_path: Path) -> None:
+    """Turn a still into a vertical/horizontal video segment with silent audio."""
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    cmd = [
+        "ffmpeg",
+        "-y",
+        "-nostdin",
+        "-hide_banner",
+        "-loglevel",
+        "warning",
+        "-loop",
+        "1",
+        "-i",
+        str(image_path),
+        "-f",
+        "lavfi",
+        "-i",
+        "anullsrc=r=48000:cl=stereo",
+        "-t",
+        str(duration),
+        "-vf",
+        aspect_filter(aspect),
+        "-c:v",
+        "libx264",
+        "-preset",
+        "fast",
+        "-c:a",
+        "aac",
+        "-ar",
+        "48000",
+        "-ac",
+        "2",
+        "-shortest",
+        "-movflags",
+        "+faststart",
+        str(output_path),
+    ]
+    run_cmd(cmd)
+
+
+def segment_duration(seg: dict) -> float:
+    if seg.get("type") == "image":
+        return float(seg["duration"])
+    return seg["end"] - seg["start"]
+
+
 def cut_montage(
     source: Path,
     segments: list[dict],
@@ -100,12 +146,13 @@ def cut_montage(
 
     for i, seg in enumerate(segments):
         part = tmp_dir / f"part_{i:02d}.mp4"
-        cut_video(source, seg["start"], seg["end"], aspect, part)
+        if seg.get("type") == "image":
+            still_to_video(Path(seg["path"]), segment_duration(seg), aspect, part)
+        else:
+            cut_video(source, seg["start"], seg["end"], aspect, part)
         parts.append(part)
 
     concat_parts(parts, output_path)
-
-    import shutil
 
     shutil.rmtree(tmp_dir, ignore_errors=True)
 

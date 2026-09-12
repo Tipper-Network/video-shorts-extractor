@@ -1,0 +1,7 @@
+{
+  "project_id": "{name}",
+  "playbook_id": "flywheel-shorts",
+  "_alternatives": ["flywheel-episode", "timelapse-montage", "podcast-chapter"],
+  "description": "Pick strategy — see planning/flywheel-strategies.md",
+  "overrides": {}
+}

@@ -6,25 +6,58 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from contextlib import nullcontext
 from pathlib import Path
 
 from cut_utils import render_clip_entry
 from project_config import load_pipeline
+from project_paths import load_project_paths
 from trim_profiles import resolve_trim_level
 
 BASE_DIR = Path(__file__).resolve().parent
-OUTPUT_DIR = BASE_DIR / "output"
+WORKSPACE_ROOT = BASE_DIR.parent
+
+# Manifest target → deliverables subfolder
+PLATFORM_SUBDIRS = {
+    "yt-shorts": "youtube",
+    "youtube": "youtube",
+    "tiktok": "tiktok",
+    "instagram": "reels",
+}
 
 
-def resolve_source(manifest: dict) -> Path:
+def short_output_path(deliverables_dir: Path, short: dict) -> Path:
+    """Route renders to deliverables/{platform}/."""
+    platform = short.get("platform") or PLATFORM_SUBDIRS.get(short.get("target", ""), "other")
+    subdir = deliverables_dir / platform
+    subdir.mkdir(parents=True, exist_ok=True)
+    name = short.get("output_name") or f"{short['id']}.mp4"
+    if not name.endswith(".mp4"):
+        name = f"{name}.mp4"
+    return subdir / name
+
+
+def resolve_source(manifest: dict, project_id: str | None = None) -> Path:
     source = Path(manifest["source"])
     if source.is_absolute() and source.exists():
         return source
-    for base in (BASE_DIR, BASE_DIR.parent):
+
+    search_roots: list[Path] = []
+    if project_id:
+        search_roots.append(load_project_paths(project_id).root)
+    search_roots.extend([BASE_DIR, WORKSPACE_ROOT])
+
+    for base in search_roots:
         candidate = base / source
         if candidate.exists():
             return candidate
-    return BASE_DIR.parent / source
+    # legacy: path already included content_pipeline/ prefix
+    for base in search_roots:
+        for prefix in ("content_pipeline/", ""):
+            candidate = base / prefix / source if prefix else base / source
+            if candidate.exists():
+                return candidate
+    return WORKSPACE_ROOT / source
 
 
 def render_manifest(
@@ -37,7 +70,7 @@ def render_manifest(
     with open(manifest_path, encoding="utf-8") as f:
         manifest = json.load(f)
 
-    source = resolve_source(manifest)
+    source = resolve_source(manifest, project_id)
     if not source.exists():
         print(f" Source not found: {source}")
         sys.exit(1)
@@ -47,74 +80,111 @@ def render_manifest(
     render_cfg = pipeline.get("modules", {}).get("render", {})
     trim_enabled = render_cfg.get("trim_on_render", True) and not skip_trim
 
+    paths = load_project_paths(project_id) if project_id else None
+    if paths:
+        paths.ensure_dirs()
+
     chapter_defaults = pipeline.get("chapters", {})
     short_defaults = pipeline.get("shorts", {})
 
     stem = manifest["stem"]
-    out_dir = OUTPUT_DIR / stem
+    out_dir = paths.root if paths else WORKSPACE_ROOT / "projects" / stem
+    plan_dir = paths.plan_dir if paths else out_dir / "output" / "plan"
+    deliverables_dir = paths.deliverables_dir if paths else out_dir / "output" / "deliverables"
     chapters_dir = out_dir / "chapters"
-    shorts_dir = out_dir / "shorts"
     chapters_dir.mkdir(parents=True, exist_ok=True)
-    shorts_dir.mkdir(parents=True, exist_ok=True)
 
     manifest_trim_default = manifest.get("render", {}).get("default_trim")
     rendered = []
 
+    work_items: list[tuple[str, dict, str]] = []
     for chapter in manifest.get("chapters") or []:
         if only and chapter["id"] != only:
             continue
-        safe_title = "".join(c if c.isalnum() or c in "-_" else "_" for c in chapter["title"][:40])
-        out_file = chapters_dir / f"{chapter['id']}_{safe_title}.mp4"
-        print(f" Chapter {chapter['id']}: {chapter['title']} [{chapter.get('cut_mode', 'contiguous')}]")
-
-        trim_level = "off"
-        if trim_enabled:
-            trim_level = resolve_trim_level(
-                clip_target=chapter.get("target", "youtube"),
-                clip_override=chapter.get("trim"),
-                manifest_default=manifest_trim_default,
-                project_default=chapter_defaults.get("default_trim"),
-            )
-
-        render_clip_entry(
-            source,
-            chapter,
-            chapter.get("aspect", "16:9"),
-            out_file,
-            default_cut_mode=chapter_defaults.get("cut_mode", "contiguous"),
-            trim_level=trim_level,
-        )
-        chapter["rendered"] = True
-        chapter["output_file"] = str(out_file.relative_to(BASE_DIR.parent))
-        rendered.append(out_file)
-
+        work_items.append(("chapter", chapter, "16:9"))
     for short in manifest.get("shorts") or []:
         if only and short["id"] != only:
             continue
-        safe_title = "".join(c if c.isalnum() or c in "-_" else "_" for c in short["title"][:40])
-        out_file = shorts_dir / f"{short['id']}_{safe_title}.mp4"
-        print(f" Short {short['id']}: {short['title']} [{short.get('cut_mode', 'contiguous')}]")
+        work_items.append(("short", short, "9:16"))
 
-        trim_level = "off"
-        if trim_enabled:
-            trim_level = resolve_trim_level(
-                clip_target=short.get("target"),
-                clip_override=short.get("trim"),
-                manifest_default=manifest_trim_default,
-                project_default=short_defaults.get("default_trim"),
-            )
+    progress_ctx = nullcontext()
+    if project_id and work_items:
+        from pipeline_log import ProgressTracker
 
-        render_clip_entry(
-            source,
-            short,
-            short.get("aspect", "9:16"),
-            out_file,
-            default_cut_mode=short_defaults.get("cut_mode", "contiguous"),
-            trim_level=trim_level,
+        progress_ctx = ProgressTracker(
+            project_id,
+            "render_shorts",
+            len(work_items),
+            unit="clip",
+            message=f"rendering {len(work_items)} clips",
         )
-        short["rendered"] = True
-        short["output_file"] = str(out_file.relative_to(BASE_DIR.parent))
-        rendered.append(out_file)
+
+    item_idx = 0
+    with progress_ctx as progress:
+        for chapter in manifest.get("chapters") or []:
+            if only and chapter["id"] != only:
+                continue
+            item_idx += 1
+            if progress:
+                progress.update(item_idx, item=chapter["id"], message=chapter["title"][:50])
+
+            safe_title = "".join(c if c.isalnum() or c in "-_" else "_" for c in chapter["title"][:40])
+            out_file = chapters_dir / f"{chapter['id']}_{safe_title}.mp4"
+            print(f" Chapter {chapter['id']}: {chapter['title']} [{chapter.get('cut_mode', 'contiguous')}]")
+
+            trim_level = "off"
+            if trim_enabled:
+                trim_level = resolve_trim_level(
+                    clip_target=chapter.get("target", "youtube"),
+                    clip_override=chapter.get("trim"),
+                    manifest_default=manifest_trim_default,
+                    project_default=chapter_defaults.get("default_trim"),
+                )
+
+            render_clip_entry(
+                source,
+                chapter,
+                chapter.get("aspect", "16:9"),
+                out_file,
+                default_cut_mode=chapter_defaults.get("cut_mode", "contiguous"),
+                trim_level=trim_level,
+            )
+            chapter["rendered"] = True
+            chapter["output_file"] = str(out_file.relative_to(WORKSPACE_ROOT))
+            rendered.append(out_file)
+
+        for short in manifest.get("shorts") or []:
+            if only and short["id"] != only:
+                continue
+            item_idx += 1
+            if progress:
+                progress.update(item_idx, item=short["id"], message=short["title"][:50])
+
+            safe_title = "".join(c if c.isalnum() or c in "-_" else "_" for c in short["title"][:40])
+            out_file = short_output_path(deliverables_dir, short)
+            rel = out_file.relative_to(WORKSPACE_ROOT)
+            print(f" Short {short['id']}: {short['title']} → {rel} [{short.get('cut_mode', 'contiguous')}]")
+
+            trim_level = "off"
+            if trim_enabled:
+                trim_level = resolve_trim_level(
+                    clip_target=short.get("target"),
+                    clip_override=short.get("trim"),
+                    manifest_default=manifest_trim_default,
+                    project_default=short_defaults.get("default_trim"),
+                )
+
+            render_clip_entry(
+                source,
+                short,
+                short.get("aspect", "9:16"),
+                out_file,
+                default_cut_mode=short_defaults.get("cut_mode", "contiguous"),
+                trim_level=trim_level,
+            )
+            short["rendered"] = True
+            short["output_file"] = str(out_file.relative_to(WORKSPACE_ROOT))
+            rendered.append(out_file)
 
     if polish:
         import importlib.util
@@ -132,9 +202,9 @@ def render_manifest(
                 words_json_path=words_path if words_path.exists() else None,
             )
 
-    manifest_out = out_dir / "manifest.json"
+    manifest_out = plan_dir / "manifest.json"
     manifest_out.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
-    print(f" Done → {out_dir} ({len(rendered)} clips)")
+    print(f" Done → {deliverables_dir.relative_to(WORKSPACE_ROOT)} ({len(rendered)} clips)")
     return out_dir
 
 
@@ -146,13 +216,34 @@ def main():
     parser.add_argument("--only", help="Render single short/chapter id (e.g. sh01)")
     parser.add_argument("--no-trim", action="store_true", help="Skip silence trim even if pipeline enables it")
     args = parser.parse_args()
-    render_manifest(
-        Path(args.manifest),
-        polish=args.polish,
-        only=args.only,
-        project_id=args.project,
-        skip_trim=args.no_trim,
-    )
+
+    manifest_path = Path(args.manifest)
+    project_id = args.project
+    if not project_id and manifest_path.exists():
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        project_id = manifest.get("series_id") or manifest.get("stem")
+
+    from contextlib import nullcontext
+
+    timer_ctx = nullcontext()
+    if project_id:
+        from pipeline_log import StageTimer
+
+        timer_ctx = StageTimer(
+            project_id,
+            "render_shorts",
+            message=str(manifest_path.name),
+            artifact=str(manifest_path.parent),
+        )
+
+    with timer_ctx:
+        render_manifest(
+            manifest_path,
+            polish=args.polish,
+            only=args.only,
+            project_id=project_id,
+            skip_trim=args.no_trim,
+        )
 
 
 if __name__ == "__main__":

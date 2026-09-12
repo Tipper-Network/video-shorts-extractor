@@ -1,0 +1,15 @@
+{
+  "project_id": "hikmat",
+  "stage": "render_shorts",
+  "status": "complete",
+  "started_at": "2026-09-02T17:03:44Z",
+  "current": 5,
+  "total": 5,
+  "percent": 100.0,
+  "unit": "clip",
+  "item": "",
+  "message": "complete",
+  "elapsed_seconds": 257.6,
+  "elapsed_human": "4m 18s",
+  "updated_at": "2026-09-02T17:03:44Z"
+}

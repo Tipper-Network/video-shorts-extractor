@@ -6,14 +6,31 @@ Carpentry timelapse project. **Not THP flywheel content** — skip `skills/flywh
 
 A **build timelapse**: one craftsman, multiple sessions, screen/phone recordings of the work. Little or no speech. Visual story = process → finished piece.
 
-## Core hook (use this, not flywheel)
+## Output layout
 
-**Result-first, then process** — under 60 seconds.
+Everything under **`projects/hikmat/`**:
 
 ```
-0:00–0:03   FINISHED piece (money shot — best angle, clearest reveal)
-0:03–0:55   Process montage (cuts from early → late clips, ascending time)
-0:55–1:00   Hold on result OR quick before/after flash
+projects/hikmat/
+  input/                         ← drop raw clips + stills
+  output/
+    master/timeline_normalized.mp4
+    plan/manifest.json
+    deliverables/{youtube,tiktok,reels}/
+  pipeline.json, requirements.md, clip-map.json, skills/
+```
+
+## Core style: Reveal-Build
+
+**Style ID:** `reveal-build`  
+Skill: [`skills/reveal_build.md`](skills/reveal_build.md)
+
+Show the **finished piece first**, then an **ascending timelapse montage** from the session clips, optional **return** to the result at the end.
+
+```
+REVEAL  0:00–0:03   Finished piece (money shot)
+BUILD   0:03–0:55   Process montage — ascending clip order, 3–8s cuts
+RETURN  0:55–1:00   Hold on result / loop bait
 ```
 
 Why it works for carpentry shorts:
@@ -23,10 +40,11 @@ Why it works for carpentry shorts:
 
 ## Hybrid output mix
 
-| Type | Count (target) | When to use |
-|------|----------------|-------------|
-| **Montage short** | 8–12 drafts → pick 3–5 | Cross-clip “best of build” compilations |
-| **Single-clip short** | 2–3 | Long clips (#5, #11) with one strong 30–45s window |
+| Type | Location | Count |
+|------|----------|-------|
+| **Platform montage** | `deliverables/{youtube,tiktok,reels}/` | 1 per platform (same edit, different segment length) |
+
+No singles folder — montages cover the full journey.
 
 ## Montage rules
 
