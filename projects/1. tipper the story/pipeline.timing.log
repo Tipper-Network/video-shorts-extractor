@@ -1,2 +1,15 @@
 2026-09-12 11:43:05  transcribe     STARTED  1. Tipper _the story_.mp4
 2026-09-12 12:10:29  transcribe     DONE     (27m 24s)  1. Tipper _the story_.mp4
+2026-09-21 17:38:22  render_shorts  STARTED  manifest.json
+2026-09-21 17:38:22  render_shorts  PROGRESS    0.0%  0/9  elapsed 0s  rendering 9 clips
+2026-09-21 17:38:22  render_shorts  PROGRESS   11.1%  1/9  elapsed 0s  ETA ~0s  sh01:sh01  Eight Failed Companies [sh01]
+2026-09-21 17:41:22  render_shorts  PROGRESS   22.2%  2/9  elapsed 3m  ETA ~10m 31s  sh02:sh02  Dump Everything You Know [sh02]
+2026-09-21 17:44:18  render_shorts  PROGRESS   33.3%  3/9  elapsed 5m 57s  ETA ~11m 54s  sh03:hook-first  Look at What I'm Building [hook-first]
+2026-09-21 17:48:06  render_shorts  PROGRESS   44.4%  4/9  elapsed 9m 44s  ETA ~12m 10s  sh04:sh04  Push vs Pull [sh04]
+2026-09-21 17:50:55  render_shorts  PROGRESS   55.6%  5/9  elapsed 12m 34s  ETA ~10m 3s  sh05:hook-first  Empathy Is Their World [hook-first]
+2026-09-21 17:53:51  render_shorts  PROGRESS   66.7%  6/9  elapsed 15m 29s  ETA ~7m 44s  sh06:sh06  Brute Forcing Success [sh06]
+2026-09-21 17:56:08  render_shorts  PROGRESS   77.8%  7/9  elapsed 17m 46s  ETA ~5m 5s  sh07:sh07  Six Months for a Function [sh07]
+2026-09-21 17:58:48  render_shorts  PROGRESS   88.9%  8/9  elapsed 20m 26s  ETA ~2m 33s  sh08:hook-first  A Hero's Journey Every Day [hook-first]
+2026-09-21 18:01:38  render_shorts  PROGRESS  100.0%  9/9  elapsed 23m 17s  sh09:story-first  Bootcamp at 37 [story-first]
+2026-09-21 18:04:58  render_shorts  PROGRESS  100.0%  9/9  elapsed 26m 36s  complete
+2026-09-21 18:04:58  render_shorts  DONE     (26m 36s)  manifest.json  → /home/psyfer/Desktop/workspace/projects/1. tipper the story/output/plan

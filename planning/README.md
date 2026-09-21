@@ -15,7 +15,9 @@ Shared workspace for turning content-pipeline ideas into executable structure.
 | **Strategy** | THP `the-hard-port-os/` | What to say — series scripts, observation bank, brand voice, flywheel intent |
 | **Execution** | This workspace | How to cut — transcription, manifests, platform rules, ffmpeg renders |
 
-Cross-reference THP media docs (`THP-MEDIA-001`, `THP-MEDIA-003`) for storyline and editorial tone. Implement the tooling here.
+Git ships this folder. Job footage and brand books do not. The website will call the same playbooks; do not fork a second design language for the UI.
+
+Cross-reference THP media docs (`THP-MEDIA-001`, `THP-MEDIA-003`) for storyline and editorial tone when the job is THP. Implement the tooling here.
 
 ## Layout
 

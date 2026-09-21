@@ -32,6 +32,7 @@ THP defines *what* to say **when the video is a THP video**. Tipper and GAF have
 | 2026-09-12 | Re-renders write `_vN` compare copies | Need the previous file on disk to A/B audio/cut changes |
 | 2026-09-12 | Script `.md` before any ffmpeg | Theme / problem / context / resolve get checked on paper. Drafts in `shorts/`, signed-off in `shorts_approved/` |
 | 2026-09-21 | Title = entity brand key | Tipper / THP / GAF are siblings. Founder style is how he talks; entity is which queue the cut is for. |
+| 2026-09-21 | Git = onboardable product | Clone ships skills, scripts, playbooks, `_template`s. Jobs, brand books, USER/MEMORY stay local. Website UI later; same agents, same manifest. |
 
 ## Active Projects
 
@@ -56,6 +57,16 @@ THP defines *what* to say **when the video is a THP video**. Tipper and GAF have
 - Draft: `sh04` Game WITH Life (28s) — splice fails 50s floor and glues two situations
 - Chunks: ch01 `04:45–19:45`; ch02 `26:10–38:00` + Tipper `45:31–48:50` (Lebanon skipped). ch03 deferred
 - 2026-09-21: shorts floor 50s; never out mid-clause; leftover-theme scan after the brief; compare path must not clobber an existing `_vN`
+
+### Tipper The Story (`tipper-the-story`)
+
+- Folder: `projects/1. tipper the story/`
+- Source: `input/1. Tipper _the story_.mp4`
+- Transcript: `output/transcript/transcript.txt` (done — do not re-transcribe)
+- Planner: `shorts_extraction.md` (nine scripts). Gemini `shorts_instructions.md` is contrast only
+- Publish queue: sh05 empathy → sh08 daily journey → sh03 look at what I'm building → sh02 dump everything → sh06 brute force → sh04 push/pull → sh01 eight failed (demoted)
+- Parked: sh07 six-months-function, sh09 bootcamp-at-37 (founder memoir, not Tipper people/places/events)
+- Chunks: `chunk_instructions.md` still Origin-Story-contaminated — do not encode until rewritten
 
 ### hikmat (archived)
 

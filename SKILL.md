@@ -12,7 +12,7 @@ requires:
 
 This workspace handles local video processing into multi-platform clips using Faster-Whisper, FFmpeg, and **Cursor agent planning** (chapters, shorts, manifests).
 
-**Separate from product repos:** brand books stay in each entity's home (THP OS, GAF folder, Tipper boundary). This workspace reads them, then cuts. Do not merge those repos here.
+**Product vs operator:** this repo is the engine. Brand books live in local `brands/` (template in git). Do not merge THP/Tipper/GAF product repos here.
 
 ## Standard Directory Map
 
@@ -30,7 +30,7 @@ When receiving a request to process video:
 1. **Entity:** Resolve Tipper / THP / GAF / founder from the video or folder name. Read [`skills/entity_brand/`](skills/entity_brand/SKILL.md) and that entity's brand records before planning cuts.
 2. **Target Identification:** If the user specifies a platform (TikTok, Instagram, YouTube), defer to `skills/<platform>/SKILL.md`.
 3. **Default Fallback:** No platform specified → one **11-15 min mid-form chunk** (16:9) + **2 vertical shorts** (9:16).
-4. **Storyline context:** Read [`brands/`](brands/) for the named entity. THP-titled → `the-hard-port-brief.md`. Tipper-titled → `Tipper_Brand_Book.md`. GAF-titled → GAF brief + book.
+4. **Storyline context:** Read `brands/{entity}` for the named job. Operator pack on this machine: THP → `the-hard-port-brief.md`, Tipper → `Tipper_Brand_Book.md`, GAF → brief + book.
 5. **Execution:** Run pipeline scripts — never expect scripts to plan cuts autonomously.
 6. **Leftover scan:** After instruction-file themes are scripted, read the rest of the transcript. The brief is not a cap. Note unused situation→resolve blocks before calling the job done.
 

@@ -7,7 +7,9 @@ description: Resolve which entity a video belongs to from its title/folder name,
 
 The video name is the brand key. **Tipper**, **The Hard Port (THP)**, and **The GAF** are siblings under one philosophy — not one brand wearing three names. Do not collapse them.
 
-**Canonical brand files live in [`brands/`](../../brands/).** Read those first. Do not hunt Desktop copies unless `brands/` is missing a file.
+**Brand files live in [`brands/`](../../brands/)** on the operator machine (git ships [`_template.md`](../../brands/_template.md) + README only). Read `brands/{entity}` before extracting. Do not hunt Desktop copies unless `brands/` is missing the file.
+
+This skill’s Tipper / THP / GAF tables are **one operator pack**. Other clones fill their own books. The website will load the same record per account.
 
 Craft (`situation_resolve`) answers: does the thought finish?  
 This skill answers: does this thought belong to **this** entity's queue?

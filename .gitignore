@@ -1,14 +1,26 @@
-# Large media — keep out of git
-projects/*/input/**
-projects/*/output/deliverables/**
-projects/*/output/cache/**
-projects/*/output/master/**
-!projects/*/input/README.md
+# Product (clone this). Operator data stays local — website will own jobs later.
+
+# Jobs
+projects/*
+!projects/README.md
+!projects/_template/
 !projects/_template/**
-# Text artifacts (transcript, plan, logs) — track in git
-!projects/*/output/transcript/**
-!projects/*/output/plan/**
-!projects/*/output/logs/**
+
+# Brand books (per operator / per account)
+brands/*
+!brands/README.md
+!brands/_template.md
+
+# Session memory
+memory/
+MEMORY.md
+USER.md
+geminiadvice.md
+
+# Secrets and caches
 content_pipeline/.cache/
 content_pipeline/.env
 .env
+__pycache__/
+*.pyc
+*.pyo

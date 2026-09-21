@@ -1,75 +1,47 @@
-# Local Content Pipeline — Setup & Structure
+# Local Content Pipeline — Setup
 
-Video editing and content creation workspace. Runs locally in Cursor.
+The **product** is this repo: transcribe, plan, render shorts and chunks.
 
-**Strategy and scripts** live in the [THP repo](../The-Hard-Port-stuff/The Hard Port/the-hard-port-os/).  
-**This folder** is where we execute: transcribe, plan cuts, apply platform rules, render.
+The **UI today** is a local folder + Cursor. The **UI later** is a website talking to the same agents. Do not put job footage or brand books in git.
 
-## 1. Environment & Setup Checklist
+## 1. Environment
 
-### Speech Recognition & Polish
-- **Faster-Whisper** — segment transcripts
-- **Vosk** — word-level timestamps for SFX (`VOSK_MODEL_PATH`)
-- **MoviePy** — dynamic zoom + SFX overlay
-- **sfx_resolver** — on-demand SFX via API or synthetic fallback
-
-### Optional API Keys
-- `FREESOUND_API_KEY` / `PIXABAY_API_KEY` — see `content_pipeline/.env.example`
-
-### Python
 ```bash
 pip install -r content_pipeline/requirements.txt
 ```
 
-## 2. Directory Structure
+- **Faster-Whisper** — transcripts
+- **Vosk** (optional) — word timestamps (`VOSK_MODEL_PATH`)
+- **FFmpeg** — cuts
+- **MoviePy** — polish (`--polish`)
+- Optional SFX keys: `content_pipeline/.env.example`
+
+## 2. What you copy vs what you keep private
 
 ```text
-~/Desktop/workspace/
-├── projects/                         # ONE FOLDER PER JOB (input + output + config)
-│   ├── README.md
-│   ├── _template/                    # Copy to start a new project
-│   ├── origin-story/
-│   │   ├── input/                    # Drop raw footage here
-│   │   ├── output/
-│   │   │   ├── transcript/           # transcript.txt + segments.json
-│   │   │   ├── plan/                 # manifest.json
-│   │   │   ├── deliverables/
-│   │   │   │   ├── shorts/           # Vertical (YT, TikTok, Reels)
-│   │   │   │   └── chunks/           # 11-15 min mid-form
-│   │   │   ├── logs/
-│   │   │   └── cache/
-│       ├── requirements.md
-│       ├── brief.md
-│       ├── pipeline.json
-│       └── *_instructions.md         # Persistent creative briefs
-├── content_pipeline/                 # Shared scripts only (no project data)
-│   ├── concat_clips.py
-│   ├── compose_shorts.py
-│   ├── render_manifest.py
-│   └── project_paths.py
-├── planning/                         # Playbooks, architecture, schemas
-└── skills/                           # Platform-wide editing rules
+clone/
+├── content_pipeline/     # scripts (git)
+├── skills/               # cut rules (git)
+├── planning/             # playbooks + schemas (git)
+├── projects/
+│   ├── README.md         # git
+│   ├── _template/        # git — copy this
+│   └── {your-job}/       # local — gitignored
+└── brands/
+    ├── README.md         # git
+    ├── _template.md      # git — copy this
+    └── {entity}.md       # local — gitignored
 ```
 
 See [`projects/README.md`](projects/README.md).
 
-## 3. Separation from THP
-
-| Concern | Where |
-|---------|-------|
-| Series themes, observation scripts, brand voice | THP `the-hard-port-os/content/youtube/` |
-| Flywheel stage definitions (attract → loop) | THP `THP-MEDIA-001` + [`planning/vision.md`](planning/vision.md) |
-| Visual/editorial language (grids, maps, evidence labels) | THP `THP-MEDIA-003` |
-| Transcription, cut points, aspect ratios, render | **This workspace** |
-
-Do not merge THP strategy docs into this repo. Link to them; implement the tooling here.
-
-## 4. Starting a project
+## 3. Start a job
 
 ```bash
 cp -r projects/_template projects/my-video
-# Drop source files in projects/my-video/input/
-# Fill requirements.md, set playbook_id in pipeline.json
+cp brands/_template.md brands/my-entity.md
+# Drop source in projects/my-video/input/
+# Entity field in requirements.md = file stem of the brand file
 ```
 
-Scripts resolve paths via `content_pipeline/project_paths.py` from `projects/{name}/`.
+Paths resolve through `content_pipeline/project_paths.py` from `projects/{name}/`.

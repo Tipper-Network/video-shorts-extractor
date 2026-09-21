@@ -1,79 +1,65 @@
-# Content Pipeline Workspace
+# Content Pipeline
 
-Local-first video editing and content creation — separate from product repos.
+Clone this repo to cut **shorts** (9:16) and **chunks** (16:9, 11–15 min) from long speech video.
 
-## Architecture (v1)
+This is the **engine**. Jobs, brand books, and memory are not in git. Today you drop files in a folder; later a website UI will call the same agents.
 
 ```
-Raw footage
-    ↓
-Whisper / Vosk (local)     → transcript + word timestamps
-    ↓
-Cursor agent (you + me)    → storyline, manifest.json
-    ↓
-FFmpeg / MoviePy           → cut, concat, zoom, SFX
-    ↓
-Platform-ready output
+Upload / drop footage
+        ↓
+Whisper transcript
+        ↓
+Agent plan  →  manifest.json  (shorts + chunks)
+        ↓
+FFmpeg render
 ```
 
-**No Ollama.** Planning is interactive in Cursor. Scripts handle mechanical work only.
+**No Ollama.** Planning is an agent (Cursor today, site-connected agents later). Scripts only transcribe and render.
 
-## What this is vs THP
+## Onboard
 
-| Layer | Location |
-|-------|----------|
-| Strategy — scripts, brand, flywheel intent | THP `the-hard-port-os/` |
-| Execution — transcribe, cut, render, SFX | **This workspace** |
-| Per-project requirements | `content_pipeline/projects/{name}/` |
+```bash
+pip install -r content_pipeline/requirements.txt
 
-## Projects vs platform
+cp -r projects/_template projects/my-video
+# Drop source in projects/my-video/input/
+# Copy brands/_template.md → brands/{entity}.md and fill it
+# Set playbook_id in projects/my-video/pipeline.json
+# Fill projects/my-video/requirements.md (entity from the video title)
 
-| | Platform | Project (e.g. origin-story) |
-|---|----------|------------------------------|
-| **Question** | *How* do we edit? | *What* does this video need? |
-| **Lives in** | `skills/`, `content_pipeline/*.py` | `projects/{name}/requirements.md` |
-| **Tested via** | [`planning/capability-matrix.md`](planning/capability-matrix.md) | Each new project folder |
+python3 content_pipeline/run_module.py --module transcribe --project my-video
+python3 content_pipeline/render_manifest.py \
+  --manifest "projects/my-video/output/plan/manifest.json" \
+  --project my-video \
+  --type shorts --no-trim
+```
 
-See [`projects/README.md`](projects/README.md).
+| You are filling in | Lives in |
+|--------------------|----------|
+| How to cut | `skills/`, `planning/playbooks.md` |
+| This video | `projects/{name}/` (local) |
+| This brand | `brands/{entity}.md` (local) |
+
+See [`projects/README.md`](projects/README.md) and [`brands/README.md`](brands/README.md).
 
 ## Stack
 
 | Tool | Role |
 |------|------|
 | Faster-Whisper | Segment transcripts |
-| Vosk | Word-level timestamps (SFX triggers) |
-| FFmpeg / auto-editor | Cut, concat, silence trim |
-| MoviePy | Dynamic zoom + SFX overlay |
-| sfx_resolver | On-demand SFX (API or synthetic) |
+| Vosk (optional) | Word-level timestamps |
+| FFmpeg | Cut, 9:16 reframe, speech level |
+| MoviePy | Polish (SFX + zoom) — captions not shipped yet |
 
 ## Scripts
 
 | Script | Purpose |
 |--------|---------|
-| `process_stream.py` | `--mode transcribe` or `--mode render` |
-| `concat_clips.py` | Chronological multi-clip assembly |
-| `render_manifest.py` | Batch render from manifest.json |
-| `auto-edit.py` | SFX + dynamic zoom polish |
-| `sfx_resolver.py` | Fetch/generate SFX on demand |
+| `run_module.py --module transcribe` | Whisper → `output/transcript/` |
+| `render_manifest.py` | Batch render from `manifest.json` |
+| `concat_clips.py` | Multi-clip assembly |
+| `auto-edit.py` | SFX + zoom (`--polish`) |
 
-## Quick start
+## What does not belong in git
 
-```bash
-pip install -r content_pipeline/requirements.txt
-
-# Transcribe (writes output/transcript/transcript.txt)
-python3 content_pipeline/run_module.py --module transcribe --project origin-story
-
-# Render from agent-written manifest
-python3 content_pipeline/render_manifest.py \
-  --manifest "projects/0. the origin story/output/plan/manifest.json" \
-  --project origin-story
-```
-
-## Optional env vars
-
-Copy `content_pipeline/.env.example` — Freesound/Pixabay keys improve SFX quality; synthetic fallback works without keys.
-
-## Active projects
-
-- **Origin Story** — [`projects/0. the origin story/brief.md`](projects/0.%20the%20origin%20story/brief.md) · source in `projects/0. the origin story/input/`
+Footage, transcripts, manifests, renders, your brand books, `USER.md` / `MEMORY.md`. Those are operator (or future account) data. `.gitignore` already excludes them; untrack anything already committed.

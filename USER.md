@@ -6,7 +6,7 @@ Stable directives for content creation sessions. One directive per entry.
 
 <!-- observed: 2026-09-02 | status: active -->
 
-- Always treat this workspace as the **local content pipeline** — video editing and assembly — separate from THP product code and Tipper.
+- Git ships the **product others onboard on** (`skills/`, `planning/`, `content_pipeline/`, templates). Job folders, brand books, and this file stay local. Cursor+folders now; website UI later — same agents, same shorts/chunks.
 
 <!-- observed: 2026-09-02 | status: active -->
 
@@ -51,5 +51,5 @@ Stable directives for content creation sessions. One directive per entry.
 
 <!-- observed: 2026-09-02 | status: active -->
 
-- **Tipper The Story** (`projects/1. tipper the story/`) — active. Transcript done. Planner extraction: `shorts_extraction.md` (nine scripts, not the Gemini 10-pack). No ffmpeg until scripts approved.
+- **Tipper The Story** (`projects/1. tipper the story/`) — active. Cut from `shorts_extraction.md`, not Gemini. Scripts + 9:16 drafts in `output/deliverables/shorts/`. Publish queue: sh05 → sh08 → sh03 → sh02 → sh06 → sh04 → sh01. Park sh07/sh09 (extracted, not promoted). Chunks not this pass.
 - **Origin Story** — Approved: sh01 story-first (100s), sh02 island-bum hook-first (64s), sh03 focus-vs-tunnel hook-first (58s), sh05 moving-house first-stream close (44s). Draft: sh04 Game WITH Life (28s). Chunks: ch01, ch02. Deferred: ch03.

@@ -1,6 +1,6 @@
 # Vision — Long-Form Stream → Themed Library + Flywheel Shorts
 
-> **Scope:** This workspace executes the cut. THP (`the-hard-port-os/`) owns brand strategy, series scripts, and editorial voice. See [`README.md`](README.md#relationship-to-thp).
+> **Scope:** This repo is the cut engine. Cursor + folders is the current UI; a website talking to these agents is the next UI. Brand books and job folders are operator data, not the product. See [`../README.md`](../README.md).
 
 ## Problem
 

@@ -1,15 +1,17 @@
 # AGENTS.md — Content Pipeline Workspace
 
-This workspace is home for **local video editing and content creation**. Treat it that way.
+This repo is the **cut engine** others clone to onboard. Jobs are local. A website UI is the future front door — same skills, same scripts.
 
 ## Purpose
 
-Turn raw footage into publishable, platform-ready content:
+Turn raw footage into two deliverable types:
 
-- Transcribe, plan cuts, apply editing skills, render
-- Two deliverable types: **Shorts** (vertical, 9:16) and **Chunks** (horizontal, 16:9, 11-15 min)
-- Maintain series continuity and flywheel sequencing
-- Keep strategy in THP; keep execution here
+- **Shorts** — vertical, 9:16
+- **Chunks** — horizontal, 16:9, 11–15 min
+
+Cursor + `projects/{name}/` is the current UI (manual drop, agent in-session). Later: website → agent(s) → same `manifest.json` → same ffmpeg. Do not invent a second cut language for the site.
+
+**Git ships the product** (`skills/`, `planning/`, `content_pipeline/`, `_template` folders). **Do not commit** job folders, brand books, or session memory.
 
 **Not in scope:** THP product code, Tipper app, or other repos. Link to them; don't merge.
 
@@ -20,7 +22,7 @@ Use runtime-provided context first (`AGENTS.md`, `SOUL.md`, `USER.md`, recent `m
 When working on a **named project**, read its on-disk brief before planning or regenerating frameworks:
 
 1. `projects/{folder}/brief.md` and `requirements.md` — resolve `entity` from the folder/video name ([`skills/entity_brand`](skills/entity_brand/SKILL.md))
-2. That entity's file in [`brands/`](brands/) (Tipper / THP / GAF). Founder spoken style is always on (`USER.md` + Origin Story craft).
+2. That entity's file in [`brands/`](brands/) — operator books, not shipped. Founder spoken style is always on (`USER.md` + craft skills).
 3. Any `*_instructions.md` or `shorts_extraction.md` in that folder
 4. `output/transcript/transcript.txt` if it exists (do not re-transcribe to plan cuts)
 5. `output/plan/manifest.json` — update in place; do not recreate from scratch unless asked
@@ -80,9 +82,9 @@ Before building custom tooling, check for maintained open-source options (ffmpeg
 | **Flywheel strategies (2 models)** | [`planning/flywheel-strategies.md`](planning/flywheel-strategies.md) |
 | **Flywheel visuals** | [`planning/flywheel-strategies-visual.md`](planning/flywheel-strategies-visual.md) |
 | Architecture | [`planning/pipeline-architecture.md`](planning/pipeline-architecture.md) |
-| **Entity brands (in-repo)** | [`brands/`](brands/) — Tipper book, THP brief, GAF brief + book |
+| **Entity brands (local)** | [`brands/`](brands/) — operator books; `_template.md` is what git ships |
 | THP OS (external, series/ops) | `~/Desktop/The-Hard-Port-stuff/The Hard Port/the-hard-port-os/` |
-| **Projects (one folder per job)** | [`projects/`](projects/README.md) |
+| **Projects (one folder per job)** | [`projects/`](projects/README.md) — jobs gitignored; `_template/` ships |
 
 ## Planning Model
 
@@ -93,7 +95,7 @@ Transcription and render stay scripted (Whisper, FFmpeg). Planning is interactiv
 ## Local Notes
 
 ```markdown
-- Projects root: projects/{name}/ — input, output, config, *_instructions.md, skills
-- Agent reads: brief.md → requirements.md → `brands/` for the named entity → *_instructions.md → transcript.txt → manifest.json
-- Origin Story: projects/0. the origin story/ (project_id: origin-story)
+- Git = onboardable product. Jobs/brands/memory = operator data (website accounts later).
+- Projects root: projects/{name}/ — input, output, config, *_instructions.md
+- Agent reads: brief.md → requirements.md → brands/{entity} → *_instructions.md → transcript.txt → manifest.json
 ```
