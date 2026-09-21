@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -17,6 +18,14 @@ load_env()
 BASE_DIR = Path(__file__).resolve().parent
 AUDIO_DIR = BASE_DIR / "audio"
 SUB_DIR = BASE_DIR / "subtitles"
+
+
+def safe_stem(name: str) -> str:
+    """Filesystem-safe stem for transcript folders and audio cache."""
+    stem = Path(name).stem
+    slug = re.sub(r"[^\w]+", "-", stem, flags=re.ASCII).strip("-").lower()
+    slug = re.sub(r"-{2,}", "-", slug)
+    return slug or "transcript"
 
 
 def run_cmd(cmd: list[str]) -> str:

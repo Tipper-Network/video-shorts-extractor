@@ -51,7 +51,9 @@ Stay in the same situation until it resolves.
 - Do not jump cafe-poverty into an island-bet unless a spoken line names the jump.
 - Do not jump “you say no” into “chance to respond” if “I'm not / but what if I am” is the pressure — that hinge *is* the situation tightening.
 - Elaboration is allowed (and usually required). Tangents are not. Handwriting, “sorry”, “let's do this” are deletes.
-- Duration expands to fit the situation. **50s floor, prefer 55–75s.** Complete resolve wins. Hard ceiling 90s. Under 50s is a fail for this series.
+- Duration expands to fit the situation. **Shorts: 50s floor, prefer 55–75s.** Complete resolve wins. Hard ceiling 90s. Under 50s is a fail for this series.
+
+**Chunks:** still one situation. The extra minutes are examples and elaboration of *that* situation, plus a structure the viewer can follow. Two jobs in one chapter fails the same way two situations in one short fail. See [`chunks`](../chunks/SKILL.md).
 
 ## Playback that holds
 
@@ -124,3 +126,4 @@ Fail if:
 - Pick the theme (that's `shorts_instructions.md`)
 - Pick 9:16 / write the file (that's `vertical_shorts`)
 - Replace timestamp hunting (that's `extract_shorts` — it must pass *this* gate)
+- Plan the 11–15 min chapter (that's `chunks` — still one situation; this file still gates the throughline)

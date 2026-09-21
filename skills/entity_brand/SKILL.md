@@ -44,7 +44,7 @@ Same belief underneath: assumptions, not lack of effort, slow people down. Diffe
 |--------|---------------|-------------------|-------------|
 | **Tipper** | People + Places + Events. Tagline **one tip at a time**. Everyman: belong, connect, equal footing. Voice: friendly, practical, authentic, candor, no jargon. Entities (shops, NPOs, creatives) and users. | Common ground with a community; seeing their world; people/places/events (somewhere / something / someone); dump knowns so you can hear; don't sell the product. | Feature lists. THP “you're oblivious / apply now.” GAF guild-hall as the closer. Career-switcher memoir unless it teaches how you meet a community. |
 | **THP** | No-bullshit media for SMBs that are “doing fine.” Fine is the problem. **We give a f\*ck. We just don't care.** Nautical: sea, sail, port, rocks, drift. Second person. Banned: unlock, leverage, empower, seamless, game-changer, boost. Never name Tipper on a THP public cut. | Survival-mode; attention vs demand; branding vs evidence; you're not going anywhere. | Tipper-as-the-product. GAF adventure. Reassurance. Announcing honesty. |
-| **GAF** | Guild of Adventurers and Frontiers. Not a school. **Assumptions kill growth.** Shackleton-honest. Play as method, not hustle. Presence / room / body. Other guilds run on Tipper — don't make Tipper the closer of a GAF short. | Frontier, being guided not taught, assumptions, play-as-method. | Hustle. Startupy pitch-deck. THP funnel copy. Tipper donations/software as the ending. |
+| **GAF** | Guilds, Adventurers, and Frontiers. Guild of guilds. Not a school. **Assumptions kill growth.** Shackleton-honest. Play as method, not hustle. Presence / room / body. Other guilds run on Tipper — don't make Tipper the closer of a GAF short. | Frontier, being guided not taught, assumptions, play-as-method. | Hustle. Startupy pitch-deck. THP funnel copy. Tipper donations/software as the ending. “Guild of Adventurers” as the expansion. |
 | **founder** | Autobiography that feeds all three. | A thought that finishes. Tag leftover Tipper / THP / GAF later if a line clearly belongs. | Treating Origin Story as a Tipper launch or a THP FND video. |
 
 Internal chain (from the THP brief — **not for public THP copy**): Hard Port (testing) → research framing → Tipper (platform). Silence about the door beyond Hard Port is the gate.
@@ -54,7 +54,7 @@ Internal chain (from the THP brief — **not for public THP copy**): Hard Port (
 1. Resolve `entity` from the name. Write it on `requirements.md`.
 2. Read that row’s file(s) in `brands/`.
 3. Run craft (`situation_resolve` + `extract_shorts`) on the transcript.
-4. **Brand pass:** keep / demote / park against the entity table. Publish_order is the entity flywheel, not “every complete thought.”
+4. **Brand pass:** keep / demote / park against the entity table. Publish_order is the entity flywheel, not “every complete thought.” Same pass on chapters: a finished memoir that belongs to another entity is leftover, not a ship.
 5. Caption/overlay distinctions from that book only:
    - Tipper: people / places / events, one tip, belong vs sell
    - THP: attention / demand / evidence, drift / port, you vs you

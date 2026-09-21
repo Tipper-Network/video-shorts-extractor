@@ -5,7 +5,7 @@
 
 ## 1. Identity
 
-**Name:** GAF; Guild of Adventurers and Frontiers
+**Name:** GAF; Guilds, Adventurers, and Frontiers
 
 **Core concept:** GAF is "the guild of all guilds." Where a traditional guild is specific to one trade, craft, or art, GAF is the shared hall that any guild, any pursuit, any serious project can call home. It is not a school and not a generic co-working space; it is a place where people who already know what they are building come to work, gather, and question their assumptions in the company of others doing the same.
 

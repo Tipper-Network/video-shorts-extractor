@@ -69,6 +69,7 @@ Multi-clip pipeline (plan → review → render) is spec'd there. Current code (
 | [`skills/situation_resolve/`](skills/situation_resolve/SKILL.md) | One situation (problem/issue/struggle/intention) held until it resolves |
 | [`skills/extract_shorts/`](skills/extract_shorts/SKILL.md) | Hook → Setup → Resolution + coherence gate |
 | [`skills/vertical_shorts/`](skills/vertical_shorts/SKILL.md) | 9:16 vertical shorts (editorial versions, not platforms) |
+| [`skills/lecture_ebook/`](skills/lecture_ebook/SKILL.md) | GAF lecture `plain.txt` → field book (`output/ebook/`) |
 
 ## Guardrails
 

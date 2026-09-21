@@ -20,10 +20,9 @@ MODULES = {
         "script": "concat_clips.py",
         "description": "Chronological multi-clip assembly",
     },
-    "transcribe": {
-        "script": "process_stream.py",
-        "description": "Extract audio + Whisper transcript",
-        "fixed_args": ["--mode", "transcribe"],
+    "srt_to_text": {
+        "script": "srt_to_text.py",
+        "description": "YouTube SRT → titled plains in transcript root + optional clock files",
     },
     "detect_topics": {
         "script": "detect_topics.py",
@@ -65,11 +64,11 @@ def main() -> None:
 
     if args.project and "--project" not in args.extra:
         # pass project to scripts that support it
-        if args.module in ("concat", "trim_silence", "detect_topics", "render", "transcribe"):
+        if args.module in ("concat", "trim_silence", "detect_topics", "render", "transcribe", "srt_to_text"):
             cmd.extend(["--project", args.project])
 
     if args.module == "transcribe" and args.project and "--input" not in args.extra:
-        pass  # auto-detect single video in project input/
+        pass  # one video in input/: auto-detect. several: pass -- --input filename
 
     print(f" Module: {args.module} — {info['description']}")
     result = subprocess.run(cmd, cwd=BASE_DIR)

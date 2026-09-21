@@ -54,6 +54,8 @@ cp -r projects/_template projects/my-video
 
 ```bash
 python3 content_pipeline/run_module.py --module transcribe --project my-video
+# several videos in input/: one file at a time
+python3 content_pipeline/process_stream.py --mode transcribe --project my-video --input "clip.mp4"
 
 python3 content_pipeline/render_manifest.py \
   --manifest "projects/my-video/output/plan/manifest.json" \

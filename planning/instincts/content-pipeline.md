@@ -6,6 +6,10 @@
 - **Never** truncate the transcript before planning. The full JSON is the source of truth.
 - **Always** verify last segment timestamp ≈ video duration before handing off to planners.
 - **Always** keep matching base filenames across input / audio / subtitles.
+<!-- added: 2026-09-21 | reason: GAF 13 YouTube SRT vs Whisper small -->
+- **Prefer** YouTube `.srt` (same upload as `input/`) as the full-file plan script. Linearize to `transcript.txt` + `segments.json`.
+- **Never** treat rolling YouTube cues as frame-accurate in/out — they overlap and lag ~2–3s.
+- **Prefer** Whisper only on the locked short/chunk window when wording or a clock is mushy (GAF vs "gaff", names, censored `[ __ ]`). Do not re-Whisper the whole lecture.
 
 ## Chapter Boundaries
 
@@ -53,6 +57,11 @@
 - **Prefer** local Whisper + FFmpeg over paid SaaS unless user explicitly approves spend.
 - **Always** plan chapters and shorts via Cursor agent in-session — read full transcript, apply instincts, write manifest.
 - **Never** exfiltrate raw video or transcripts to external APIs without user approval.
+
+<!-- added: 2026-09-21 | reason: GAF Future Ready field book -->
+- **Always** load `skills/lecture_ebook` before writing a book from GAF lectures.
+- **Never** ship the linearized `plain.txt` dump as the book.
+- **Prefer** dropping stream wreckage and keeping the example that proves the move.
 
 ## Human Gate
 

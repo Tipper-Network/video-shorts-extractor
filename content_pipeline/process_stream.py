@@ -21,6 +21,7 @@ from transcribe import (
     SUB_DIR,
     extract_audio,
     run_cmd,
+    safe_stem,
     transcribe_vosk_words,
     transcribe_whisper,
 )
@@ -125,7 +126,12 @@ def main():
     parser = argparse.ArgumentParser(description="Content pipeline — transcribe or render")
     parser.add_argument("--mode", choices=["transcribe", "render"], default="transcribe")
     parser.add_argument("--project", help="Project ID — reads/writes under projects/{id}/")
-    parser.add_argument("--input", help="Video filename inside project input/ or input/")
+    parser.add_argument(
+        "--input",
+        help="One video filename inside project input/ (or legacy input/). "
+        "Required when the project has more than one video. "
+        "Writes output/transcript/{slug}/ so files do not overwrite.",
+    )
     parser.add_argument("--manifest", help="Path to manifest.json (render mode)")
     parser.add_argument("--start", type=float, help="Manual cut start (render fallback)")
     parser.add_argument("--end", type=float, help="Manual cut end (render fallback)")
@@ -153,6 +159,7 @@ def main():
         return
 
     video_path, base_name = find_input_video(args.project, args.input)
+    slug = safe_stem(video_path.name)
 
     from contextlib import nullcontext
 
@@ -161,17 +168,30 @@ def main():
 
         paths = load_project_paths(args.project)
         paths.ensure_dirs()
-        audio_path = paths.audio_cache_dir / f"{base_name}.wav"
-        segments_path = paths.segments_json_path()
-        words_path = paths.words_json_path()
-        transcript_txt = paths.transcript_txt_path()
+        # Multi-file jobs pass --input; keep a per-video folder so the next
+        # transcribe does not clobber the per-video clock file. Single auto-detected
+        # video still writes the legacy output/transcript/transcript.txt.
+        if args.input:
+            audio_path = paths.audio_cache_dir / f"{slug}.wav"
+            out_dir = paths.transcript_dir / slug
+            out_dir.mkdir(parents=True, exist_ok=True)
+            segments_path = out_dir / "segments.json"
+            words_path = out_dir / "words.json"
+            from srt_to_text import clock_txt_path
+
+            transcript_txt = clock_txt_path(out_dir)
+        else:
+            audio_path = paths.audio_cache_dir / f"{base_name}.wav"
+            segments_path = paths.segments_json_path()
+            words_path = paths.words_json_path()
+            transcript_txt = paths.transcript_txt_path()
         timer_ctx = StageTimer(args.project, "transcribe", message=video_path.name)
     else:
         paths = None
-        audio_path = AUDIO_DIR / f"{base_name}.wav"
-        segments_path = SUB_DIR / f"{base_name}.json"
-        words_path = SUB_DIR / f"{base_name}.words.json"
-        transcript_txt = SUB_DIR / f"{base_name}.txt"
+        audio_path = AUDIO_DIR / f"{slug}.wav"
+        segments_path = SUB_DIR / f"{slug}.json"
+        words_path = SUB_DIR / f"{slug}.words.json"
+        transcript_txt = SUB_DIR / f"{slug}.txt"
         timer_ctx = nullcontext()
 
     with timer_ctx:

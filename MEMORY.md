@@ -33,6 +33,7 @@ THP defines *what* to say **when the video is a THP video**. Tipper and GAF have
 | 2026-09-12 | Script `.md` before any ffmpeg | Theme / problem / context / resolve get checked on paper. Drafts in `shorts/`, signed-off in `shorts_approved/` |
 | 2026-09-21 | Title = entity brand key | Tipper / THP / GAF are siblings. Founder style is how he talks; entity is which queue the cut is for. |
 | 2026-09-21 | Git = onboardable product | Clone ships skills, scripts, playbooks, `_template`s. Jobs, brand books, USER/MEMORY stay local. Website UI later; same agents, same manifest. |
+| 2026-09-21 | YouTube `.srt` first, Whisper on the cut | Same-file YouTube captions recover more words than Whisper `small`. Plan from linearized SRT. Whisper only the locked 50–90s window to tighten clocks / GAF / uncensored speech. |
 
 ## Active Projects
 
@@ -66,7 +67,22 @@ THP defines *what* to say **when the video is a THP video**. Tipper and GAF have
 - Planner: `shorts_extraction.md` (nine scripts). Gemini `shorts_instructions.md` is contrast only
 - Publish queue: sh05 empathy → sh08 daily journey → sh03 look at what I'm building → sh02 dump everything → sh06 brute force → sh04 push/pull → sh01 eight failed (demoted)
 - Parked: sh07 six-months-function, sh09 bootcamp-at-37 (founder memoir, not Tipper people/places/events)
-- Chunks: `chunk_instructions.md` still Origin-Story-contaminated — do not encode until rewritten
+- Chunks: jobs 1+2 rendered (`ch01_common-ground.mp4`, `ch02_show-you-their-world.mp4`). Job 4 under floor. Gemini `chunk_instructions.md` unused.
+
+### Tipper The Origin Story (`tipper-the-origin-story`)
+
+- Folder: `projects/2. tipper the origin story/`
+- Entity: **Tipper** (token in the name — not founder `0. the origin story`)
+- Source: `input/2. Tipper _the origin_.mp4` (1:14:16)
+- Transcript: in progress (Whisper `small`)
+- Deliverables: shorts + chunks; playback `.md` then extract
+
+### Program Future Ready (`program-future-ready`)
+
+- Folder: `projects/program future ready vids/`
+- Entity: GAF. Six lectures 13–18. YouTube `.srt` → titled plains. Whisper only on locked cut windows. Do not overwrite lecture 13 Whisper `transcript.txt`.
+- Books: `output/ebook/Future-Ready.md` (full, ~24k) and `Future-Ready-Summary.md` (≥30 pages / ~11k). Spine pamphlet kept as `Future-Ready-Spine.md`.
+- Skill: `skills/lecture_ebook/`. Cuts later.
 
 ### hikmat (archived)
 

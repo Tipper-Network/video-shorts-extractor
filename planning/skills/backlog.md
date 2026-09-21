@@ -30,6 +30,7 @@ Skills live in `skills/` at the workspace root. This file tracks what exists, wh
 | render-manifest | `skills/render_manifest/` | planned | Renderer | 3 |
 | flywheel-series | `skills/flywheel_series/` | planned | Shorts Planner | 4 |
 | qa-manifest | `skills/qa-manifest/` | gap | QA Reviewer | 5 |
+| lecture-ebook | `skills/lecture_ebook/` | shipped | Ebook editor | — |
 
 ## Skill Creation Order
 

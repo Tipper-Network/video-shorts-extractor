@@ -5,7 +5,18 @@
   "overrides": {
     "modules": {
       "transcribe": { "enabled": true },
-      "render": { "enabled": true, "render_chapters": true }
+      "render": { "enabled": true, "render_chapters": true, "trim_on_render": false }
     }
+  },
+  "chapters": {
+    "enabled": true,
+    "cut_mode": "contiguous",
+    "default_trim": "light"
+  },
+  "shorts": {
+    "cut_mode": "contiguous",
+    "default_trim": "moderate",
+    "supercut_allowed": true,
+    "versions": ["hook-first", "story-first", "contiguous"]
   }
 }

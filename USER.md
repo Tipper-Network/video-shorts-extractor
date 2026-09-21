@@ -46,10 +46,16 @@ Stable directives for content creation sessions. One directive per entry.
 - Shorts duration: **50s floor, ~60s+ is the average.** Do not ship a speech short under 50s. Prefer 55–75s. Hard ceiling still 90s. Complete resolve still wins, but pad by holding the situation (more of the same thought), not by splicing a second story.
 - Do not out mid-clause to dodge a pitch. If the land is “right now,” keep the finished example of the move.
 - After the instruction-file themes are done, scan the leftover transcript. The brief is not a cap.
+- Full-file script: YouTube `.srt` when the upload is the same file as `input/`. Whisper the locked window only, not the whole lecture.
+- GAF Future Ready lectures: titled plains in `output/transcript/` (`13. Future Ready, The Program.txt`, …) are the ebook source. Clocked copies stay in each lecture folder.
+- GAF prints as **Guilds, Adventurers, and Frontiers** (guild of guilds). Not “Guild of Adventurers and Frontiers.”
+- Future Ready voice locks: stretch = day he moved to the ocean / chose to buy the island not live as a bum (story is in GAF 9–12, not in this job yet). Restaurant chosen because financially liquid. Girlfriend = stacked ships (friendship + partnership + commitment), not a swapped work example. Cosmetic friend stays, anonymous. Lecture 16 cold open is not a hole. Ships = you go out of yourself and come back. Agents = feedback loop, mutual support, better instructions. The six lectures *are* the designed month. Two yous: whatever is internal reflects external — do not invent a me/self/I diagram he did not draw.
 
 ## Active Projects
 
 <!-- observed: 2026-09-02 | status: active -->
 
-- **Tipper The Story** (`projects/1. tipper the story/`) — active. Cut from `shorts_extraction.md`, not Gemini. Scripts + 9:16 drafts in `output/deliverables/shorts/`. Publish queue: sh05 → sh08 → sh03 → sh02 → sh06 → sh04 → sh01. Park sh07/sh09 (extracted, not promoted). Chunks not this pass.
+- **Tipper The Origin Story** (`projects/2. tipper the origin story/`) — **active.** Entity Tipper. Source `2. Tipper _the origin_.mp4` (1:14:16). Full transcript, then short + chunk playback `.md`, then extract. Not founder Origin Story (`0.`).
+- **Program Future Ready** (`projects/program future ready vids/`) — GAF. Two books: `output/ebook/Future-Ready.md` (full) and `Future-Ready-Summary.md` (≥30 pages). Titled plains in `output/transcript/`. Cuts later.
+- **Tipper The Story** (`projects/1. tipper the story/`) — Shorts: `shorts_extraction.md`. Chunks rendered: `ch01_common-ground.mp4`, `ch02_show-you-their-world.mp4`. Gemini unused.
 - **Origin Story** — Approved: sh01 story-first (100s), sh02 island-bum hook-first (64s), sh03 focus-vs-tunnel hook-first (58s), sh05 moving-house first-stream close (44s). Draft: sh04 Game WITH Life (28s). Chunks: ch01, ch02. Deferred: ch03.
