@@ -84,7 +84,7 @@ Source (long video)
 
 | Module | Role |
 |--------|------|
-| `plan_chapter` | Self-contained 10–30 min; `youtube_chunks` skill |
+| `plan_chunk` | Self-contained 11–15 min; `chunks` skill |
 | `plan_shorts_around_chapter` | Teasers + CTAs; `parent_chapter` required |
 | `plan_flywheel_sequence` | **Disabled** — order derived from chapter anchor |
 
@@ -101,7 +101,7 @@ Source (long video)
 | **Narrative: plan_chapter** | ✗ | ✓ |
 | **Narrative: plan_flywheel_sequence** | ✓ | ✗ |
 | **Narrative: plan_shorts_around_chapter** | ✗ | ✓ |
-| **Skill: youtube_chunks** | ✗ | ✓ |
+| **Skill: chunks** | ✗ | ✓ |
 | **Short `parent_chapter`** | `n/a` | required |
 | **Serve stage lives in** | short (taste) | chapter (full) |
 

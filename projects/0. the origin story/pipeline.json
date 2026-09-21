@@ -17,7 +17,12 @@
     "shorts": {
       "cut_mode": "supercut",
       "default_trim": "moderate",
-      "supercut_allowed": true
+      "supercut_allowed": true,
+      "versions": ["hook-first", "story-first", "contiguous"]
+    },
+    "deliverables": {
+      "shorts": { "versions": ["hook-first", "story-first", "contiguous"] },
+      "chunks": { "count": 2 }
     }
   }
 }

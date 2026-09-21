@@ -58,5 +58,5 @@ Cross-reference THP media docs (`THP-MEDIA-001`, `THP-MEDIA-003`) for storyline 
 - **Status tags:** `planned` → `in-progress` → `shipped` → `deprecated`
 - **Agent docs:** role, inputs, outputs, skills, instincts, handoffs, done-when
 - **Schemas:** source of truth for JSON between scripts; code must conform
-- **Don't duplicate platform rules** — link to `skills/youtube_chunks/` etc.
+- **Don't duplicate platform rules** — link to `skills/chunks/` etc.
 - **Don't duplicate THP strategy** — link to THP media docs

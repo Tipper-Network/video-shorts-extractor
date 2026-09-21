@@ -47,7 +47,7 @@ python3 content_pipeline/run_module.py --project my-series --module detect_topic
 
 ## Agent Layer 2 (required)
 
-Agent reads topics file + full transcript + `skills/youtube_chunks/`:
+Agent reads topics file + full transcript + `skills/chunks/`:
 
 1. Assign chapter titles and themes
 2. Snap start/end to sentence boundaries (+10s context)

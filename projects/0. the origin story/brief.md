@@ -7,8 +7,15 @@
 
 | File | Purpose |
 |------|---------|
-| [`shorts_instructions.md`](shorts_instructions.md) | 5 vertical shorts — timestamps, assembly, overlays |
-| [`youtube_instructions.md`](youtube_instructions.md) | 3 mid-form YouTube chapters (11–15 min, 16:9) |
+| [`shorts_instructions.md`](shorts_instructions.md) | 5 vertical short concepts — timestamps, assembly, overlays |
+| [`chunk_instructions.md`](chunk_instructions.md) | 3 mid-form chapter concepts (batch 1: first 2) |
+
+## Deliverables (batch 1)
+
+| Type | Count | Skill |
+|------|-------|-------|
+| Shorts (9:16) | 5 concepts, up to 3 editorial versions each | `skills/extract_shorts` + `skills/vertical_shorts` |
+| Mid-form chunks 16:9 (11–15 min) | 2 | `skills/chunks` |
 
 ## Persistent artifacts
 
@@ -22,8 +29,11 @@
 ```
 input/0. Origin story.mp4
   → transcribe → output/transcript/transcript.txt
-  → plan/manifest.json (5 shorts + 3 chapters)
-  → deliverables/youtube/
+  → plan/manifest.json (5 shorts + 2 chunks)
+  → deliverables/shorts/*.md (script) → approve → render
+  → deliverables/shorts/*.mp4 (drafts)
+  → deliverables/shorts_approved/ (signed-off)
+  → deliverables/chunks/
 ```
 
 ## Commands

@@ -67,5 +67,16 @@
 
 ---
 
-## 3. Metadata Directive
+## 3. Leftover windows (batch 1)
+
+| Window | What it is | Status |
+|--------|------------|--------|
+| `19:50–26:10` | Surrender / fake productivity / study vs give | Too short for a chunk. Short material (see shorts leftover table). |
+| `38:01–45:30` | Lebanon visit, bootcamp, anxiety | Skipped in ch02 to fit 15 min. Do not drop silently. |
+| `48:50–52:40` | Hiring / 50-person interviews | After ch02 out. Not in any chunk. |
+| `52:40–1:07:00` | GAF, tunnel, small-business, moving house | **ch03** — deferred, not missed. |
+
+---
+
+## 4. Metadata Directive
 * In the description of each extracted video, include a pinned backlink to the full livestream archive: `[0. The Origin Story "how today came to be"](https://studio.youtube.com/video/PJfvjQMPbGo)`.

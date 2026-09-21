@@ -9,9 +9,7 @@
   ],
   "skills": [
     "projects/{project_id}/skills/montage_compose",
-    "projects/{project_id}/skills/youtube_shorts",
-    "projects/{project_id}/skills/tiktok_shorts",
-    "projects/{project_id}/skills/instagram_reels"
+    "skills/vertical_shorts"
   ],
   "modules": {
     "concat": { "enabled": true, "mode": "full" },

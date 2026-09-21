@@ -57,6 +57,12 @@ class ProjectPaths:
     def segment_pool_path(self) -> Path:
         return self.plan_dir / "segment-pool.json"
 
+    def shorts_dir(self) -> Path:
+        return self.deliverables_dir / "shorts"
+
+    def shorts_approved_dir(self) -> Path:
+        return self.deliverables_dir / "shorts_approved"
+
     def deliverable_dir(self, platform: str) -> Path:
         return self.deliverables_dir / platform
 
@@ -83,9 +89,9 @@ class ProjectPaths:
             self.transcript_dir,
             self.audio_cache_dir,
             self.deliverables_dir,
-            self.deliverables_dir / "youtube",
-            self.deliverables_dir / "tiktok",
-            self.deliverables_dir / "reels",
+            self.deliverables_dir / "shorts",
+            self.deliverables_dir / "shorts_approved",
+            self.deliverables_dir / "chunks",
         ):
             path.mkdir(parents=True, exist_ok=True)
 

@@ -14,10 +14,10 @@ Skills live in `skills/` at the workspace root. This file tracks what exists, wh
 
 | Skill | Path | Agent | Notes |
 |-------|------|-------|-------|
-| youtube-chunks | `skills/youtube_chunks/` | Chapter Planner | 10–30 min 16:9 rules |
-| youtube-shorts | `skills/youtube_shorts/` | Shorts Planner | 30–60s 9:16 |
-| tiktok-shorts | `skills/tiktok_shorts/` | Shorts Planner | 15–60s aggressive pacing |
-| instagram-reels | `skills/instagram_reels/` | Shorts Planner | 30–90s aesthetic |
+| chunks | `skills/chunks/` | Chapter Planner | 11–15 min 16:9 rules |
+| vertical-shorts | `skills/vertical_shorts/` | Shorts Planner | 9:16 — editorial versions, not platforms |
+| extract-shorts | `skills/extract_shorts/` | Shorts Planner | Hook → Setup → Resolution; coherence gate before render |
+| situation-resolve | `skills/situation_resolve/` | Shorts Planner | One situation held until it resolves |
 | dynamic-zoom | `skills/dynamic_zoom/` | Renderer | Periodic zoom in/out |
 | sfx-allocation | `skills/sfx_allocation/` | Renderer | Word-triggered SFX |
 
@@ -44,7 +44,7 @@ Skills live in `skills/` at the workspace root. This file tracks what exists, wh
 Orchestrator     → SKILL.md, plan-stream, render-manifest
 Transcriber      → (process_stream extract/transcribe only)
 Chapter Planner  → plan-stream, youtube-chunks
-Shorts Planner   → plan-stream, flywheel-series, youtube-shorts (+ platform)
+Shorts Planner   → plan-stream, extract-shorts, flywheel-series, vertical-shorts
 Renderer         → render-manifest, dynamic_zoom, sfx_allocation
 QA Reviewer      → qa-manifest, all platform skills (reference)
 ```

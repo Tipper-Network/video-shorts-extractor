@@ -2,9 +2,9 @@
   "playbook_id": "flywheel-episode",
   "strategy": "flywheel-episode",
   "name": "Flywheel episode",
-  "description": "Strategy B: A 10–30 min YouTube chapter IS the service delivery. Flywheel shorts tease, support, and close around it. Publish: pre-shorts → chapter → post-shorts.",
-  "primary_output": "chapters_and_shorts",
-  "conclusion": "Viewer follows shorts into the full chapter for payoff; post-shorts cement trust and loop to next episode.",
+  "description": "Strategy B: A 11-15 min chunk IS the service delivery. Flywheel shorts tease, support, and close around it. Publish: pre-shorts → chunk → post-shorts.",
+  "primary_output": "chunks_and_shorts",
+  "conclusion": "Viewer follows shorts into the 11-15 min mid-form chunk for payoff; post-shorts cement trust and loop to next episode.",
   "module_order": [
     "transcribe",
     "detect_topics",
@@ -21,21 +21,22 @@
     "polish": { "enabled": true, "sfx": true, "zoom": false }
   },
   "narrative_modules": {
-    "plan_chapter": {
+    "plan_chunk": {
       "enabled": true,
-      "focus": "chapter_first",
-      "skills": ["skills/detect_topics", "skills/youtube_chunks"],
-      "notes": "One self-contained 10–30 min contiguous chapter per topic. Service = full delivery here."
+      "focus": "chunk_first",
+      "skills": ["skills/detect_topics", "skills/chunks"],
+      "notes": "One self-contained 11–15 min contiguous chunk per topic. Service = full delivery here."
     },
-    "plan_shorts_around_chapter": {
+    "plan_shorts_around_chunk": {
       "enabled": true,
       "skills": [
-        "skills/youtube_shorts",
-        "skills/tiktok_shorts",
-        "skills/instagram_reels",
+        "skills/situation_resolve",
+        "skills/extract_shorts",
+        "skills/vertical_shorts",
+        "skills/chunks",
         "skills/flywheel_series"
       ],
-      "notes": "Shorts tease parent chapter. parent_chapter required. publish_order wraps chapter."
+      "notes": "Shorts tease parent chunk. parent_chunk required. publish_order wraps chunk."
     },
     "plan_flywheel_sequence": { "enabled": false }
   },
@@ -43,7 +44,7 @@
     "concat": { "enabled": false },
     "transcribe": { "enabled": true, "vosk_words": false },
     "detect_topics": { "enabled": true, "method": "heuristic", "pause_threshold_sec": 2.5 },
-    "plan_manifest": { "enabled": true, "planner": "cursor-agent", "focus": "chapter_first_then_shorts" },
+    "plan_manifest": { "enabled": true, "planner": "cursor-agent", "focus": "chunk_first_then_shorts" },
     "compose_shorts": { "enabled": false },
     "render": { "enabled": true, "trim_on_render": true },
     "trim_silence": { "enabled": false },
@@ -51,29 +52,39 @@
   },
   "skills": [
     "skills/detect_topics",
-    "skills/youtube_chunks",
-    "skills/youtube_shorts",
-    "skills/tiktok_shorts",
-    "skills/instagram_reels",
+    "skills/chunks",
+    "skills/situation_resolve",
+    "skills/extract_shorts",
+    "skills/vertical_shorts",
     "skills/flywheel_series"
   ],
   "chapters": {
     "enabled": true,
     "cut_mode": "contiguous",
-    "min_sec": 600,
-    "max_sec": 1800,
+    "min_sec": 660,
+    "max_sec": 900,
     "default_trim": "light"
   },
   "shorts": {
     "cut_mode": "contiguous",
     "default_trim": "moderate",
-    "require_parent_chapter": true
+    "require_parent_chapter": true,
+    "versions": ["hook-first", "story-first", "contiguous"]
+  },
+  "deliverables": {
+    "shorts": {
+      "skill": "skills/vertical_shorts",
+      "versions": ["hook-first", "story-first", "contiguous"]
+    },
+    "chunks": {
+      "skill": "skills/chunks"
+    }
   },
   "flywheel": {
     "enabled": true,
     "tag_shorts": true,
     "sequence_is_product": false,
-    "chapter_is_service_delivery": true
+    "chunk_is_service_delivery": true
   },
   "acts": [
     {
@@ -81,29 +92,29 @@
       "stages": ["attract", "engage"],
       "output": "shorts",
       "default_trim": "aggressive",
-      "planning": "Pre-chapter shorts. Tease problem/question. publish_order before chapter."
+      "planning": "Pre-chunk shorts. Tease problem/question. publish_order before chunk."
     },
     {
       "act_id": "prove",
       "stages": ["trust"],
       "output": "shorts",
       "default_trim": "moderate",
-      "planning": "Optional trust short before chapter drop."
+      "planning": "Optional trust short before chunk drop."
     },
     {
       "act_id": "deliver",
       "stages": ["service"],
-      "output": "chapters",
+      "output": "chunks",
       "default_trim": "light",
-      "planning": "THE chapter — 10–30 min full value. Center of publish sequence."
+      "planning": "THE chunk — 11-15 min mid-form value. Center of publish sequence."
     },
     {
       "act_id": "close",
       "stages": ["referral", "loop"],
       "output": "shorts",
       "default_trim": "moderate",
-      "planning": "Post-chapter shorts. Proof + CTA back to chapter + tease next episode."
+      "planning": "Post-chunk shorts. Proof + CTA back to chunk + tease next episode."
     }
   ],
-  "publish_pattern": ["short", "short", "chapter", "short", "short"]
+  "publish_pattern": ["short", "short", "chunk", "short", "short"]
 }

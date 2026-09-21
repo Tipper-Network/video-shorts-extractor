@@ -7,6 +7,7 @@ Copy this folder to `projects/{your-project-id}/` and fill in with the agent.
 | Field | Value |
 |-------|-------|
 | Project ID | `{name}` |
+| **Entity** | Tipper / THP / GAF / founder — from the video title ([`skills/entity_brand`](../../skills/entity_brand/SKILL.md)) |
 | Playbook | Set `playbook_id` in `pipeline.json` |
 | Input | `projects/{name}/input/` — **drop raw video here** |
 
@@ -17,7 +18,7 @@ Link persistent briefs here (saved from Gemini or written in-session):
 | File | Purpose |
 |------|---------|
 | `shorts_instructions.md` | Optional — vertical shorts brief |
-| `youtube_instructions.md` | Optional — YouTube chapter brief |
+| `chunk_instructions.md` | Optional — Mid-form chunk brief |
 
 ## Goal
 

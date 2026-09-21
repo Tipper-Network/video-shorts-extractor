@@ -69,7 +69,7 @@ flowchart TB
     DOC["subtitles/*.json"]
     TOP["*.topics.json"]
     MAN["manifest.json"]
-    VID["chapters/ + shorts/"]
+    VID["chunks/ + shorts/"]
   end
 
   V --> RUN
@@ -145,8 +145,8 @@ flowchart TB
   "description": "Long speech → chapters + flywheel shorts",
   "module_order": ["transcribe", "detect_topics", "plan_manifest", "render", "polish"],
   "skills": [
-    "skills/youtube_chunks",
-    "skills/youtube_shorts",
+    "skills/chunks",
+    "skills/vertical_shorts",
     "skills/flywheel_series"
   ],
   "modules": { "...": "..." },
@@ -174,12 +174,12 @@ Or copy the full playbook into `projects/{name}/pipeline.json` and customize inl
 
 ## Playbook catalog
 
-| Playbook ID | Strategy | Primary output |
-|-------------|----------|----------------|
-| [`flywheel-shorts`](playbooks/flywheel-shorts.json) | Shorts queue = flywheel journey | ordered `shorts[]` |
-| [`flywheel-episode`](playbooks/flywheel-episode.json) | Chapter + wrapper shorts | `chapters[]` + `shorts[]` |
-| [`timelapse-montage`](playbooks/timelapse-montage.json) | Visual timelapse (no speech) | supercut shorts |
-| [`podcast-chapter`](playbooks/podcast-chapter.json) | Single deep-dive | one chapter |
+| Playbook ID | Strategy | Deliverables |
+|-------------|----------|--------------|
+| [`flywheel-shorts`](playbooks/flywheel-shorts.json) | Shorts queue = flywheel journey | `shorts[]` (vertical) |
+| [`flywheel-episode`](playbooks/flywheel-episode.json) | Mid-form + flywheel shorts | `chapters[]` (16:9) + `shorts[]` |
+| [`timelapse-montage`](playbooks/timelapse-montage.json) | Visual timelapse (no speech) | `shorts[]` (supercut) |
+| [`podcast-chapter`](playbooks/podcast-chapter.json) | Single mid-form deep-dive | `chapters[]` (11-15 min) |
 
 Add new playbooks to [`playbooks/`](playbooks/) — don't fork module code.
 
@@ -200,9 +200,8 @@ Video (speech)                      Many clips → concat
     │                                   │
     ▼                                   ▼
 [plan_manifest] ◄── skills:           [plan_manifest] ◄── skills:
-  youtube_chunks                        hikmat/montage_compose
-  flywheel_series                       youtube_shorts (project)
-  youtube_shorts                        │
+  chunks                                montage skill (project)
+  vertical_shorts                       vertical_shorts
     │                                   │
     ▼                                   ▼
 [render] trim: light/moderate         [render] trim: off
@@ -211,8 +210,8 @@ Video (speech)                      Many clips → concat
 [polish] optional                     (no polish)
     │                                   │
     ▼                                   ▼
-chapters/ 16:9                        shorts/ 9:16 supercut
-shorts/  9:16 flywheel-tagged
+chunks/   16:9 (11-15 min)            shorts/ 9:16 (supercut)
+shorts/   9:16 (vertical)
 ```
 
 ---

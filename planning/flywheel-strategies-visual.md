@@ -108,8 +108,8 @@ flowchart TB
   end
 
   subgraph SK["Skills — rules"]
-    SK1[youtube_shorts]
-    SK2[youtube_chunks]
+    SK1[vertical_shorts]
+    SK2[chunks]
     SK3[flywheel_series]
   end
 

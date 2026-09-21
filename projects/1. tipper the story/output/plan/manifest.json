@@ -1,0 +1,175 @@
+{
+  "version": "1.1",
+  "source": "input/1. Tipper _the story_.mp4",
+  "stem": "tipper-the-story",
+  "series_id": "tipper-the-story",
+  "planned_at": "2026-09-12T09:12:00Z",
+  "planner_model": "cursor-agent",
+  "content_type": "speech-flywheel",
+  "short_form_style": "flywheel-shorts",
+  "related_video": "https://studio.youtube.com/video/293tZJOEmog",
+  "instruction_files": {
+    "shorts": "shorts_instructions.md",
+    "chunks": "chunk_instructions.md",
+    "requirements": "requirements.md"
+  },
+  "deliverables": {
+    "shorts": {
+      "skill": "skills/vertical_shorts",
+      "count": 10,
+      "versions": ["hook-first", "story-first", "contiguous"]
+    },
+    "chunks": {
+      "skill": "skills/chunks",
+      "count": 3,
+      "duration_min_sec": 660,
+      "duration_max_sec": 900,
+      "aspect": "16:9"
+    }
+  },
+  "review": {
+    "status": "draft",
+    "notes": "Full manifest for Tipper The Story. 10 Shorts (editorial versions) and 3 mid-form chunks."
+  },
+  "chapters": [
+    {
+      "id": "ch01",
+      "title": "The Reality of Starting Over: 8 Failed Ventures to Day 1",
+      "theme": "failure-to-day-1",
+      "aspect": "16:9",
+      "target": "chunk",
+      "cut_mode": "supercut",
+      "segments": [
+        { "start": 100, "end": 390, "label": "breakdown-2021" },
+        { "start": 445, "end": 740, "label": "identity-vs-product" },
+        { "start": 741, "end": 1190, "label": "spain-stillness" }
+      ],
+      "rendered": false
+    },
+    {
+      "id": "ch02",
+      "title": "The Founder's Apprenticeship: Self-Taught Dev to Product Architecture",
+      "theme": "self-taught-dev",
+      "aspect": "16:9",
+      "target": "chunk",
+      "cut_mode": "supercut",
+      "segments": [
+        { "start": 1570, "end": 1890, "label": "study-curriculum" },
+        { "start": 1891, "end": 2280, "label": "storm-commitment" },
+        { "start": 2385, "end": 2850, "label": "bootcamp-prototypes" }
+      ],
+      "rendered": false
+    },
+    {
+      "id": "ch03",
+      "title": "Beyond the Startup: Building GAF & The Social Genome Project",
+      "theme": "ecosystem-vision",
+      "aspect": "16:9",
+      "target": "chunk",
+      "cut_mode": "supercut",
+      "segments": [
+        { "start": 2930, "end": 3159, "label": "hiring-investment" },
+        { "start": 3160, "end": 3525, "label": "gaf-vision" },
+        { "start": 3540, "end": 3718, "label": "future-exchange" }
+      ],
+      "rendered": false
+    }
+  ],
+  "shorts": [
+    {
+      "id": "sh01",
+      "title": "Separating Yourself from Your Product",
+      "aspect": "9:16",
+      "cut_mode": "supercut",
+      "segments": [
+        { "start": 560, "end": 565, "label": "hook" },
+        { "start": 210, "end": 250, "label": "confession" },
+        { "start": 555, "end": 595, "label": "trap" }
+      ],
+      "publish_order": 1
+    },
+    {
+      "id": "sh02",
+      "title": "8 Failed Companies & Zero in the Bank",
+      "aspect": "9:16",
+      "cut_mode": "contiguous",
+      "start": 105,
+      "end": 175,
+      "publish_order": 2
+    },
+    {
+      "id": "sh03",
+      "title": "Shared Worlds vs. Isolated Scopes",
+      "aspect": "9:16",
+      "cut_mode": "contiguous",
+      "start": 270,
+      "end": 340,
+      "publish_order": 3
+    },
+    {
+      "id": "sh04",
+      "title": "Reaction vs. Response (The 5% Rule)",
+      "aspect": "9:16",
+      "cut_mode": "supercut",
+      "segments": [
+        { "start": 335, "end": 375, "label": "ego-check" },
+        { "start": 525, "end": 570, "label": "framework" }
+      ],
+      "publish_order": 4
+    },
+    {
+      "id": "sh05",
+      "title": "Brute Forcing Success vs. Learning from Failure",
+      "aspect": "9:16",
+      "cut_mode": "contiguous",
+      "start": 2735,
+      "end": 2765,
+      "publish_order": 5
+    },
+    {
+      "id": "sh06",
+      "title": "The Hero's Journey Happens Every Single Day",
+      "aspect": "9:16",
+      "cut_mode": "contiguous",
+      "start": 2925,
+      "end": 3045,
+      "publish_order": 6
+    },
+    {
+      "id": "sh07",
+      "title": "The Push vs. The Pull of Building",
+      "aspect": "9:16",
+      "cut_mode": "contiguous",
+      "start": 985,
+      "end": 1035,
+      "publish_order": 7
+    },
+    {
+      "id": "sh08",
+      "title": "It Took Me 6 Months to Understand a Function",
+      "aspect": "9:16",
+      "cut_mode": "contiguous",
+      "start": 2265,
+      "end": 2320,
+      "publish_order": 8
+    },
+    {
+      "id": "sh09",
+      "title": "Why Startups Build the Wrong Thing",
+      "aspect": "9:16",
+      "cut_mode": "contiguous",
+      "start": 1655,
+      "end": 1730,
+      "publish_order": 9
+    },
+    {
+      "id": "sh10",
+      "title": "Entering a Coding Bootcamp at 37",
+      "aspect": "9:16",
+      "cut_mode": "contiguous",
+      "start": 3365,
+      "end": 3435,
+      "publish_order": 10
+    }
+  ]
+}

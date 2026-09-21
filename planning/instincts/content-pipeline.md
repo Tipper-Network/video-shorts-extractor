@@ -16,6 +16,15 @@
 - **Never** produce a chapter shorter than 600s without flagging it for human review.
 - **Never** produce a chapter longer than 1800s without splitting or flagging.
 
+## Entity (title = brand)
+
+<!-- added: 2026-09-21 | reason: Tipper / THP / GAF are named on the video -->
+- **Always** resolve entity from the video/folder name before extracting (`skills/entity_brand`).
+- **Always** read `brands/` for that entity (`Tipper_Brand_Book.md` / `the-hard-port-brief.md` / GAF brief+book). Desktop copies are fallback only.
+- **Never** apply THP observational series rules to a Tipper-titled video, or GAF guild copy to a THP video.
+- **Always** apply founder spoken style (`THP-MEDIA-003` Founder Narration + situation_resolve) on every entity.
+- **Prefer** parking a finished thought that belongs to a sibling entity over shipping it on the wrong queue.
+
 ## Flywheel
 
 <!-- added: 2026-09-01 | reason: user flywheel strategy -->
@@ -31,7 +40,11 @@
 - **Never** re-transcribe during render — manifest timestamps are frozen at approval.
 - **Always** validate manifest against schema before first ffmpeg call.
 - **Prefer** logging per-clip failures over aborting the entire batch.
-- **Never** overwrite an existing rendered clip without `--force` or explicit user approval.
+- **Never** overwrite an existing rendered clip. Write `{stem}_v2.mp4`, `_v3`, … so the previous file stays for A/B. `--force` only when the user explicitly asks to replace. Never ffmpeg `-y` onto an existing `_vN`.
+- **Never** out mid-clause to dodge a pitch. If the land is “right now,” keep the finished example of the move (sh05: “this is the first stream”).
+- Shorts floor 50s, prefer ~60s+. Do not ship 28–34s WisdomBits.
+- **Never** ffmpeg a recut until the user has approved the playback script in `deliverables/shorts/{stem}.md`. Script first, picture second.
+- Draft mp4s stay in `deliverables/shorts/`. Signed-off videos are copied to `deliverables/shorts_approved/`.
 
 ## Local-First
 

@@ -7,6 +7,7 @@ This workspace is home for **local video editing and content creation**. Treat i
 Turn raw footage into publishable, platform-ready content:
 
 - Transcribe, plan cuts, apply editing skills, render
+- Two deliverable types: **Shorts** (vertical, 9:16) and **Chunks** (horizontal, 16:9, 11-15 min)
 - Maintain series continuity and flywheel sequencing
 - Keep strategy in THP; keep execution here
 
@@ -18,10 +19,11 @@ Use runtime-provided context first (`AGENTS.md`, `SOUL.md`, `USER.md`, recent `m
 
 When working on a **named project**, read its on-disk brief before planning or regenerating frameworks:
 
-1. `projects/{folder}/brief.md` and `requirements.md`
-2. Any `*_instructions.md` in that folder (e.g. `shorts_instructions.md`, `youtube_instructions.md`)
-3. `output/transcript/transcript.txt` if it exists (do not re-transcribe to plan cuts)
-4. `output/plan/manifest.json` — update in place; do not recreate from scratch unless asked
+1. `projects/{folder}/brief.md` and `requirements.md` — resolve `entity` from the folder/video name ([`skills/entity_brand`](skills/entity_brand/SKILL.md))
+2. That entity's file in [`brands/`](brands/) (Tipper / THP / GAF). Founder spoken style is always on (`USER.md` + Origin Story craft).
+3. Any `*_instructions.md` or `shorts_extraction.md` in that folder
+4. `output/transcript/transcript.txt` if it exists (do not re-transcribe to plan cuts)
+5. `output/plan/manifest.json` — update in place; do not recreate from scratch unless asked
 
 Resolve project folder via `project_id` in `pipeline.json` (folder name may differ, e.g. `0. the origin story` → `origin-story`).
 
@@ -78,7 +80,8 @@ Before building custom tooling, check for maintained open-source options (ffmpeg
 | **Flywheel strategies (2 models)** | [`planning/flywheel-strategies.md`](planning/flywheel-strategies.md) |
 | **Flywheel visuals** | [`planning/flywheel-strategies-visual.md`](planning/flywheel-strategies-visual.md) |
 | Architecture | [`planning/pipeline-architecture.md`](planning/pipeline-architecture.md) |
-| THP strategy (external) | `~/Desktop/The-Hard-Port-stuff/The Hard Port/the-hard-port-os/` |
+| **Entity brands (in-repo)** | [`brands/`](brands/) — Tipper book, THP brief, GAF brief + book |
+| THP OS (external, series/ops) | `~/Desktop/The-Hard-Port-stuff/The Hard Port/the-hard-port-os/` |
 | **Projects (one folder per job)** | [`projects/`](projects/README.md) |
 
 ## Planning Model
@@ -91,6 +94,6 @@ Transcription and render stay scripted (Whisper, FFmpeg). Planning is interactiv
 
 ```markdown
 - Projects root: projects/{name}/ — input, output, config, *_instructions.md, skills
-- Agent reads: brief.md → requirements.md → *_instructions.md → transcript.txt → manifest.json
+- Agent reads: brief.md → requirements.md → `brands/` for the named entity → *_instructions.md → transcript.txt → manifest.json
 - Origin Story: projects/0. the origin story/ (project_id: origin-story)
 ```

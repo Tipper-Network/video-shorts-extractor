@@ -28,17 +28,20 @@ pip install -r content_pipeline/requirements.txt
 ├── projects/                         # ONE FOLDER PER JOB (input + output + config)
 │   ├── README.md
 │   ├── _template/                    # Copy to start a new project
-│   └── hikmat/
-│       ├── input/                    # Drop raw footage here
-│       ├── output/
-│       │   ├── master/
-│       │   ├── plan/
-│       │   ├── deliverables/
-│       │   ├── logs/
-│       │   └── cache/
+│   ├── origin-story/
+│   │   ├── input/                    # Drop raw footage here
+│   │   ├── output/
+│   │   │   ├── transcript/           # transcript.txt + segments.json
+│   │   │   ├── plan/                 # manifest.json
+│   │   │   ├── deliverables/
+│   │   │   │   ├── shorts/           # Vertical (YT, TikTok, Reels)
+│   │   │   │   └── chunks/           # 11-15 min mid-form
+│   │   │   ├── logs/
+│   │   │   └── cache/
 │       ├── requirements.md
+│       ├── brief.md
 │       ├── pipeline.json
-│       └── skills/
+│       └── *_instructions.md         # Persistent creative briefs
 ├── content_pipeline/                 # Shared scripts only (no project data)
 │   ├── concat_clips.py
 │   ├── compose_shorts.py

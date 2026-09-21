@@ -1,0 +1,11 @@
+{
+  "project_id": "tipper-the-concept",
+  "playbook_id": "flywheel-shorts",
+  "description": "Tipper the concept — speech long-form → flywheel shorts queue",
+  "overrides": {
+    "modules": {
+      "transcribe": { "enabled": true },
+      "render": { "enabled": true, "render_chapters": true }
+    }
+  }
+}

@@ -50,6 +50,7 @@ TARGET_DEFAULTS: dict[str, TrimLevel] = {
     "yt-shorts": "moderate",
     "tiktok": "aggressive",
     "instagram": "moderate",
+    "reels": "moderate",
 }
 
 

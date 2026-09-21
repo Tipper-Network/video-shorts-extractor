@@ -1,8 +1,14 @@
 # Large media — keep out of git
 projects/*/input/**
-projects/*/output/**
+projects/*/output/deliverables/**
+projects/*/output/cache/**
+projects/*/output/master/**
 !projects/*/input/README.md
 !projects/_template/**
+# Text artifacts (transcript, plan, logs) — track in git
+!projects/*/output/transcript/**
+!projects/*/output/plan/**
+!projects/*/output/logs/**
 content_pipeline/.cache/
 content_pipeline/.env
 .env

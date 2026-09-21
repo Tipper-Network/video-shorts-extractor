@@ -105,13 +105,13 @@ def render_from_manifest(manifest_path: Path) -> None:
     stem = manifest["stem"]
     out_dir = OUTPUT_DIR / stem
     out_dir.mkdir(parents=True, exist_ok=True)
-    chapters_dir = out_dir / "chapters"
+    chunks_dir = out_dir / "chunks"
     shorts_dir = out_dir / "shorts"
-    chapters_dir.mkdir(exist_ok=True)
+    chunks_dir.mkdir(exist_ok=True)
     shorts_dir.mkdir(exist_ok=True)
 
     for chapter in manifest.get("chapters") or []:
-        out_file = chapters_dir / f"{chapter['id']}_{chapter['title'][:40].replace(' ', '_')}.mp4"
+        out_file = chunks_dir / f"{chapter['id']}_{chapter['title'][:40].replace(' ', '_')}.mp4"
         cut_video(source, chapter["start"], chapter["end"], chapter.get("aspect", "16:9"), out_file)
 
     for short in manifest.get("shorts") or []:
@@ -147,7 +147,7 @@ def main():
         out = OUTPUT_DIR / args.output_name
         if args.project:
             paths = load_project_paths(args.project)
-            out = paths.deliverables_dir / "youtube" / args.output_name
+            out = paths.deliverables_dir / "chunks" / args.output_name
             out.parent.mkdir(parents=True, exist_ok=True)
         cut_video(video_path, args.start, args.end, args.aspect, out)
         return

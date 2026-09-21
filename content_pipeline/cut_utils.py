@@ -20,13 +20,38 @@ def run_cmd(cmd: list[str], *, fatal: bool = True) -> subprocess.CompletedProces
     return result
 
 
+# Hard speech leveling — live yells need dynaudnorm + a tight LRA, not loudnorm alone.
+VOICE_AF = (
+    "acompressor=threshold=-24dB:ratio=8:attack=3:release=80:makeup=5,"
+    "dynaudnorm=f=75:g=25:p=0.6:m=12,"
+    "alimiter=limit=0.75:attack=3:release=30,"
+    "loudnorm=I=-16:TP=-1.5:LRA=4"
+)
+
+
 def aspect_filter(aspect: str) -> str:
     if aspect == "9:16":
-        return "crop=ih*(9/16):ih,scale=1080:1920"
+        # Full 16:9 frame placed inside 1080x1920 vertical canvas
+        # Background: fills 1080x1920 (blurred)
+        # Foreground: scales 16:9 original to 1080 width (unblurred)
+        return (
+            "split[v1][v2];"
+            "[v1]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=20:10,setsar=1[v1out];"
+            "[v2]scale=1080:trunc(1080*ih/iw/2)*2,setsar=1[v2out];"
+            "[v1out][v2out]overlay=(W-w)/2:(H-h)/2"
+        )
     return "scale=1920:1080"
 
 
-def cut_video(source: Path, start: float, end: float, aspect: str, output_path: Path) -> None:
+def cut_video(
+    source: Path,
+    start: float,
+    end: float,
+    aspect: str,
+    output_path: Path,
+    *,
+    level_audio: bool = False,
+) -> None:
     duration = end - start
     output_path.parent.mkdir(parents=True, exist_ok=True)
     cmd = [
@@ -44,14 +69,20 @@ def cut_video(source: Path, start: float, end: float, aspect: str, output_path: 
         str(duration),
         "-vf",
         aspect_filter(aspect),
-        "-c:v",
-        "libx264",
-        "-preset",
-        "fast",
-        "-c:a",
-        "aac",
-        str(output_path),
     ]
+    if level_audio:
+        cmd.extend(["-af", VOICE_AF])
+    cmd.extend(
+        [
+            "-c:v",
+            "libx264",
+            "-preset",
+            "fast",
+            "-c:a",
+            "aac",
+            str(output_path),
+        ]
+    )
     run_cmd(cmd)
 
 
@@ -59,6 +90,7 @@ def concat_parts(parts: list[Path], output_path: Path) -> None:
     list_file = output_path.with_suffix(".concat.txt")
     with open(list_file, "w", encoding="utf-8") as f:
         for part in parts:
+            # use absolute path to avoid confusion
             f.write(f"file '{part.resolve()}'\n")
 
     cmd = [
@@ -73,7 +105,7 @@ def concat_parts(parts: list[Path], output_path: Path) -> None:
         "-safe",
         "0",
         "-i",
-        str(list_file),
+        str(list_file.resolve()),
         "-c:v",
         "libx264",
         "-preset",
@@ -82,10 +114,37 @@ def concat_parts(parts: list[Path], output_path: Path) -> None:
         "aac",
         "-movflags",
         "+faststart",
-        str(output_path),
+        str(output_path.resolve()),
     ]
     run_cmd(cmd)
     list_file.unlink(missing_ok=True)
+
+
+def level_speech(input_path: Path) -> None:
+    """Re-encode audio on the finished file so spikes always hit the leveler."""
+    tmp = input_path.with_name(input_path.stem + ".level.mp4")
+    cmd = [
+        "ffmpeg",
+        "-y",
+        "-nostdin",
+        "-hide_banner",
+        "-loglevel",
+        "warning",
+        "-i",
+        str(input_path),
+        "-c:v",
+        "copy",
+        "-af",
+        VOICE_AF,
+        "-c:a",
+        "aac",
+        "-movflags",
+        "+faststart",
+        str(tmp),
+    ]
+    run_cmd(cmd)
+    tmp.replace(input_path)
+    print(f" Audio leveled → {input_path.name}")
 
 
 def still_to_video(image_path: Path, duration: float, aspect: str, output_path: Path) -> None:
@@ -212,3 +271,5 @@ def render_clip_entry(
 
     if trim_level != "off":
         apply_trim(output_path, output_path, trim_level)
+
+    level_speech(output_path)

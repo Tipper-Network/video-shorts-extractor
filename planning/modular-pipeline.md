@@ -79,7 +79,7 @@ Example instruction set you give the agent for a THP episode:
 ```
 1. run_module transcribe --input episode_04.mp4
 2. run_module detect_topics --transcript subtitles/episode_04.json
-3. Read topics + skills/youtube_chunks → write manifest chapters (contiguous)
+3. Read topics + skills/chunks → write manifest chunks (contiguous)
 4. Read chapters + skills/flywheel_series → write shorts:
    - sh01 attract (from ch01 hook window)
    - sh02 engage (question clip)

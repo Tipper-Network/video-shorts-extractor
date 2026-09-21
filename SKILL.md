@@ -12,7 +12,7 @@ requires:
 
 This workspace handles local video processing into multi-platform clips using Faster-Whisper, FFmpeg, and **Cursor agent planning** (chapters, shorts, manifests).
 
-**Separate from THP:** brand strategy, series scripts, and editorial voice live in `The-Hard-Port-stuff/the-hard-port-os/`. This workspace executes the cut.
+**Separate from product repos:** brand books stay in each entity's home (THP OS, GAF folder, Tipper boundary). This workspace reads them, then cuts. Do not merge those repos here.
 
 ## Standard Directory Map
 
@@ -27,10 +27,12 @@ This workspace handles local video processing into multi-platform clips using Fa
 
 When receiving a request to process video:
 
-1. **Target Identification:** If the user specifies a platform (TikTok, Instagram, YouTube), defer to `skills/<platform>/SKILL.md`.
-2. **Default Fallback:** No platform specified → one **15-minute YouTube chapter** (16:9) + **2 vertical shorts** (9:16).
-3. **Storyline context:** If the content belongs to a THP series, read the relevant script from THP `content/youtube/` for tone and structure — apply cuts here.
-4. **Execution:** Run pipeline scripts — never expect scripts to plan cuts autonomously.
+1. **Entity:** Resolve Tipper / THP / GAF / founder from the video or folder name. Read [`skills/entity_brand/`](skills/entity_brand/SKILL.md) and that entity's brand records before planning cuts.
+2. **Target Identification:** If the user specifies a platform (TikTok, Instagram, YouTube), defer to `skills/<platform>/SKILL.md`.
+3. **Default Fallback:** No platform specified → one **11-15 min mid-form chunk** (16:9) + **2 vertical shorts** (9:16).
+4. **Storyline context:** Read [`brands/`](brands/) for the named entity. THP-titled → `the-hard-port-brief.md`. Tipper-titled → `Tipper_Brand_Book.md`. GAF-titled → GAF brief + book.
+5. **Execution:** Run pipeline scripts — never expect scripts to plan cuts autonomously.
+6. **Leftover scan:** After instruction-file themes are scripted, read the rest of the transcript. The brief is not a cap. Note unused situation→resolve blocks before calling the job done.
 
 ## Pipeline Scripts
 
@@ -62,10 +64,11 @@ Multi-clip pipeline (plan → review → render) is spec'd there. Current code (
 |-------|---------|
 | [`skills/dynamic_zoom/`](skills/dynamic_zoom/SKILL.md) | Periodic zoom in/out |
 | [`skills/sfx_allocation/`](skills/sfx_allocation/SKILL.md) | Word-triggered SFX |
-| [`skills/youtube_chunks/`](skills/youtube_chunks/SKILL.md) | 10–30 min chapters |
-| [`skills/youtube_shorts/`](skills/youtube_shorts/SKILL.md) | Vertical teasers |
-| [`skills/tiktok_shorts/`](skills/tiktok_shorts/SKILL.md) | Fast-paced shorts |
-| [`skills/instagram_reels/`](skills/instagram_reels/SKILL.md) | Visual story reels |
+| [`skills/chunks/`](skills/chunks/SKILL.md) | 11–15 min mid-form chunks |
+| [`skills/entity_brand/`](skills/entity_brand/SKILL.md) | Title = brand key: Tipper / THP / GAF / founder |
+| [`skills/situation_resolve/`](skills/situation_resolve/SKILL.md) | One situation (problem/issue/struggle/intention) held until it resolves |
+| [`skills/extract_shorts/`](skills/extract_shorts/SKILL.md) | Hook → Setup → Resolution + coherence gate |
+| [`skills/vertical_shorts/`](skills/vertical_shorts/SKILL.md) | 9:16 vertical shorts (editorial versions, not platforms) |
 
 ## Guardrails
 

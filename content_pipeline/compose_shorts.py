@@ -208,11 +208,11 @@ def build_manifest(clip_map: dict, pool: list[dict]) -> dict:
         "content_type": "carpentry-timelapse",
         "short_form_style": SHORT_FORM_STYLE,
         "output_layout": {
-            "montage": "deliverables/{platform}/reveal-build.mp4",
+            "montage": "deliverables/shorts/reveal-build_{platform}.mp4",
         },
         "review": {
             "status": "draft",
-            "notes": "Platform-separated deliverables under output/deliverables/{platform}/.",
+            "notes": "Unified shorts deliverables under output/deliverables/shorts/ with platform suffixes.",
         },
         "chapters": [],
         "shorts": shorts,

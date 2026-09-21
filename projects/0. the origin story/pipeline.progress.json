@@ -1,0 +1,15 @@
+{
+  "project_id": "origin-story",
+  "stage": "render_shorts",
+  "status": "complete",
+  "started_at": "2026-09-21T13:08:17Z",
+  "current": 1,
+  "total": 1,
+  "percent": 100.0,
+  "unit": "clip",
+  "item": "",
+  "message": "complete",
+  "elapsed_seconds": 120.6,
+  "elapsed_human": "2m 1s",
+  "updated_at": "2026-09-21T13:08:17Z"
+}

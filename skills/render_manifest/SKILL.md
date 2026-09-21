@@ -64,7 +64,8 @@ content_pipeline/output/{stem}/
 
 - Never re-transcribe during render
 - Log per-clip failures; don't abort entire batch
-- Never overwrite rendered files without `--force`
+- Never overwrite a rendered file. Next pass writes `_v2` / `_v3` so both stay for compare. `--force` only when the user asks to replace. Never ffmpeg `-y` onto an existing `_vN` — if `_v2` is taken, write `_v3`.
+- Do not render a short whose `script_approved` is false. The agent must paste the playback script and wait.
 
 ## Future
 

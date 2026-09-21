@@ -1,0 +1,6 @@
+ Extracting audio from video...
+ Executing: ffmpeg -y -i /home/psyfer/Desktop/workspace/projects/0. the origin story/input/0. Origin story.mp4 -vn -acodec pcm_s16le -ar 16000 -ac 1 /home/psyfer/Desktop/workspace/projects/0. the origin story/output/cache/audio/0. Origin story.wav
+ Running Faster-Whisper transcription...
+ Saved transcript text → /home/psyfer/Desktop/workspace/projects/0. the origin story/output/transcript/transcript.txt (984 lines)
+ Transcript: /home/psyfer/Desktop/workspace/projects/0. the origin story/output/transcript/transcript.txt
+ Planning cuts → use Cursor agent + manifest.json

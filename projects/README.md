@@ -7,6 +7,8 @@ Each project is **self-contained**. Your workflow:
 3. Fill **`requirements.md`** with us (story, audience, cuts)
 4. Run pipeline scripts with `--project {name}`
 5. Collect publish-ready files from **`output/deliverables/`**
+    - `shorts/` (9:16 — one file per editorial version)
+    - `chunks/` (11-15 min mid-form)
 
 Platform code stays in `content_pipeline/`. Planning stays in `planning/`. **Everything for this job lives here.**
 
@@ -17,7 +19,7 @@ Save Gemini/agent creative briefs as files — **never regenerate in chat**:
 | Pattern | Purpose |
 |---------|---------|
 | `shorts_instructions.md` | Shorts timestamps, hooks, assembly |
-| `youtube_instructions.md` | YouTube chapter extractions |
+| `chunk_instructions.md` | Mid-form chunks (11-15 min) |
 | `requirements.md` | Index + links to all instruction files |
 
 Manifest (`output/plan/manifest.json`) holds machine-cut timestamps; instruction files hold creative intent.
@@ -32,9 +34,8 @@ projects/{name}/
 │   ├── plan/               ← manifest.json (edit plan)
 │   ├── logs/
 │   └── deliverables/       ← publish-ready exports
-│       ├── youtube/
-│       ├── tiktok/
-│       └── reels/
+│       ├── shorts/         ← vertical 9:16 (platform in filename)
+│       └── chunks/         ← horizontal 16:9 (11-15 min)
 ├── *_instructions.md       ← persistent creative briefs (your Gemini exports)
 ├── requirements.md         ← index + project rules
 ├── pipeline.json
@@ -68,7 +69,10 @@ python3 content_pipeline/pipeline_log.py --project origin-story --show
 
 | Project | Type | Status |
 |---------|------|--------|
-| [0. the origin story](0.%20the%20origin%20story/brief.md) | Speech flywheel | Transcript done → manifest validation → render |
+| [0. the origin story](0.%20the%20origin%20story/brief.md) | Speech flywheel | Render shorts in progress |
+| [1. tipper the story](1.%20tipper%20the%20story/brief.md) | Speech flywheel | Transcript done → manifest draft ready |
+| [2. tipper the origin story](2.%20tipper%20the%20origin%20story/brief.md) | Speech flywheel | Initialized |
+| [3. tipper the concept](3.%20tipper%20the%20concept/brief.md) | Speech flywheel | Initialized |
 
 ## What goes where
 

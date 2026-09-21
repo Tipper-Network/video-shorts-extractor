@@ -31,6 +31,37 @@
       "items": { "$ref": "#/definitions/short" },
       "default": []
     },
+    "deferred_chapters": {
+      "type": "array",
+      "items": { "type": "object" },
+      "default": []
+    },
+    "deliverables": {
+      "type": "object",
+      "properties": {
+        "shorts": {
+          "type": "object",
+          "properties": {
+            "skill": { "type": "string" },
+            "count": { "type": "integer" },
+            "versions": {
+              "type": "array",
+              "items": { "enum": ["hook-first", "story-first", "contiguous"] }
+            }
+          }
+        },
+        "chunks": {
+          "type": "object",
+          "properties": {
+            "skill": { "type": "string" },
+            "count": { "type": "integer" },
+            "duration_min_sec": { "type": "integer" },
+            "duration_max_sec": { "type": "integer" },
+            "aspect": { "enum": ["16:9"] }
+          }
+        }
+      }
+    },
     "review": {
       "type": "object",
       "properties": {
@@ -42,6 +73,15 @@
     }
   },
   "definitions": {
+    "extract_beat": {
+      "type": "object",
+      "required": ["start", "end", "text"],
+      "properties": {
+        "start": { "type": "number", "minimum": 0 },
+        "end": { "type": "number", "minimum": 0 },
+        "text": { "type": "string", "minLength": 1 }
+      }
+    },
     "segment": {
       "type": "object",
       "required": ["start", "end"],
@@ -95,6 +135,24 @@
         },
         "title": { "type": "string", "minLength": 1 },
         "hook_type": { "type": "string" },
+        "extract_mode": { "enum": ["splice", "contiguous"] },
+        "theme_block": {
+          "type": "object",
+          "properties": {
+            "start": { "type": "number", "minimum": 0 },
+            "end": { "type": "number", "minimum": 0 }
+          }
+        },
+        "hook": { "$ref": "#/definitions/extract_beat" },
+        "setup": { "$ref": "#/definitions/extract_beat" },
+        "resolution": { "$ref": "#/definitions/extract_beat" },
+        "coherence": {
+          "type": "object",
+          "properties": {
+            "spoken_as": { "type": "string" },
+            "complete": { "type": "boolean" }
+          }
+        },
         "content_type": { "type": "string" },
         "flywheel_stage": {
           "enum": ["attract", "engage", "trust", "service", "referral", "loop", "n/a"]
@@ -102,14 +160,22 @@
         "parent_chapter": { "type": "string" },
         "cta": { "type": "string" },
         "aspect": { "enum": ["9:16"], "default": "9:16" },
-        "target": { "enum": ["yt-shorts", "tiktok", "instagram"], "default": "yt-shorts" },
+        "target": { "type": "string" },
+        "version_id": { "enum": ["hook-first", "story-first", "contiguous"] },
+        "versions": { "type": "array", "items": { "type": "object" } },
         "trim": { "enum": ["off", "light", "moderate", "aggressive"] },
         "min_len": { "type": "integer" },
         "max_len": { "type": "integer" },
         "publish_order": { "type": "integer" },
         "overflow_ok": { "type": "boolean", "default": false },
-        "rendered": { "type": "boolean", "default": false },
-        "output_file": { "type": "string" }
+        "rendered": {
+          "oneOf": [
+            { "type": "boolean" },
+            { "type": "object", "additionalProperties": { "type": "boolean" } }
+          ]
+        },
+        "output_file": { "type": "string" },
+        "output_files": { "type": "object", "additionalProperties": { "type": "string" } }
       }
     }
   }

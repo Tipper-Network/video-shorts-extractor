@@ -34,7 +34,7 @@ Tracks **platform** editing capabilities — scripts and skills — tested again
 | SFX overlay | `auto-edit.py` + `sfx_resolver.py` | `sfx_allocation` | shipped | — | Synthetic fallback works offline |
 | Dynamic zoom | `auto-edit.py` | `dynamic_zoom` | shipped | — | |
 | Silence / dead-air trim | `trim_silence.py` + render trim | platform skills | shipped | hikmat skipped | Off for silent projects |
-| Filler word removal | auto-editor tight margins | `tiktok_shorts` | partial | — | Via aggressive trim profile |
+| Filler word removal | auto-editor tight margins | `vertical_shorts` (tiktok variant) | partial | — | Via aggressive trim profile |
 | Burned-in subtitles | — | platform skills (spec) | planned | — | Roadmap Phase 6 |
 | Smart reframe (face track) | — | — | planned | — | Roadmap Phase 6 |
 | Audio noise reduction | — | — | planned | — | |
@@ -44,10 +44,10 @@ Tracks **platform** editing capabilities — scripts and skills — tested again
 
 | Skill | Path | Status | Tested on | Notes |
 |-------|------|--------|-----------|-------|
-| YouTube chapters | `skills/youtube_chunks/` | shipped | — | 10–30 min 16:9 rules |
-| YouTube Shorts | `skills/youtube_shorts/` | shipped | — | |
-| TikTok Shorts | `skills/tiktok_shorts/` | shipped | — | Silence + filler spec'd |
-| Instagram Reels | `skills/instagram_reels/` | shipped | — | |
+| Mid-form chunks | `skills/chunks/` | shipped | — | 11–15 min 16:9 rules |
+| Vertical shorts | `skills/vertical_shorts/` | shipped | origin-story | 9:16 — editorial versions, not platforms |
+| Extract shorts | `skills/extract_shorts/` | shipped | origin-story sh01 | Hook / Setup / Resolution + coherence gate |
+| Situation resolve | `skills/situation_resolve/` | shipped | origin-story sh01–sh02 | Script cohesion: situation → pressure → resolve |
 | Dynamic zoom | `skills/dynamic_zoom/` | shipped | — | Wired in auto-edit.py |
 | SFX allocation | `skills/sfx_allocation/` | shipped | — | Wired via sfx_resolver |
 | Plan stream | `skills/plan_stream/` | partial | — | Agent + detect_topics Layer 1 |
