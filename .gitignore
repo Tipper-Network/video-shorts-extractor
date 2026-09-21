@@ -19,8 +19,20 @@ geminiadvice.md
 
 # Secrets and caches
 content_pipeline/.cache/
+content_pipeline/output/**
+!content_pipeline/output/README.md
+content_pipeline/audio/**
 content_pipeline/.env
 .env
 __pycache__/
 *.pyc
 *.pyo
+
+# Media never belongs in this repo
+*.mp4
+*.mov
+*.mkv
+*.webm
+*.wav
+*.m4a
+*.aac
