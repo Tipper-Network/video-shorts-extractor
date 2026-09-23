@@ -1,14 +1,17 @@
-# Projects — one folder per job
+# Step 1 — Projects (cut)
 
-Each job is **self-contained and local**. Git only ships `_template/` and this README. Real jobs are gitignored; a website account will own the same layout later.
+Each job is **self-contained and local**. Git only ships `_template/` and this README. Real jobs are gitignored.
 
-1. `cp -r projects/_template projects/{name}/`
-2. Drop raw media in **`input/`**
+**Stage:** cut shorts + chunks here. When both are done, **move the whole job folder** to [`../step-2-viral-edit/`](../step-2-viral-edit/) for the viral-edit pass. Queue: [`VIDEO-EDITS.md`](VIDEO-EDITS.md).
+
+1. `cp -r step-1-projects/_template step-1-projects/{name}/`
+2. Drop raw media in **`input/`** (or per-lecture folders when the job uses that layout)
 3. Fill **`requirements.md`** (entity from the video title)
 4. Run pipeline scripts with `--project {name}`
-5. Collect publish-ready files from **`output/deliverables/`**
-    - `shorts/` (9:16 — one file per editorial version)
-    - `chunks/` (11-15 min mid-form)
+5. Collect **cut** files from **`output/deliverables/`**
+   - `shorts/` (9:16 — one file per editorial version)
+   - `chunks/` (11-15 min mid-form)
+6. **Handoff:** move `{name}/` → `step-2-viral-edit/{name}/` — viral polish writes to **`viral/`**, not `output/`
 
 Platform code stays in `content_pipeline/`. Planning stays in `planning/`. **Everything for this job lives here — not in git.**
 

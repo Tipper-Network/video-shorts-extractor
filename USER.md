@@ -39,6 +39,8 @@ Stable directives for content creation sessions. One directive per entry.
 <!-- observed: 2026-09-02 | status: active -->
 
 - **Outcome:** 2 types of deliverables: **Shorts** (9:16, up to 3 editorial versions) and **Chunks** (16:9, 11-15 min). Never render YouTube / TikTok / Reels copies of the same cut.
+- **Stage folders:** `step-1-projects/` (cut) → when shorts + chunks are done, move the job to `step-2-viral-edit/` → then `step-3-flywheel-organiser/` → `step-4-ready-to-post./`. Video-edits queue: `step-1-projects/VIDEO-EDITS.md`.
+- **Viral end results:** under `{job}/viral/{shorts,covers,approved}/` in step-2. Cut masters stay in `output/deliverables/`. Never overwrite `output/` with captioned/typed finishes.
 - Story-first usually wins when the elaboration is kept; put the punchline hook on the front of that cut. Level speech on the finished file (`level_speech`: compressor + dynaudnorm + limiter + loudnorm −16 / LRA 4) so live spikes don't jump.
 - Agent must not go silent on long ffmpeg/transcribe jobs — background them and keep responding.
 - Never overwrite a rendered clip the user can already play. Next pass writes `_v2`, `_v3`, … so both files stay for A/B. Only `--force` replaces in place. Never land on an existing `_vN`.
@@ -50,6 +52,7 @@ Stable directives for content creation sessions. One directive per entry.
 - GAF Future Ready lectures: titled plains in `output/transcript/` (`13. Future Ready, The Program.txt`, …) are the ebook source. Clocked copies stay in each lecture folder.
 - GAF prints as **Guilds, Adventurers, and Frontiers** (guild of guilds). Not “Guild of Adventurers and Frontiers.”
 - Future Ready voice locks: stretch = day he moved to the ocean / chose to buy the island not live as a bum (story is in GAF 9–12, not in this job yet). Restaurant chosen because financially liquid. Girlfriend = stacked ships (friendship + partnership + commitment), not a swapped work example. Cosmetic friend stays, anonymous. Lecture 16 cold open is not a hole. Ships = you go out of yourself and come back. Agents = feedback loop, mutual support, better instructions. The six lectures *are* the designed month. Two yous: whatever is internal reflects external — do not invent a me/self/I diagram he did not draw.
+- AI Influencer Cheat Sheet skills live in `~/.cursor/skills/` (`charsheet-soul`, `ugc-influencer-video`, `content-engine`, `digital-product`). Do not copy them into repo `skills/` — that tree is the cut engine. Source zips stay in `AI Influencer Cheat Sheet/skills/`.
 
 ## Active Projects
 
@@ -64,6 +67,6 @@ Stable directives for content creation sessions. One directive per entry.
 - **Tipper The Change** (`projects/9. tipper the change/`) — extracted. 9 shorts + 3 chunks. Publish sh08→sh09→sh04→sh03→sh05→sh06→sh02→sh01→sh07. Do not re-transcribe.
 - **GAF Qualifications 1–3** (`10 qualifications 1`–`12 qualifications 3`) — extracted. Entity GAF. Plan from SRT. Do not Whisper. Do not close on Tipper. Pt 3 is 2 chunks (THP supercut skip; third under floor).
 - **Tipper The Origin Story** (`projects/2. tipper the origin story/`) — Entity Tipper. Shorts + chunks extracted. Scripts in `shorts_extraction.md` / `chunk_extraction.md`. Not founder Origin Story (`0.`).
-- **Program Future Ready** (`projects/program future ready vids/`) — GAF. Two books: `output/ebook/Future-Ready.md` (full) and `Future-Ready-Summary.md` (≥30 pages). Titled plains in `output/transcript/`. Cuts later.
+- **Program Future Ready** (`step-1-projects/program future ready vids/`) — GAF. On video-edits queue ([`step-1-projects/VIDEO-EDITS.md`](step-1-projects/VIDEO-EDITS.md)). Books done. `.srt` dropped in `lectures/`. Paused. When shorts + chunks are done → move whole folder to `step-2-viral-edit/`.
 - **Tipper The Story** (`projects/1. tipper the story/`) — Shorts: `shorts_extraction.md`. Chunks rendered: `ch01_common-ground.mp4`, `ch02_show-you-their-world.mp4`. Gemini unused.
 - **Origin Story** — Approved: sh01 story-first (100s), sh02 island-bum hook-first (64s), sh03 focus-vs-tunnel hook-first (58s), sh05 moving-house first-stream close (44s). Draft: sh04 Game WITH Life (28s). Chunks: ch01, ch02. Deferred: ch03.

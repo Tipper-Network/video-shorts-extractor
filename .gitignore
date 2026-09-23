@@ -1,10 +1,27 @@
 # Product (clone this). Operator data stays local — website will own jobs later.
 
-# Jobs
+# Jobs (legacy path + staged folders)
 projects/*
 !projects/README.md
 !projects/_template/
 !projects/_template/**
+
+step-1-projects/*
+!step-1-projects/README.md
+!step-1-projects/VIDEO-EDITS.md
+!step-1-projects/_template/
+!step-1-projects/_template/**
+
+step-2-viral-edit/*
+!step-2-viral-edit/README.md
+!step-2-viral-edit/_template/
+!step-2-viral-edit/_template/**
+
+step-3-flywheel-organiser/*
+!step-3-flywheel-organiser/README.md
+
+step-4-ready-to-post./*
+!step-4-ready-to-post./README.md
 
 # Brand books (per operator / per account)
 brands/*

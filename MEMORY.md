@@ -35,6 +35,8 @@ THP defines *what* to say **when the video is a THP video**. Tipper and GAF have
 | 2026-09-21 | Git = onboardable product | Clone ships skills, scripts, playbooks, `_template`s. Jobs, brand books, USER/MEMORY stay local. Website UI later; same agents, same manifest. |
 | 2026-09-21 | YouTube `.srt` first, Whisper on the cut | Same-file YouTube captions recover more words than Whisper `small`. Plan from linearized SRT. Whisper only the locked 50–90s window to tighten clocks / GAF / uncensored speech. |
 | 2026-09-21 | Faster render: copy concat, no 16:9 upscale, parallel shorts | Supercut `-c copy` (fallback re-encode). Chunks stay source size, cap 1920. Shorts `--jobs 4`. Sidecar `.srt` skips full-file Whisper. |
+| 2026-09-23 | Cheat-sheet influencer skills stay personal | `charsheet-soul`, `ugc-influencer-video`, `content-engine`, `digital-product` install to `~/.cursor/skills/`. Repo `skills/` stays the cut engine. |
+| 2026-09-23 | Viral finish ≠ `output/` | Step-2 writes captions/type/covers to `{job}/viral/`. Cut masters stay in `output/deliverables/`. |
 
 ## Active Projects
 
@@ -167,10 +169,11 @@ THP defines *what* to say **when the video is a THP video**. Tipper and GAF have
 
 ### Program Future Ready (`program-future-ready`)
 
-- Folder: `projects/program future ready vids/`
-- Entity: GAF. Six lectures 13–18. YouTube `.srt` → titled plains. Whisper only on locked cut windows. Do not overwrite lecture 13 Whisper `transcript.txt`.
-- Books: `output/ebook/Future-Ready.md` (full, ~24k) and `Future-Ready-Summary.md` (≥30 pages / ~11k). Spine pamphlet kept as `Future-Ready-Spine.md`.
-- Skill: `skills/lecture_ebook/`. Cuts later.
+- Folder: `step-1-projects/program future ready vids/` (was `projects/` — operator renamed to step folders 2026-09-23)
+- Entity: GAF. Six lectures 13–18 under `lectures/{n}. {Title}/` (mp4 + `.srt` per lecture). Whisper only on locked cut windows. Do not overwrite lecture 13 Whisper clocks.
+- Books: `output/ebook/Future-Ready.md` (full) and `Future-Ready-Summary.md` (≥30 pages). Spine pamphlet kept as `Future-Ready-Spine.md`.
+- Skill: `skills/lecture_ebook/`. Extraction: `shorts_extraction.md` + `chunk_extraction.md` (jobs unmarked). Queue: `step-1-projects/VIDEO-EDITS.md`. Paused 2026-09-23.
+- **Handoff:** when shorts + chunks are done → move whole folder to `step-2-viral-edit/program future ready vids/`.
 
 ### hikmat (archived)
 
