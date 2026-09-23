@@ -16,11 +16,28 @@ ALL_VIDEO_CLIPS = list(range(1, 12))
 
 
 def load_clip_map(path: Path) -> dict:
+    """Read a project's ``clip-map.json``.
+
+    Args:
+        path: Clip map file.
+
+    Returns:
+        Parsed clip map (clips, stills, durations).
+    """
     with open(path, encoding="utf-8") as f:
         return json.load(f)
 
 
 def resolve_source_dir(clip_map: dict, project_id: str = "hikmat") -> Path:
+    """Folder that holds the raw clips/stills.
+
+    Args:
+        clip_map: Loaded clip map (may include ``source_dir``).
+        project_id: Project whose ``input/`` is tried first.
+
+    Returns:
+        Existing input dir, or ``clip_map["source_dir"]`` resolved on the project.
+    """
     from project_paths import load_project_paths
 
     paths = load_project_paths(project_id)
@@ -34,10 +51,28 @@ def resolve_source_dir(clip_map: dict, project_id: str = "hikmat") -> Path:
 
 
 def resolve_still_path(clip_map: dict, still: dict) -> Path:
+    """Absolute path to one still from the clip map.
+
+    Args:
+        clip_map: Loaded clip map.
+        still: Entry with a ``file`` key.
+
+    Returns:
+        Path under the source dir.
+    """
     return resolve_source_dir(clip_map) / still["file"]
 
 
 def segment_label(clip_index: int, offset: float) -> str:
+    """Heuristic label for a pool slice (materials / process / result).
+
+    Args:
+        clip_index: 1-based clip number in the map.
+        offset: 0–1 position inside that clip.
+
+    Returns:
+        ``materials``, ``process``, ``result-close``, or ``result-hook``.
+    """
     if clip_index == 11 and offset >= 0.8:
         return "result-hook"
     if clip_index <= 3 and offset <= 0.15:
@@ -48,6 +83,15 @@ def segment_label(clip_index: int, offset: float) -> str:
 
 
 def build_pool(clip_map: dict, segment_len: float = 5.0) -> list[dict]:
+    """Build candidate slices from each clip's ``candidate_offsets``.
+
+    Args:
+        clip_map: Loaded clip map.
+        segment_len: Target slice length in seconds.
+
+    Returns:
+        Pool entries with clocks on the master timeline.
+    """
     total = clip_map["total_duration_sec"]
     pool: list[dict] = []
 
@@ -74,6 +118,15 @@ def build_pool(clip_map: dict, segment_len: float = 5.0) -> list[dict]:
 
 
 def trim_segment(seg: dict, segment_len: float) -> dict:
+    """Cap a pool slice to ``segment_len`` from its start.
+
+    Args:
+        seg: Pool entry with ``start`` / ``end``.
+        segment_len: Max duration.
+
+    Returns:
+        Same dict, or a copy with a shorter ``end``.
+    """
     duration = seg["end"] - seg["start"]
     if duration <= segment_len:
         return seg
@@ -82,7 +135,19 @@ def trim_segment(seg: dict, segment_len: float) -> dict:
 
 
 def pick_build_segment(pool: list[dict], clip_index: int, segment_len: float) -> dict:
-    """One process slice per clip. Clip 11 ends on final action (0.5), not result (0.85)."""
+    """Pick one process slice per clip. Clip 11 prefers offset 0.5, not the result 0.85.
+
+    Args:
+        pool: Full candidate pool.
+        clip_index: 1-based clip number.
+        segment_len: Cap duration.
+
+    Returns:
+        Trimmed pool entry.
+
+    Raises:
+        ValueError: No pool rows for that clip.
+    """
     clip_segs = [s for s in pool if s["clip_index"] == clip_index]
     if not clip_segs:
         raise ValueError(f"No pool segment for clip {clip_index}")
@@ -100,6 +165,17 @@ def pick_build_segment(pool: list[dict], clip_index: int, segment_len: float) ->
 
 
 def still_segment(clip_map: dict, still: dict, duration: float, label: str) -> dict:
+    """Manifest segment for a still image.
+
+    Args:
+        clip_map: Loaded clip map.
+        still: Still entry with ``file``.
+        duration: Hold time in seconds.
+        label: ``reveal`` / ``return`` / etc.
+
+    Returns:
+        ``{type: image, path, duration, label, file}``.
+    """
     path = resolve_still_path(clip_map, still)
     return {
         "type": "image",
@@ -111,6 +187,17 @@ def still_segment(clip_map: dict, still: dict, duration: float, label: str) -> d
 
 
 def result_stills(clip_map: dict) -> tuple[dict, dict]:
+    """Pick reveal (last still) and return (second-last, or same if only one).
+
+    Args:
+        clip_map: Must include ``stills[]``.
+
+    Returns:
+        ``(reveal, return_still)``.
+
+    Raises:
+        ValueError: No stills.
+    """
     stills = clip_map.get("stills") or []
     if not stills:
         raise ValueError("clip-map.json needs stills[] for reveal/return")
@@ -124,6 +211,11 @@ SHORT_FORM_STYLE = "reveal-build"
 
 
 def style_fields() -> dict:
+    """Shared reveal-build style keys for a short entry.
+
+    Returns:
+        ``short_form_style``, ``hook_type``, ``cut_mode``.
+    """
     return {
         "short_form_style": SHORT_FORM_STYLE,
         "hook_type": "result-first",
@@ -142,11 +234,21 @@ def compose_full_montage(
     min_len: int,
     max_len: int,
 ) -> dict:
-    """
-    Reveal-Build with full clip coverage:
-      REVEAL  — best result still
-      BUILD   — one segment per video clip (1→11), ascending
-      RETURN  — second result still (or same if only one)
+    """Reveal-build montage: still → one slice per clip 1–11 → still.
+
+    Args:
+        clip_map: Loaded clip map (needs ``stills``).
+        pool: Candidate slices from ``build_pool``.
+        short_id: Manifest id (``yt_full``, …).
+        title: Display title.
+        platform: ``youtube`` / ``tiktok`` / ``reels``.
+        target: Trim-target key (``yt-shorts``, ``tiktok``, ``instagram``).
+        segment_len: Seconds per piece.
+        min_len: Soft minimum duration.
+        max_len: Soft maximum duration.
+
+    Returns:
+        One short dict ready for ``manifest["shorts"]``.
     """
     reveal_still, return_still = result_stills(clip_map)
     reveal = still_segment(clip_map, reveal_still, segment_len, "reveal")
@@ -187,6 +289,15 @@ def compose_full_montage(
 
 
 def build_manifest(clip_map: dict, pool: list[dict]) -> dict:
+    """One reveal-build short per platform (same segments, different ``segment_len``).
+
+    Args:
+        clip_map: Loaded clip map.
+        pool: Candidate slices.
+
+    Returns:
+        Manifest with ``shorts`` and empty ``chapters``.
+    """
     # One reveal-build montage per platform — same segments, different segment_len only.
     montage_specs = [
         ("yt_full", "Reveal-Build", "youtube", "yt-shorts", 5.0, 30, 90),
@@ -220,6 +331,7 @@ def build_manifest(clip_map: dict, pool: list[dict]) -> dict:
 
 
 def main() -> None:
+    """CLI: write ``segment-pool.json`` and ``manifest.json`` under the plan dir."""
     parser = argparse.ArgumentParser(description="Build hikmat segment pool + montage manifest")
     parser.add_argument(
         "--clip-map",

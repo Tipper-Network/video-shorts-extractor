@@ -101,7 +101,7 @@ leftover scan         → jobs named and not shipped, plus leftover windows
 
 ## Platform
 
-- Aspect: 16:9 (1920×1080)
+- Aspect: 16:9. Canvas is the source size, capped at 1920 wide — never upscale (720p stays 1280×720).
 - Min 660s / max 900s
 - Trim: light (keep natural pauses; strip gaps > 2.5s)
 - Drafts: `output/deliverables/chunks/`

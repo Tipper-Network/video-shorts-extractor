@@ -42,6 +42,9 @@
 
 <!-- added: 2026-09-01 | reason: batch render reliability -->
 - **Never** re-transcribe during render — manifest timestamps are frozen at approval.
+- **Never** upscale 16:9 chunks past the source (720p stays 1280×720; cap 1920 wide).
+- **Prefer** supercut concat `-c copy`. Re-encode only when streams do not match.
+- **Prefer** 3–4 parallel ffmpeg workers for shorts. Chapters stay serial.
 - **Always** validate manifest against schema before first ffmpeg call.
 - **Prefer** logging per-clip failures over aborting the entire batch.
 - **Never** overwrite an existing rendered clip. Write `{stem}_v2.mp4`, `_v3`, … so the previous file stays for A/B. `--force` only when the user explicitly asks to replace. Never ffmpeg `-y` onto an existing `_vN`.

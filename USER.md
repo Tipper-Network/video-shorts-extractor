@@ -55,7 +55,15 @@ Stable directives for content creation sessions. One directive per entry.
 
 <!-- observed: 2026-09-02 | status: active -->
 
-- **Tipper The Origin Story** (`projects/2. tipper the origin story/`) — **active.** Entity Tipper. Source `2. Tipper _the origin_.mp4` (1:14:16). Full transcript, then short + chunk playback `.md`, then extract. Not founder Origin Story (`0.`).
+- **Tipper The Social Structures** (`projects/5. tipper the social structures/`) — Entity Tipper. Shorts + chunks extracted. Gemini `shorts.md` contrast only. Source filename keeps typo `Stuctures`.
+- **Tipper The Startup** (`projects/4. tipper the startup/`) — Entity Tipper. Shorts + chunks extracted. Scripts in `shorts_extraction.md` / `chunk_extraction.md`. Gemini `shorts.md` contrast only. No sidecar `.srt`.
+- **Tipper The Concept** — extracted 2026-09-21. Folder now under `~/Desktop/ready to post/3. tipper the concept/`.
+- **Tipper The Start of the Project** (`projects/6. tipper the start of the project/`) — extracted. 9 shorts + 3 chunks. Do not re-transcribe.
+- **Tipper The Work** (`projects/7. tipper the work/`) — extracted. 9 shorts + 3 chunks. Publish sh03→sh04→sh06→sh05→sh07→sh08→sh09→sh01→sh02. Do not re-transcribe.
+- **Tipper The Effort** (`projects/8. tipper the effort/`) — extracted. 9 shorts + 3 chunks. Publish sh03→sh01→sh02→sh05→sh06→sh07→sh09→sh08→sh04. Do not re-transcribe.
+- **Tipper The Change** (`projects/9. tipper the change/`) — extracted. 9 shorts + 3 chunks. Publish sh08→sh09→sh04→sh03→sh05→sh06→sh02→sh01→sh07. Do not re-transcribe.
+- **GAF Qualifications 1–3** (`10 qualifications 1`–`12 qualifications 3`) — extracted. Entity GAF. Plan from SRT. Do not Whisper. Do not close on Tipper. Pt 3 is 2 chunks (THP supercut skip; third under floor).
+- **Tipper The Origin Story** (`projects/2. tipper the origin story/`) — Entity Tipper. Shorts + chunks extracted. Scripts in `shorts_extraction.md` / `chunk_extraction.md`. Not founder Origin Story (`0.`).
 - **Program Future Ready** (`projects/program future ready vids/`) — GAF. Two books: `output/ebook/Future-Ready.md` (full) and `Future-Ready-Summary.md` (≥30 pages). Titled plains in `output/transcript/`. Cuts later.
 - **Tipper The Story** (`projects/1. tipper the story/`) — Shorts: `shorts_extraction.md`. Chunks rendered: `ch01_common-ground.mp4`, `ch02_show-you-their-world.mp4`. Gemini unused.
 - **Origin Story** — Approved: sh01 story-first (100s), sh02 island-bum hook-first (64s), sh03 focus-vs-tunnel hook-first (58s), sh05 moving-house first-stream close (44s). Draft: sh04 Game WITH Life (28s). Chunks: ch01, ch02. Deferred: ch03.

@@ -7,6 +7,8 @@ import argparse
 import json
 import shutil
 import sys
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from contextlib import nullcontext
 from pathlib import Path
 
@@ -19,7 +21,14 @@ BASE_DIR = Path(__file__).resolve().parent
 WORKSPACE_ROOT = BASE_DIR.parent
 
 def resolve_short_versions(short: dict) -> list[dict]:
-    """Editorial versions of one short (not platforms). Default: the short itself."""
+    """Editorial versions of one short (not platforms).
+
+    Args:
+        short: Manifest short dict.
+
+    Returns:
+        ``short["versions"]``, or ``[short]`` if none.
+    """
     versions = short.get("versions")
     if versions:
         return list(versions)
@@ -27,7 +36,17 @@ def resolve_short_versions(short: dict) -> list[dict]:
 
 
 def short_output_path(deliverables_dir: Path, short: dict, version: dict, safe_title: str | None = None) -> Path:
-    """Route renders to deliverables/shorts/ — one file per editorial version."""
+    """Destination under ``deliverables/shorts/`` for one editorial version.
+
+    Args:
+        deliverables_dir: Project deliverables root.
+        short: Parent short dict.
+        version: Version dict (or the short itself).
+        safe_title: Fallback slug when no ``output_name``.
+
+    Returns:
+        ``.mp4`` path (file may not exist yet).
+    """
     subdir = deliverables_dir / "shorts"
     subdir.mkdir(parents=True, exist_ok=True)
 
@@ -48,7 +67,15 @@ def short_output_path(deliverables_dir: Path, short: dict, version: dict, safe_t
 
 
 def promote_to_approved(src: Path, deliverables_dir: Path) -> Path:
-    """Copy a finished short into shorts_approved/. Does not overwrite an existing approved file."""
+    """Copy a finished short into ``shorts_approved/``. Never overwrites an approved file.
+
+    Args:
+        src: Rendered draft mp4.
+        deliverables_dir: Project deliverables root.
+
+    Returns:
+        Path in ``shorts_approved/`` (``_vN`` if the name was taken).
+    """
     approved = deliverables_dir / "shorts_approved"
     approved.mkdir(parents=True, exist_ok=True)
     dest = approved / src.name
@@ -60,7 +87,17 @@ def promote_to_approved(src: Path, deliverables_dir: Path) -> Path:
 
 
 def compare_output_path(dest: Path, *, overwrite: bool = False) -> Path:
-    """Keep an existing render so the next pass can be A/B'd. Never clobber dest or an existing _vN."""
+    """Keep an existing render so the next pass can be A/B'd.
+
+    Never clobber ``dest`` or an existing ``_vN``.
+
+    Args:
+        dest: Intended output path.
+        overwrite: If True, return ``dest`` (in-place replace).
+
+    Returns:
+        ``dest`` if free (or overwrite), else the next free ``{stem}_vN.mp4``.
+    """
     import re
 
     if overwrite:
@@ -79,7 +116,15 @@ def compare_output_path(dest: Path, *, overwrite: bool = False) -> Path:
 
 
 def chapter_output_path(deliverables_dir: Path, chapter: dict) -> Path:
-    """Route chapter renders to deliverables/chunks/."""
+    """Destination under ``deliverables/chunks/``.
+
+    Args:
+        deliverables_dir: Project deliverables root.
+        chapter: Manifest chapter dict.
+
+    Returns:
+        ``.mp4`` path.
+    """
     subdir = deliverables_dir / "chunks"
     subdir.mkdir(parents=True, exist_ok=True)
     if chapter.get("output_name"):
@@ -93,6 +138,15 @@ def chapter_output_path(deliverables_dir: Path, chapter: dict) -> Path:
 
 
 def resolve_source(manifest: dict, project_id: str | None = None) -> Path:
+    """Resolve ``manifest["source"]`` against the project, pipeline dir, or workspace.
+
+    Args:
+        manifest: Loaded manifest.
+        project_id: Optional project for a search root.
+
+    Returns:
+        Existing file if found; otherwise ``workspace / source`` (may be missing).
+    """
     source = Path(manifest["source"])
     if source.is_absolute() and source.exists():
         return source
@@ -124,6 +178,20 @@ def render_manifest(
     overwrite: bool = False,
     **kwargs,
 ) -> Path:
+    """Batch-render chapters and/or shorts from an approved manifest.
+
+    Args:
+        manifest_path: ``output/plan/manifest.json``.
+        polish: Run auto-edit (SFX + zoom) after the cut.
+        only: Render this clip id only (``sh01``, ``ch01``, …).
+        project_id: Pipeline defaults / path root.
+        skip_trim: Do not apply silence trim even if the pipeline wants it.
+        overwrite: Replace existing files instead of writing ``_vN``.
+        **kwargs: Extra CLI flags forwarded from ``main`` (``jobs``, ``type``, …).
+
+    Returns:
+        Deliverables directory used.
+    """
     with open(manifest_path, encoding="utf-8") as f:
         manifest = json.load(f)
 
@@ -225,6 +293,7 @@ def render_manifest(
             chapter["output_file"] = str(out_file.relative_to(WORKSPACE_ROOT))
             rendered.append(out_file)
 
+        short_jobs: list[dict] = []
         for short in manifest.get("shorts") or []:
             if only and short["id"] != only:
                 continue
@@ -247,13 +316,6 @@ def render_manifest(
             for version in versions:
                 clip = {**short, **version} if version is not short else short
                 version_id = version.get("version_id") or version.get("id") or short["id"]
-                item_idx += 1
-                if progress:
-                    progress.update(
-                        item_idx,
-                        item=f"{short['id']}:{version_id}",
-                        message=f"{short['title'][:40]} [{version_id}]",
-                    )
 
                 approved = version.get("script_approved", short.get("script_approved", True))
                 if approved is False and not kwargs.get("allow_unapproved"):
@@ -269,12 +331,6 @@ def render_manifest(
                 )
                 if out_file.exists() and not overwrite:
                     out_file = compare_output_path(out_file, overwrite=False)
-                rel = out_file.relative_to(WORKSPACE_ROOT)
-                print(
-                    f" Short {short['id']} [{version_id}]: {short['title']} → {rel}"
-                    f" [{clip.get('cut_mode', 'contiguous')}]"
-                )
-
                 trim_level = "off"
                 if trim_enabled:
                     trim_level = resolve_trim_level(
@@ -283,20 +339,65 @@ def render_manifest(
                         manifest_default=manifest_trim_default,
                         project_default=short_defaults.get("default_trim"),
                     )
-
-                render_clip_entry(
-                    source,
-                    clip,
-                    clip.get("aspect", "9:16"),
-                    out_file,
-                    default_cut_mode=short_defaults.get("cut_mode", "contiguous"),
-                    trim_level=trim_level,
+                short_jobs.append(
+                    {
+                        "short": short,
+                        "clip": clip,
+                        "version_id": version_id,
+                        "out_file": out_file,
+                        "trim_level": trim_level,
+                    }
                 )
-                short["output_files"][version_id] = str(out_file.relative_to(WORKSPACE_ROOT))
-                rendered.append(out_file)
 
-            short["rendered"] = True
-            if short["output_files"]:
+        jobs = max(1, int(kwargs.get("jobs") or 4))
+        progress_lock = threading.Lock()
+
+        def _run_short(job: dict) -> Path:
+            out_file = job["out_file"]
+            clip = job["clip"]
+            short = job["short"]
+            rel = out_file.relative_to(WORKSPACE_ROOT)
+            print(
+                f" Short {short['id']} [{job['version_id']}]: {short['title']} → {rel}"
+                f" [{clip.get('cut_mode', 'contiguous')}]"
+            )
+            render_clip_entry(
+                source,
+                clip,
+                clip.get("aspect", "9:16"),
+                out_file,
+                default_cut_mode=short_defaults.get("cut_mode", "contiguous"),
+                trim_level=job["trim_level"],
+            )
+            return out_file
+
+        if short_jobs:
+            print(f" Shorts: {len(short_jobs)} clips, {min(jobs, len(short_jobs))} in parallel")
+            with ThreadPoolExecutor(max_workers=min(jobs, len(short_jobs))) as pool:
+                futures = {pool.submit(_run_short, job): job for job in short_jobs}
+                for fut in as_completed(futures):
+                    job = futures[fut]
+                    out_file = fut.result()
+                    job["short"]["output_files"][job["version_id"]] = str(
+                        out_file.relative_to(WORKSPACE_ROOT)
+                    )
+                    rendered.append(out_file)
+                    with progress_lock:
+                        item_idx += 1
+                        if progress:
+                            progress.update(
+                                item_idx,
+                                item=f"{job['short']['id']}:{job['version_id']}",
+                                message=f"{job['short']['title'][:40]} [{job['version_id']}]",
+                            )
+
+        for short in manifest.get("shorts") or []:
+            if only and short["id"] != only:
+                continue
+            if render_type and render_type != "shorts":
+                continue
+            if short.get("output_files"):
+                short["rendered"] = True
                 short["output_file"] = next(iter(short["output_files"].values()))
 
     if polish:
@@ -322,6 +423,7 @@ def render_manifest(
 
 
 def main():
+    """CLI: render shorts/chapters from ``manifest.json`` (``--project`` or ``--manifest``)."""
     parser = argparse.ArgumentParser(description="Render all clips from manifest.json")
     parser.add_argument("--manifest", help="Path to approved manifest.json")
     parser.add_argument("--project", help="Project ID for pipeline.json defaults")
@@ -329,6 +431,12 @@ def main():
     parser.add_argument("--only", help="Render single short/chapter id (e.g. sh01)")
     parser.add_argument("--version", help="Render one editorial version (e.g. story-first)")
     parser.add_argument("--type", choices=["shorts", "chapters"], help="Filter by type")
+    parser.add_argument(
+        "--jobs",
+        type=int,
+        default=4,
+        help="Parallel ffmpeg workers for shorts (default: 4). Chapters stay serial.",
+    )
     parser.add_argument("--no-trim", action="store_true", help="Skip silence trim even if pipeline enables it")
     parser.add_argument(
         "--force",
@@ -387,6 +495,7 @@ def main():
             overwrite=args.force,
             render_type=args.type,
             only_version=args.version,
+            jobs=args.jobs,
         )
 
 

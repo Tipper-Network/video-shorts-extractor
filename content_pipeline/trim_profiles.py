@@ -10,6 +10,8 @@ TrimLevel = Literal["off", "light", "moderate", "aggressive"]
 
 @dataclass(frozen=True)
 class TrimProfile:
+    """Silence-trim preset: ffmpeg long-pause or auto-editor margin."""
+
     level: TrimLevel
     method: str  # ffmpeg | auto-editor
     min_silence: float | None = None
@@ -61,6 +63,19 @@ def resolve_trim_level(
     manifest_default: str | None = None,
     project_default: str | None = None,
 ) -> TrimLevel:
+    """Pick how hard to trim silence on a clip.
+
+    Precedence: clip override → manifest default → platform target → project default → ``off``.
+
+    Args:
+        clip_target: Manifest platform key (``youtube``, ``yt-shorts``, ``tiktok``, …).
+        clip_override: Per-clip ``trim`` value if the planner set one.
+        manifest_default: Manifest-wide default trim.
+        project_default: ``pipeline.json`` project default.
+
+    Returns:
+        One of ``off``, ``light``, ``moderate``, ``aggressive``.
+    """
     for value in (clip_override, manifest_default, TARGET_DEFAULTS.get(clip_target or "", ""), project_default):
         if value and value in PROFILES:
             return value  # type: ignore[return-value]
@@ -68,4 +83,12 @@ def resolve_trim_level(
 
 
 def get_profile(level: TrimLevel) -> TrimProfile | None:
+    """Look up the ffmpeg / auto-editor settings for a trim level.
+
+    Args:
+        level: ``off``, ``light``, ``moderate``, or ``aggressive``.
+
+    Returns:
+        The preset, or ``None`` when trim is ``off``.
+    """
     return PROFILES.get(level)

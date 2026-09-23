@@ -3,7 +3,8 @@
 Transcribe local video — planning is done by Cursor agent, not a local LLM.
 
 Modes:
-  transcribe (default) — extract audio + Whisper segments + transcript.txt + optional Vosk words
+  transcribe (default) — YouTube .srt next to the video if present, else Whisper.
+                         Optional Vosk words. --whisper forces full-file Whisper.
   render               — ffmpeg cut from manifest or inline --start/--end
 """
 
@@ -36,7 +37,15 @@ for d in [INPUT_DIR, AUDIO_DIR, SUB_DIR, OUTPUT_DIR]:
 
 
 def find_input_video(project_id: str | None, input_name: str | None) -> tuple[Path, str]:
-    """Locate source video in project input/ or legacy input/."""
+    """Locate the source video in project ``input/`` or legacy ``input/``.
+
+    Args:
+        project_id: Project slug, or ``None`` for the pipeline-local ``input/``.
+        input_name: Filename inside ``input/``. Required when that folder has more than one video.
+
+    Returns:
+        ``(video_path, stem)``. Exits the process if the file is missing or ambiguous.
+    """
     if project_id:
         paths = load_project_paths(project_id)
         paths.ensure_dirs()
@@ -73,12 +82,21 @@ def find_input_video(project_id: str | None, input_name: str | None) -> tuple[Pa
 
 
 def cut_video(input_video: Path, start: float, end: float, aspect: str, output_path: Path) -> None:
+    """Cut one window with ffmpeg (legacy render path; prefer ``cut_utils.cut_video``).
+
+    Args:
+        input_video: Source mp4.
+        start: In-point seconds.
+        end: Out-point seconds.
+        aspect: ``16:9`` or ``9:16``.
+        output_path: Destination mp4.
+    """
     duration = end - start
     print(f" Rendering clip: {output_path.name} ({start}s → {end}s)")
 
-    vf = "scale=1920:1080"
-    if aspect == "9:16":
-        vf = "crop=ih*(9/16):ih,scale=1080:1920"
+    from cut_utils import aspect_filter
+
+    vf = aspect_filter(aspect)
 
     cmd = [
         "ffmpeg", "-y",
@@ -93,6 +111,11 @@ def cut_video(input_video: Path, start: float, end: float, aspect: str, output_p
 
 
 def render_from_manifest(manifest_path: Path) -> None:
+    """Legacy batch render: chapters → ``chunks/``, shorts → ``shorts/`` under ``output/{stem}/``.
+
+    Args:
+        manifest_path: ``manifest.json`` with ``source``, ``stem``, ``chapters``, ``shorts``.
+    """
     with open(manifest_path, encoding="utf-8") as f:
         manifest = json.load(f)
 
@@ -123,6 +146,7 @@ def render_from_manifest(manifest_path: Path) -> None:
 
 
 def main():
+    """CLI: transcribe (YouTube SRT or Whisper) or render a cut from a manifest / clocks."""
     parser = argparse.ArgumentParser(description="Content pipeline — transcribe or render")
     parser.add_argument("--mode", choices=["transcribe", "render"], default="transcribe")
     parser.add_argument("--project", help="Project ID — reads/writes under projects/{id}/")
@@ -140,6 +164,11 @@ def main():
     parser.add_argument("--vosk", action="store_true", help="Also run Vosk word-level transcript")
     parser.add_argument("--vosk-model", help="Path to Vosk model directory")
     parser.add_argument("--model", default="small", help="Whisper model size (default: small)")
+    parser.add_argument(
+        "--whisper",
+        action="store_true",
+        help="Force full-file Whisper even when a YouTube .srt sits next to the video",
+    )
     args = parser.parse_args()
 
     if args.mode == "render":
@@ -194,17 +223,31 @@ def main():
         transcript_txt = SUB_DIR / f"{slug}.txt"
         timer_ctx = nullcontext()
 
-    with timer_ctx:
-        extract_audio(video_path, audio_path)
-        transcribe_whisper(
-            audio_path,
-            segments_path,
-            model_size=args.model,
-            transcript_txt_path=transcript_txt,
-        )
+    from srt_to_text import find_sidecar_srt, write_clocks_from_srt
 
-        if args.vosk:
-            transcribe_vosk_words(audio_path, words_path, model_path=args.vosk_model)
+    srt_path = None if args.whisper else find_sidecar_srt(video_path)
+
+    with timer_ctx:
+        if srt_path:
+            print(f" Using YouTube SRT {srt_path.name} — skip full-file Whisper")
+            write_clocks_from_srt(
+                srt_path,
+                segments_json_path=segments_path,
+                transcript_txt_path=transcript_txt,
+            )
+            if args.vosk:
+                extract_audio(video_path, audio_path)
+                transcribe_vosk_words(audio_path, words_path, model_path=args.vosk_model)
+        else:
+            extract_audio(video_path, audio_path)
+            transcribe_whisper(
+                audio_path,
+                segments_path,
+                model_size=args.model,
+                transcript_txt_path=transcript_txt,
+            )
+            if args.vosk:
+                transcribe_vosk_words(audio_path, words_path, model_path=args.vosk_model)
 
     print(f" Transcript: {transcript_txt}")
     print(" Planning cuts → use Cursor agent + manifest.json")

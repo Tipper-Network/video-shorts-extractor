@@ -22,10 +22,29 @@ CENSOR = re.compile(r"\[\s*__\s*\]")
 
 
 def _hms(h: str, m: str, s: str, ms: str) -> float:
+    """Convert SRT clock pieces to seconds.
+
+    Args:
+        h: Hours.
+        m: Minutes.
+        s: Seconds.
+        ms: Milliseconds.
+
+    Returns:
+        Time as a float in seconds.
+    """
     return int(h) * 3600 + int(m) * 60 + int(s) + int(ms) / 1000
 
 
 def parse_srt(path: Path) -> list[dict]:
+    """Parse a YouTube ``.srt`` into timed cue dicts.
+
+    Args:
+        path: Path to the ``.srt`` (UTF-8, optional BOM).
+
+    Returns:
+        Cues as ``{start, end, text}`` with times in seconds. ``[ __ ]`` becomes ``fuck``.
+    """
     raw = path.read_text(encoding="utf-8-sig")
     cues: list[dict] = []
     for block in re.split(r"\n\s*\n", raw.strip()):
@@ -50,7 +69,14 @@ def parse_srt(path: Path) -> list[dict]:
 
 
 def linearize(cues: list[dict]) -> list[dict]:
-    """Drop words already shown in the previous rolling caption."""
+    """Drop words already shown in the previous rolling caption.
+
+    Args:
+        cues: Overlapping YouTube cues from ``parse_srt``.
+
+    Returns:
+        Cues with each word kept once, still ``{start, end, text}``.
+    """
     out: list[dict] = []
     prev: list[str] = []
     for cue in cues:
@@ -68,11 +94,23 @@ def linearize(cues: list[dict]) -> list[dict]:
 
 
 def to_paragraphs(chunks: list[dict], gap_sec: float = 2.5) -> str:
+    """Join linearized chunks into ebook paragraphs.
+
+    New paragraph on a pause ≥ ``gap_sec``, or ~480 characters plus a sentence end.
+
+    Args:
+        chunks: Linearized ``{start, end, text}`` pieces.
+        gap_sec: Silence (seconds) that starts a new paragraph.
+
+    Returns:
+        Paragraphs separated by blank lines, trailing newline if non-empty.
+    """
     paras: list[str] = []
     buf: list[str] = []
     last_end: float | None = None
 
     def flush() -> None:
+        """Push the current sentence buffer as one paragraph."""
         text = " ".join(buf).strip()
         text = re.sub(r"\s+", " ", text)
         if text:
@@ -92,11 +130,73 @@ def to_paragraphs(chunks: list[dict], gap_sec: float = 2.5) -> str:
 
 
 def find_srt(folder: Path) -> Path | None:
+    """Find a caption file in a lecture folder.
+
+    Args:
+        folder: Transcript folder that may contain ``captions.srt`` or ``*.srt``.
+
+    Returns:
+        ``captions.srt`` if present, else the first ``*.srt`` by name, else ``None``.
+    """
     named = folder / "captions.srt"
     if named.exists():
         return named
     matches = sorted(folder.glob("*.srt"))
     return matches[0] if matches else None
+
+
+def find_sidecar_srt(video_path: Path) -> Path | None:
+    """Find a YouTube ``.srt`` next to the source mp4, or ``captions.srt`` in ``input/``.
+
+    Args:
+        video_path: Source video (usually ``projects/{id}/input/*.mp4``).
+
+    Returns:
+        Matching sidecar path, or ``None`` if none exists.
+    """
+    folders = [video_path.parent]
+    parent = video_path.parent.parent
+    if parent != video_path.parent:
+        folders.append(parent)
+    for folder in folders:
+        for name in (f"{video_path.stem}.srt", "captions.srt"):
+            candidate = folder / name
+            if candidate.exists():
+                return candidate
+        found = find_srt(folder)
+        if found:
+            return found
+    return None
+
+
+def write_clocks_from_srt(
+    srt: Path,
+    *,
+    segments_json_path: Path,
+    transcript_txt_path: Path,
+) -> list[dict]:
+    """Linearize rolling captions into ``segments.json`` and a clocked transcript.
+
+    Args:
+        srt: YouTube ``.srt`` path.
+        segments_json_path: Where to write the cue list JSON.
+        transcript_txt_path: Where to write ``[clock → clock]`` lines.
+
+    Returns:
+        Linearized cue list (same objects written to disk).
+
+    Raises:
+        ValueError: If the SRT has no usable cues.
+    """
+    chunks = linearize(parse_srt(srt))
+    if not chunks:
+        raise ValueError(f"Empty SRT: {srt}")
+    export_transcripts(
+        chunks,
+        segments_json_path=segments_json_path,
+        transcript_txt_path=transcript_txt_path,
+    )
+    return chunks
 
 
 LECTURE_TITLES = {
@@ -110,7 +210,14 @@ LECTURE_TITLES = {
 
 
 def clock_txt_name(folder: Path) -> str:
-    """`13. Future Ready, The Program.txt` — priority + video title, not transcript.txt."""
+    """Filename for a lecture clock/plain file — ``13. Future Ready, The Program.txt``.
+
+    Args:
+        folder: Lecture transcript folder (slug is the folder name).
+
+    Returns:
+        ``{n}. {Title}.txt`` when the slug is known, else ``{slug}.txt``.
+    """
     slug = folder.name
     title = LECTURE_TITLES.get(slug)
     if title:
@@ -120,15 +227,38 @@ def clock_txt_name(folder: Path) -> str:
 
 
 def clock_txt_path(folder: Path) -> Path:
+    """Clocked ``{n}. {Title}.txt`` inside a lecture transcript folder.
+
+    Args:
+        folder: ``output/transcript/{slug}/``.
+
+    Returns:
+        Path for the cut-planning clock file.
+    """
     return folder / clock_txt_name(folder)
 
 
 def plain_txt_path(folder: Path) -> Path:
-    """Ebook plain text lives in the transcript root, not the lecture subfolder."""
+    """Ebook plain text lives in the transcript root, not the lecture subfolder.
+
+    Args:
+        folder: ``output/transcript/{slug}/``.
+
+    Returns:
+        ``output/transcript/{n}. {Title}.txt``.
+    """
     return folder.parent / clock_txt_name(folder)
 
 
 def find_clock_txt(folder: Path) -> Path | None:
+    """Existing clocked title file, or legacy ``transcript.txt``.
+
+    Args:
+        folder: Lecture transcript folder.
+
+    Returns:
+        Path if a clock file or Whisper ``transcript.txt`` exists, else ``None``.
+    """
     named = clock_txt_path(folder)
     if named.exists():
         return named
@@ -139,6 +269,19 @@ def find_clock_txt(folder: Path) -> Path | None:
 
 
 def convert_folder(folder: Path, *, write_clocks: bool) -> dict:
+    """Linearize a lecture folder's ``.srt`` into ebook plain text.
+
+    Args:
+        folder: ``output/transcript/{slug}/`` containing a ``.srt``.
+        write_clocks: If True, also write clocked ``{n}. {Title}.txt`` + ``segments.json``.
+
+    Returns:
+        Stats dict including ``plain_text``, ``words``, ``span``, and paths.
+
+    Raises:
+        FileNotFoundError: No ``.srt`` in the folder.
+        ValueError: SRT parsed to zero cues.
+    """
     srt = find_srt(folder)
     if not srt:
         raise FileNotFoundError(f"No .srt in {folder}")
@@ -170,6 +313,14 @@ def convert_folder(folder: Path, *, write_clocks: bool) -> dict:
 
 
 def write_ebook(results: list[dict], out_path: Path) -> None:
+    """Dump converted lecture plains into one markdown file.
+
+    This is a raw concat, not the edited field book.
+
+    Args:
+        results: ``convert_folder`` dicts in lecture order.
+        out_path: Usually ``output/ebook/Future-Ready.md``.
+    """
     parts = ["# Future Ready\n", "The G.A.F. program lectures.\n"]
     for item in results:
         parts.append(f"\n# {item['title']}\n")
@@ -180,6 +331,7 @@ def write_ebook(results: list[dict], out_path: Path) -> None:
 
 
 def main() -> None:
+    """CLI: ``--project`` or ``--dir`` → titled plains; optional ``--clocks`` / ``--ebook``."""
     parser = argparse.ArgumentParser(description="YouTube SRT → plain text + optional clocks")
     parser.add_argument("--project", help="Project ID under projects/")
     parser.add_argument("--dir", help="One transcript folder containing a .srt")

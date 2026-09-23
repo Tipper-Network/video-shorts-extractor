@@ -42,6 +42,15 @@ DEFAULT_PIPELINE: dict[str, Any] = {
 
 
 def _deep_merge(base: dict[str, Any], overlay: dict[str, Any]) -> dict[str, Any]:
+    """Recursively merge ``overlay`` onto a copy of ``base``.
+
+    Args:
+        base: Playbook or default pipeline.
+        overlay: Project ``pipeline.json`` (ids/overrides keys are skipped here).
+
+    Returns:
+        New dict; nested dicts are merged, other values replaced.
+    """
     result = json.loads(json.dumps(base))
     for key, value in overlay.items():
         if key in ("playbook_id", "project_id", "overrides"):
@@ -54,10 +63,29 @@ def _deep_merge(base: dict[str, Any], overlay: dict[str, Any]) -> dict[str, Any]
 
 
 def playbook_path(playbook_id: str) -> Path:
+    """Path to ``planning/playbooks/{playbook_id}.json``.
+
+    Args:
+        playbook_id: Stem, e.g. ``flywheel-episode``.
+
+    Returns:
+        Absolute playbook path (may not exist yet).
+    """
     return PLAYBOOKS_DIR / f"{playbook_id}.json"
 
 
 def load_playbook(playbook_id: str) -> dict[str, Any]:
+    """Read one playbook JSON.
+
+    Args:
+        playbook_id: Stem under ``planning/playbooks/``.
+
+    Returns:
+        Parsed playbook dict.
+
+    Raises:
+        FileNotFoundError: No such playbook file.
+    """
     path = playbook_path(playbook_id)
     if not path.exists():
         raise FileNotFoundError(f"Playbook not found: {playbook_id} ({path})")
@@ -66,13 +94,25 @@ def load_playbook(playbook_id: str) -> dict[str, Any]:
 
 
 def list_playbooks() -> list[str]:
+    """Sorted playbook ids (filename stems) under ``planning/playbooks/``.
+
+    Returns:
+        Playbook ids, excluding README.
+    """
     if not PLAYBOOKS_DIR.exists():
         return []
     return sorted(p.stem for p in PLAYBOOKS_DIR.glob("*.json") if p.name != "README.md")
 
 
 def find_project_dir(project_id: str) -> Path:
-    """Resolve project folder by slug or pipeline.json project_id."""
+    """Resolve the project folder by folder name or ``pipeline.json`` ``project_id``.
+
+    Args:
+        project_id: Folder slug or the id written inside ``pipeline.json``.
+
+    Returns:
+        ``projects/{folder}/``. Falls back to ``projects/{project_id}/`` if unmatched.
+    """
     direct = PROJECTS_DIR / project_id
     if (direct / "pipeline.json").exists() or direct.is_dir():
         if (direct / "pipeline.json").exists():
@@ -99,10 +139,26 @@ def find_project_dir(project_id: str) -> Path:
 
 
 def pipeline_path(project_id: str) -> Path:
+    """``pipeline.json`` inside the resolved project folder.
+
+    Args:
+        project_id: Slug or pipeline id.
+
+    Returns:
+        Path to ``pipeline.json``.
+    """
     return find_project_dir(project_id) / "pipeline.json"
 
 
 def load_pipeline(project_id: str) -> dict[str, Any]:
+    """Merge playbook + project ``pipeline.json`` + ``overrides``.
+
+    Args:
+        project_id: Slug or pipeline id.
+
+    Returns:
+        Full pipeline dict. Uses ``DEFAULT_PIPELINE`` when no file exists.
+    """
     path = pipeline_path(project_id)
     if not path.exists():
         data = json.loads(json.dumps(DEFAULT_PIPELINE))
@@ -135,19 +191,52 @@ def load_pipeline(project_id: str) -> dict[str, Any]:
 
 
 def module_order(project_id: str) -> list[str]:
+    """Module names in run order.
+
+    Args:
+        project_id: Slug or pipeline id.
+
+    Returns:
+        ``module_order`` or legacy ``workflow``, else ``[]``.
+    """
     pipeline = load_pipeline(project_id)
     return pipeline.get("module_order") or pipeline.get("workflow") or []
 
 
 def module_enabled(project_id: str, module: str) -> bool:
+    """Whether a module is on for this project.
+
+    Args:
+        project_id: Slug or pipeline id.
+        module: Key under ``modules`` (``concat``, ``srt_to_text``, …).
+
+    Returns:
+        True if ``modules.{module}.enabled`` is set.
+    """
     pipeline = load_pipeline(project_id)
     mod = pipeline.get("modules", {}).get(module, {})
     return bool(mod.get("enabled", False))
 
 
 def chapter_cut_mode(project_id: str) -> str:
+    """How chapters are cut.
+
+    Args:
+        project_id: Slug or pipeline id.
+
+    Returns:
+        ``contiguous`` (default) or ``supercut``.
+    """
     return load_pipeline(project_id).get("chapters", {}).get("cut_mode", "contiguous")
 
 
 def shorts_cut_mode(project_id: str) -> str:
+    """How shorts are cut.
+
+    Args:
+        project_id: Slug or pipeline id.
+
+    Returns:
+        ``contiguous`` (default) or ``supercut``.
+    """
     return load_pipeline(project_id).get("shorts", {}).get("cut_mode", "contiguous")

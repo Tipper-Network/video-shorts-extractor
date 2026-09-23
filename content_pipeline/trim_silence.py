@@ -13,6 +13,14 @@ BASE_DIR = Path(__file__).resolve().parent
 
 
 def probe_duration(path: Path) -> float:
+    """Read media duration with ffprobe.
+
+    Args:
+        path: Video or audio file.
+
+    Returns:
+        Duration in seconds.
+    """
     result = subprocess.run(
         [
             "ffprobe", "-v", "error",
@@ -28,6 +36,13 @@ def probe_duration(path: Path) -> float:
 
 
 def trim_with_auto_editor(input_path: Path, output_path: Path, margin: str) -> None:
+    """Cut silence with ``auto-editor`` (must be on PATH).
+
+    Args:
+        input_path: Source video.
+        output_path: Trimmed destination.
+        margin: Keep this much audio around speech (e.g. ``0.6sec``).
+    """
     ae = shutil.which("auto-editor")
     if not ae:
         print(" auto-editor not found in PATH")
@@ -54,7 +69,14 @@ def trim_long_pauses_ffmpeg(
     min_silence: float,
     threshold_db: float,
 ) -> None:
-    """Remove audio silence >= min_silence seconds (keeps A/V in sync via re-encode)."""
+    """Remove silences ≥ ``min_silence`` seconds (re-encode keeps A/V in sync).
+
+    Args:
+        input_path: Source video.
+        output_path: Trimmed destination.
+        min_silence: Minimum pause length to drop (seconds).
+        threshold_db: Peak threshold in dB (e.g. ``-40``).
+    """
     output_path.parent.mkdir(parents=True, exist_ok=True)
     af = (
         f"silenceremove=stop_periods=-1:stop_duration={min_silence}"
@@ -76,6 +98,7 @@ def trim_long_pauses_ffmpeg(
 
 
 def main() -> None:
+    """CLI: trim one file with auto-editor or ffmpeg ``silenceremove``."""
     parser = argparse.ArgumentParser(description="Trim dead air from video")
     parser.add_argument("--input", required=True)
     parser.add_argument("--output", required=True)

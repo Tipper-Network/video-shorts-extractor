@@ -31,6 +31,11 @@ DEFAULT_TRIGGERS = {
 
 
 def load_triggers() -> dict:
+    """Load ``sfx_triggers.json`` or the built-in word → query map.
+
+    Returns:
+        ``{word: {query, synthetic}}`` dict.
+    """
     if TRIGGERS_PATH.exists():
         with open(TRIGGERS_PATH, encoding="utf-8") as f:
             return json.load(f)
@@ -38,11 +43,29 @@ def load_triggers() -> dict:
 
 
 def _cache_path(key: str, ext: str = ".mp3") -> Path:
+    """Hashed cache path under ``.cache/sfx/``.
+
+    Args:
+        key: Cache key (provider + query).
+        ext: File suffix including the dot.
+
+    Returns:
+        Destination path (file may not exist yet).
+    """
     digest = hashlib.sha256(key.encode()).hexdigest()[:16]
     return CACHE_DIR / f"{digest}{ext}"
 
 
 def _download(url: str, dest: Path) -> bool:
+    """Download a URL to ``dest``.
+
+    Args:
+        url: HTTP(S) audio URL.
+        dest: Local file path.
+
+    Returns:
+        True if the file exists and is non-empty.
+    """
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "content-pipeline/1.0"})
         with urllib.request.urlopen(req, timeout=20) as resp:
@@ -56,6 +79,15 @@ def _download(url: str, dest: Path) -> bool:
 
 
 def _fetch_freesound(query: str, cache_key: str) -> Path | None:
+    """Search Freesound and cache the first preview.
+
+    Args:
+        query: Search string.
+        cache_key: Local cache identity.
+
+    Returns:
+        Cached mp3 path, or ``None`` if no key / no hit.
+    """
     token = os.environ.get("FREESOUND_API_KEY")
     if not token:
         return None
@@ -88,6 +120,15 @@ def _fetch_freesound(query: str, cache_key: str) -> Path | None:
 
 
 def _fetch_pixabay(query: str, cache_key: str) -> Path | None:
+    """Search Pixabay audio and cache the first hit.
+
+    Args:
+        query: Search string.
+        cache_key: Local cache identity.
+
+    Returns:
+        Cached mp3 path, or ``None`` if no key / no hit.
+    """
     key = os.environ.get("PIXABAY_API_KEY")
     if not key:
         return None
@@ -117,7 +158,14 @@ def _fetch_pixabay(query: str, cache_key: str) -> Path | None:
 
 
 def _synthesize(kind: str) -> Path:
-    """Generate a short WAV when no API key or network result is available."""
+    """Generate a short WAV when no API key or network result is available.
+
+    Args:
+        kind: ``pop``, ``ding``, ``buzzer``, ``cha_ching``, ``whoosh``, or a 440Hz fallback.
+
+    Returns:
+        Cached ``.wav`` path.
+    """
     sr = 44100
     dest = _cache_path(f"synthetic:{kind}", ".wav")
     if dest.exists():
@@ -150,9 +198,15 @@ def _synthesize(kind: str) -> Path:
 
 
 def resolve_sfx(trigger_word: str) -> Path | None:
-    """
-    Resolve a trigger word to a local audio file path.
+    """Resolve a trigger word to a local audio file.
+
     Order: cache hit → Freesound → Pixabay → synthetic fallback.
+
+    Args:
+        trigger_word: Transcript token (punctuation stripped).
+
+    Returns:
+        Local audio path, or ``None`` if the word is not in the trigger map.
     """
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     triggers = load_triggers()

@@ -34,17 +34,42 @@ STOPWORDS = {
 
 
 def tokenize(text: str) -> set[str]:
+    """Lowercase word set with stopwords and 1–2 letter tokens removed.
+
+    Args:
+        text: Transcript fragment.
+
+    Returns:
+        Content tokens for Jaccard compare.
+    """
     words = re.findall(r"\b[a-zA-Z']+\b", text.lower())
     return {w for w in words if w not in STOPWORDS and len(w) > 2}
 
 
 def jaccard(a: set[str], b: set[str]) -> float:
+    """Jaccard similarity of two token sets.
+
+    Args:
+        a: Left token set.
+        b: Right token set.
+
+    Returns:
+        ``0.0``–``1.0`` (``0.0`` if either set is empty).
+    """
     if not a or not b:
         return 0.0
     return len(a & b) / len(a | b)
 
 
 def load_segments(path: Path) -> list[dict]:
+    """Load Whisper/SRT segment JSON (bare list or ``{segments: [...]}``).
+
+    Args:
+        path: ``segments.json``.
+
+    Returns:
+        List of ``{start, end, text}``.
+    """
     with open(path, encoding="utf-8") as f:
         data = json.load(f)
     if isinstance(data, dict) and "segments" in data:
@@ -53,6 +78,15 @@ def load_segments(path: Path) -> list[dict]:
 
 
 def preview_text(segments: list[dict], max_chars: int = 120) -> str:
+    """Join segment texts and truncate for a topic preview.
+
+    Args:
+        segments: Pieces with a ``text`` field.
+        max_chars: Max preview length (ellipsis after).
+
+    Returns:
+        Single-line preview string.
+    """
     text = " ".join(s["text"] for s in segments).strip()
     if len(text) <= max_chars:
         return text
@@ -60,6 +94,15 @@ def preview_text(segments: list[dict], max_chars: int = 120) -> str:
 
 
 def build_blocks(segments: list[dict], pause_threshold: float) -> list[dict]:
+    """Group consecutive segments split by pauses ≥ ``pause_threshold``.
+
+    Args:
+        segments: Timed transcript lines.
+        pause_threshold: Gap in seconds that starts a new block.
+
+    Returns:
+        Topic blocks with clocks, preview, and token sample.
+    """
     if not segments:
         return []
 
@@ -95,6 +138,15 @@ def build_blocks(segments: list[dict], pause_threshold: float) -> list[dict]:
 
 
 def score_boundaries(blocks: list[dict], segments: list[dict]) -> list[dict]:
+    """Score the cut between each pair of adjacent blocks.
+
+    Args:
+        blocks: From ``build_blocks``.
+        segments: Original segments (for pause measurement).
+
+    Returns:
+        Boundary dicts with ``score``, ``lexical_shift``, ``pause_sec``.
+    """
     boundaries = []
     for i in range(len(blocks) - 1):
         left = blocks[i]
@@ -141,6 +193,18 @@ def merge_chapter_candidates(
     max_sec: float,
     context_pad: float = 10.0,
 ) -> list[dict]:
+    """Merge topic blocks into chapter-length candidates.
+
+    Args:
+        blocks: Pause-split blocks.
+        boundaries: Scores from ``score_boundaries``.
+        min_sec: Prefer not to flush a chapter shorter than this.
+        max_sec: Flush before the running group exceeds this.
+        context_pad: Seconds pulled back onto the start clock.
+
+    Returns:
+        Candidates with ``needs_agent_review`` (titles left empty).
+    """
     if not blocks:
         return []
 
@@ -150,6 +214,7 @@ def merge_chapter_candidates(
     duration = blocks[0]["duration"]
 
     def flush(end_block: dict, force: bool = False) -> None:
+        """Emit the current group as a candidate if it is long enough (or ``force``)."""
         nonlocal group, duration
         if not group:
             return
@@ -205,6 +270,21 @@ def detect_topics(
     max_chapter_sec: float = 1800,
     context_pad: float = 10.0,
 ) -> dict:
+    """Run heuristic topic detection on a transcript JSON.
+
+    Args:
+        transcript_path: ``segments.json``.
+        pause_threshold: Seconds of silence that start a new block.
+        min_chapter_sec: Minimum chapter candidate length.
+        max_chapter_sec: Maximum chapter candidate length.
+        context_pad: Seconds of lead-in on each candidate start.
+
+    Returns:
+        Topics payload for the agent to title and snap.
+
+    Raises:
+        ValueError: Empty transcript.
+    """
     segments = load_segments(transcript_path)
     if not segments:
         raise ValueError(f"No segments in {transcript_path}")
@@ -242,6 +322,7 @@ def detect_topics(
 
 
 def main() -> None:
+    """CLI: write ``*.topics.json`` next to a transcript (or ``--output``)."""
     parser = argparse.ArgumentParser(description="Heuristic topic detection from transcript")
     parser.add_argument("--transcript", required=True, help="Path to subtitles/{stem}.json")
     parser.add_argument("--output", help="Output topics.json (default: alongside transcript)")

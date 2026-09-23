@@ -25,7 +25,15 @@ SFX_COOLDOWN = 0.8
 
 
 def apply_word_sfx(video_clip, transcript_words: list[dict]):
-    """Overlay SFX at trigger words using on-demand resolver."""
+    """Overlay SFX at trigger words using the on-demand resolver.
+
+    Args:
+        video_clip: MoviePy video with audio.
+        transcript_words: Vosk words ``{word, start, end}``.
+
+    Returns:
+        Same clip, or a new clip with SFX mixed in (cooldown ``SFX_COOLDOWN``).
+    """
     triggers = load_triggers()
     audio_tracks = [video_clip.audio]
     last_sfx_time = -1.0
@@ -55,6 +63,16 @@ def apply_word_sfx(video_clip, transcript_words: list[dict]):
 
 
 def apply_dynamic_zooms(video_clip, interval=ZOOM_INTERVAL, factor=ZOOM_FACTOR):
+    """Alternate zoomed / unzoomed slices every ``interval`` seconds.
+
+    Args:
+        video_clip: MoviePy video.
+        interval: Seconds per slice (default ``ZOOM_INTERVAL``).
+        factor: Scale when zoomed (default ``ZOOM_FACTOR``).
+
+    Returns:
+        Composited clip the same frame size as the input.
+    """
     duration = video_clip.duration
     subclips = []
     current_time = 0.0
@@ -86,6 +104,15 @@ def process_video(
     zoom: bool = True,
     sfx: bool = True,
 ) -> None:
+    """Polish one file: optional word SFX + optional pulse zoom, then write mp4.
+
+    Args:
+        input_path: Source video.
+        output_path: Destination mp4.
+        words_json_path: Vosk ``words.json`` for SFX triggers; skipped if missing.
+        zoom: Apply alternating zooms.
+        sfx: Mix trigger SFX when word JSON exists.
+    """
     video = VideoFileClip(str(input_path))
 
     if sfx and words_json_path and os.path.exists(words_json_path):
@@ -108,6 +135,7 @@ def process_video(
 
 
 def main():
+    """CLI: ``--input`` / ``--output`` plus optional ``--words``, ``--no-zoom``, ``--no-sfx``."""
     parser = argparse.ArgumentParser(description="Apply SFX + dynamic zoom to a video")
     parser.add_argument("--input", required=True, help="Input video path")
     parser.add_argument("--output", required=True, help="Output video path")

@@ -57,8 +57,10 @@ content_pipeline/output/{stem}/
 
 ## FFmpeg Filters
 
-- **16:9:** `scale=1920:1080`
-- **9:16:** `crop=ih*(9/16):ih,scale=1080:1920`
+- **16:9:** `scale='min(1920,iw)':-2` — never upscale
+- **9:16:** letterbox + blur canvas 1080×1920 (`cut_utils.aspect_filter`)
+- **Supercut concat:** `-c copy` (re-encode only if streams mismatch)
+- **Shorts:** `--jobs 4` parallel ffmpeg. Chapters stay serial.
 
 ## Guardrails
 

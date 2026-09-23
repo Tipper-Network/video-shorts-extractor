@@ -9,6 +9,10 @@ ENV_PATH = Path(__file__).resolve().parent / ".env"
 
 
 def load_env() -> None:
+    """Load ``content_pipeline/.env`` into ``os.environ``.
+
+    Skips missing files, comments, and keys already set in the environment.
+    """
     if not ENV_PATH.exists():
         return
     for line in ENV_PATH.read_text(encoding="utf-8").splitlines():

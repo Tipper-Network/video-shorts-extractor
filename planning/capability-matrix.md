@@ -21,7 +21,7 @@ Tracks **platform** editing capabilities — scripts and skills — tested again
 | Chronological video concat | `concat_clips.py` | — | tested | hikmat | Stream-copy + concat demuxer |
 | Normalize portrait / no-audio | `concat_clips.py --mode normalize` | — | tested | hikmat | 6/11 clips re-encoded; cache reused |
 | Insert stills in timeline | `concat_clips.py --include-images` | — | failed | hikmat | Split-frame glitches; deferred |
-| Whisper transcription | `transcribe.py` | — | shipped | origin-story, tipper-the-story | CPU `small`. Prefer YouTube `.srt` for full-file when the upload matches `input/` |
+| Whisper transcription | `transcribe.py` / `process_stream.py` | — | shipped | origin-story, tipper-the-story | CPU `small`. Sidecar `.srt` next to `input/` skips Whisper (`--whisper` to force) |
 | YouTube SRT → plain + clocks | `srt_to_text.py` | — | tested | program-future-ready | Titled plains in `output/transcript/`; clocked `{n}. {Title}.txt` in each lecture folder |
 | GAF lecture → field book | agent | `lecture_ebook` | shipped | program-future-ready | Drop stream wreckage; GAF voice; no Tipper closer |
 | Vosk word timestamps | `transcribe.py` | `sfx_allocation` | shipped | — | Needs `VOSK_MODEL_PATH` |
@@ -30,7 +30,7 @@ Tracks **platform** editing capabilities — scripts and skills — tested again
 | Modular module runner | `run_module.py` | `modules/README` | shipped | — | Per-project enable flags |
 | Project pipeline config | `project_config.py` | `project-pipeline.schema` | shipped | hikmat | `projects/{id}/pipeline.json` |
 | Visual montage compose | `compose_shorts.py` | hikmat/montage_compose | tested | hikmat | segment pool + manifest |
-| Batch render from manifest | `render_manifest.py` | `render_manifest` | tested | hikmat | contiguous + supercut segments |
+| Batch render from manifest | `render_manifest.py` | `render_manifest` | tested | hikmat | contiguous + supercut (`-c copy`). Shorts `--jobs 4`. 16:9 no upscale |
 | Trim on render | `render_manifest.py` + `trim_profiles.py` | platform skills | shipped | — | light/moderate/aggressive |
 | Manual cut render | `process_stream.py --mode render` | — | shipped | — | |
 | SFX overlay | `auto-edit.py` + `sfx_resolver.py` | `sfx_allocation` | shipped | — | Synthetic fallback works offline |

@@ -45,8 +45,10 @@ content_pipeline/output/{stem}/
 
 ## FFmpeg Reference (from process_stream.py)
 
-- 16:9: `scale=1920:1080`
-- 9:16: `crop=ih*(9/16):ih,scale=1080:1920`
+- 16:9: `scale='min(1920,iw)':-2` (no upscale)
+- 9:16: letterbox + blur 1080×1920
+- supercut: concat `-c copy`; fallback re-encode if copy fails
+- shorts: parallel `--jobs 4`
 - Codec: libx264 fast preset, aac audio
 
 ## Done When

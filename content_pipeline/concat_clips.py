@@ -41,14 +41,17 @@ class ClipInfo:
 
     @property
     def is_portrait(self) -> bool:
+        """True when height > width."""
         return self.height > self.width
 
     @property
     def is_image(self) -> bool:
+        """True when this entry is a still, not a video."""
         return self.kind == "image"
 
     @property
     def needs_normalize(self) -> bool:
+        """True if this clip cannot be stream-copied into a 1920×1080 h264 timeline."""
         if self.is_image:
             return True
         # HEVC/other codecs must re-encode — stream-copy concat breaks playback
@@ -63,6 +66,14 @@ class ClipInfo:
 
 
 def clip_sort_key(path: Path) -> tuple:
+    """Sort key: ``YYYYMMDD_HHMMSS`` from the stem, else last.
+
+    Args:
+        path: Clip or still path.
+
+    Returns:
+        ``(date, time, name)`` tuple for chronological glob order.
+    """
     match = TIMESTAMP_RE.match(path.stem)
     if match:
         return (match.group(1), match.group(2), path.name)
@@ -70,6 +81,16 @@ def clip_sort_key(path: Path) -> tuple:
 
 
 def discover_clips(source_dir: Path, exclude: set[str], include_images: bool = False) -> list[Path]:
+    """List mp4s (and optional stills) in chronological order.
+
+    Args:
+        source_dir: Folder of raw clips.
+        exclude: Filenames to skip.
+        include_images: Also pick jpg/png/webp.
+
+    Returns:
+        Sorted paths (tiny mp4s under 100KB skipped).
+    """
     items: list[Path] = []
     patterns = ["*.mp4"]
     if include_images:
@@ -87,6 +108,15 @@ def discover_clips(source_dir: Path, exclude: set[str], include_images: bool = F
 
 
 def probe_image(path: Path, duration: float) -> ClipInfo:
+    """ffprobe a still and wrap it as a ``ClipInfo``.
+
+    Args:
+        path: Image file.
+        duration: Hold time when converted to video.
+
+    Returns:
+        ClipInfo with ``kind="image"`` and no audio.
+    """
     cmd = [
         "ffprobe",
         "-v",
@@ -112,6 +142,14 @@ def probe_image(path: Path, duration: float) -> ClipInfo:
 
 
 def probe_clip(path: Path) -> ClipInfo:
+    """ffprobe width, height, codec, duration, and whether audio exists.
+
+    Args:
+        path: Video file.
+
+    Returns:
+        ClipInfo for normalize / draft decisions.
+    """
     cmd = [
         "ffprobe",
         "-v",
@@ -157,6 +195,15 @@ def probe_clip(path: Path) -> ClipInfo:
 
 
 def run_ffmpeg(cmd: list[str], label: str) -> None:
+    """Run ffmpeg and raise if it fails.
+
+    Args:
+        cmd: Full argv.
+        label: Printed progress tag.
+
+    Raises:
+        RuntimeError: Non-zero ffmpeg exit.
+    """
     print(f"  → {label}", flush=True)
     result = subprocess.run(
         cmd,
@@ -169,6 +216,15 @@ def run_ffmpeg(cmd: list[str], label: str) -> None:
 
 
 def concat_stream_copy(clips: list[Path], output_path: Path) -> bool:
+    """Concat demuxer with ``-c copy`` (fast draft).
+
+    Args:
+        clips: Ordered source files.
+        output_path: Destination mp4.
+
+    Returns:
+        True on success; False if streams will not copy (caller re-encodes).
+    """
     list_file = output_path.parent / "concat_list.txt"
     with open(list_file, "w", encoding="utf-8") as f:
         for clip in clips:
@@ -202,6 +258,13 @@ def concat_stream_copy(clips: list[Path], output_path: Path) -> bool:
 
 
 def concat_reencode(clips: list[Path], output_path: Path, preset: str) -> None:
+    """Concat demuxer + libx264/aac (safe when codecs differ).
+
+    Args:
+        clips: Ordered source files (already 1080p if normalized).
+        output_path: Destination mp4.
+        preset: x264 preset (``ultrafast`` for drafts).
+    """
     list_file = output_path.parent / "concat_list.txt"
     with open(list_file, "w", encoding="utf-8") as f:
         for clip in clips:
@@ -241,7 +304,13 @@ def concat_reencode(clips: list[Path], output_path: Path, preset: str) -> None:
 
 
 def image_to_video(info: ClipInfo, out_path: Path, preset: str) -> None:
-    """Turn a still into a short 1080p segment with silent audio."""
+    """Turn a still into a short 1080p segment with silent audio.
+
+    Args:
+        info: Image ClipInfo (uses ``info.duration``).
+        out_path: Destination mp4.
+        preset: x264 preset.
+    """
     out_path.parent.mkdir(parents=True, exist_ok=True)
     cmd = [
         "ffmpeg",
@@ -283,6 +352,13 @@ def image_to_video(info: ClipInfo, out_path: Path, preset: str) -> None:
 
 
 def normalize_clip(info: ClipInfo, out_path: Path, preset: str) -> None:
+    """Scale/pad to 1920×1080, add silent audio if missing, or convert a still.
+
+    Args:
+        info: Probed clip.
+        out_path: Normalized cache file.
+        preset: x264 preset.
+    """
     if info.is_image:
         image_to_video(info, out_path, preset)
         return
@@ -337,6 +413,13 @@ def normalize_clip(info: ClipInfo, out_path: Path, preset: str) -> None:
 
 
 def concat_draft(clips: list[Path], output_path: Path, preset: str) -> None:
+    """Stream-copy first; fall back to one re-encode concat.
+
+    Args:
+        clips: Ordered videos (no stills).
+        output_path: Timeline mp4.
+        preset: Used only on the fallback re-encode.
+    """
     print("Mode: draft (stream-copy first)", flush=True)
     if concat_stream_copy(clips, output_path):
         print(" Used stream-copy — fast draft timeline.", flush=True)
@@ -354,6 +437,17 @@ def concat_normalize(
     reencode_all: bool = False,
     progress=None,
 ) -> None:
+    """Normalize clips that need it (or all), then concat.
+
+    Args:
+        clip_infos: Probed clips in order.
+        output_path: Timeline mp4.
+        cache_dir: Where ``*_norm.mp4`` lives.
+        preset: x264 preset for encodes.
+        force: Re-encode even if a cache file exists.
+        reencode_all: Ignore passthrough; encode every clip.
+        progress: Optional ``ProgressTracker`` (``update(i, item=…)``).
+    """
     label = "full re-encode" if reencode_all else "normalize (as needed)"
     print(f"Mode: {label}", flush=True)
     cache_dir.mkdir(parents=True, exist_ok=True)
@@ -392,6 +486,12 @@ def concat_normalize(
 
 
 def print_summary(output_path: Path, clip_infos: list[ClipInfo]) -> None:
+    """Print ffprobe duration/size vs source total.
+
+    Args:
+        output_path: Finished timeline.
+        clip_infos: Clips that were joined.
+    """
     probe = subprocess.run(
         [
             "ffprobe",
@@ -417,6 +517,7 @@ def print_summary(output_path: Path, clip_infos: list[ClipInfo]) -> None:
 
 
 def main() -> None:
+    """CLI: chronological concat — ``--mode draft|normalize|full``."""
     parser = argparse.ArgumentParser(
         description="Concat clips in chronological order (draft or normalize)"
     )

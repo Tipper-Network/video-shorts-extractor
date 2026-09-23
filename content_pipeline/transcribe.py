@@ -21,7 +21,14 @@ SUB_DIR = BASE_DIR / "subtitles"
 
 
 def safe_stem(name: str) -> str:
-    """Filesystem-safe stem for transcript folders and audio cache."""
+    """Filesystem-safe stem for transcript folders and audio cache.
+
+    Args:
+        name: Filename or stem (``13. The G.A.F.: "Future Ready".mp4``).
+
+    Returns:
+        Lowercase hyphenated slug, or ``transcript`` if nothing remains.
+    """
     stem = Path(name).stem
     slug = re.sub(r"[^\w]+", "-", stem, flags=re.ASCII).strip("-").lower()
     slug = re.sub(r"-{2,}", "-", slug)
@@ -29,6 +36,14 @@ def safe_stem(name: str) -> str:
 
 
 def run_cmd(cmd: list[str]) -> str:
+    """Run a subprocess; print the command; exit the process on failure.
+
+    Args:
+        cmd: argv list (usually ffmpeg).
+
+    Returns:
+        Captured stdout.
+    """
     print(f" Executing: {' '.join(cmd)}")
     result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     if result.returncode != 0:
@@ -38,7 +53,12 @@ def run_cmd(cmd: list[str]) -> str:
 
 
 def extract_audio(video_path: Path, audio_path: Path) -> None:
-    """Extract 16kHz mono audio optimized for speech recognition."""
+    """Extract 16kHz mono PCM WAV for Whisper / Vosk.
+
+    Args:
+        video_path: Source video.
+        audio_path: Destination ``.wav``.
+    """
     print(" Extracting audio from video...")
     cmd = [
         "ffmpeg", "-y", "-i", str(video_path),
@@ -54,7 +74,17 @@ def transcribe_whisper(
     model_size: str = "small",
     transcript_txt_path: Path | None = None,
 ) -> list[dict]:
-    """Full segment transcript via Faster-Whisper. Always writes segments JSON + transcript.txt."""
+    """Full-file Faster-Whisper. Always writes segments JSON + ``transcript.txt``.
+
+    Args:
+        audio_path: 16kHz mono WAV.
+        transcript_json_path: ``segments.json`` destination.
+        model_size: Whisper size (default ``small``, CPU int8).
+        transcript_txt_path: Clocked text path; defaults next to the JSON.
+
+    Returns:
+        Segment dicts ``{start, end, text}``.
+    """
     print(" Running Faster-Whisper transcription...")
     model = WhisperModel(model_size, device="cpu", compute_type="int8")
     segments, _info = model.transcribe(str(audio_path), beam_size=5)
@@ -74,7 +104,14 @@ def transcribe_whisper(
 
 
 def format_timestamp(seconds: float) -> str:
-    """Format seconds as H:MM:SS or MM:SS."""
+    """Format seconds as ``H:MM:SS`` or ``MM:SS``.
+
+    Args:
+        seconds: Clock in seconds.
+
+    Returns:
+        Human clock string used in transcript lines.
+    """
     total = int(round(seconds))
     hours, rem = divmod(total, 3600)
     minutes, secs = divmod(rem, 60)
@@ -84,7 +121,15 @@ def format_timestamp(seconds: float) -> str:
 
 
 def write_transcript_txt(segments: list[dict], txt_path: Path) -> Path:
-    """Write full human-readable transcript with timestamps (always produced on transcribe)."""
+    """Write ``[start → end] text`` lines.
+
+    Args:
+        segments: ``{start, end, text}`` list.
+        txt_path: Destination clock file.
+
+    Returns:
+        ``txt_path``.
+    """
     txt_path.parent.mkdir(parents=True, exist_ok=True)
     lines = [
         f"[{format_timestamp(seg['start'])} → {format_timestamp(seg['end'])}] {seg['text']}"
@@ -102,7 +147,13 @@ def export_transcripts(
     segments_json_path: Path,
     transcript_txt_path: Path,
 ) -> None:
-    """Persist segment JSON + full timestamped transcript.txt."""
+    """Persist segment JSON + timestamped ``transcript.txt``.
+
+    Args:
+        segments: ``{start, end, text}`` list.
+        segments_json_path: JSON destination.
+        transcript_txt_path: Clocked text destination.
+    """
     segments_json_path.parent.mkdir(parents=True, exist_ok=True)
     with open(segments_json_path, "w", encoding="utf-8") as f:
         json.dump(segments, f, indent=2, ensure_ascii=False)

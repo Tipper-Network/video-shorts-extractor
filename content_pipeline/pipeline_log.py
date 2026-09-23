@@ -29,15 +29,24 @@ STAGES = [
 
 
 def _now() -> str:
+    """UTC ISO-8601 timestamp with a Z suffix (no microseconds)."""
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
 def _now_local() -> str:
+    """Local wall-clock time for the human timing log."""
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
 def format_duration(seconds: float) -> str:
-    """Human-readable duration: 45s, 3m 12s, 1h 5m."""
+    """Human-readable duration: ``45s``, ``3m 12s``, ``1h 5m``.
+
+    Args:
+        seconds: Elapsed time.
+
+    Returns:
+        Compact duration string.
+    """
     seconds = max(0, int(round(seconds)))
     if seconds < 60:
         return f"{seconds}s"
@@ -49,24 +58,56 @@ def format_duration(seconds: float) -> str:
 
 
 def log_path(project_id: str) -> Path:
+    """``pipeline.log.json`` for this project.
+
+    Args:
+        project_id: Slug or pipeline id.
+
+    Returns:
+        JSON log path.
+    """
     from project_config import find_project_dir
 
     return find_project_dir(project_id) / "pipeline.log.json"
 
 
 def timing_log_path(project_id: str) -> Path:
+    """Append-only ``pipeline.timing.log``.
+
+    Args:
+        project_id: Slug or pipeline id.
+
+    Returns:
+        Text log path.
+    """
     from project_config import find_project_dir
 
     return find_project_dir(project_id) / "pipeline.timing.log"
 
 
 def progress_path(project_id: str) -> Path:
+    """Live ``pipeline.progress.json`` snapshot.
+
+    Args:
+        project_id: Slug or pipeline id.
+
+    Returns:
+        Progress JSON path.
+    """
     from project_config import find_project_dir
 
     return find_project_dir(project_id) / "pipeline.progress.json"
 
 
 def load_log(project_id: str) -> dict[str, Any]:
+    """Read the stage log, or a fresh empty structure.
+
+    Args:
+        project_id: Slug or pipeline id.
+
+    Returns:
+        ``{project_id, current_stage, totals, history, …}``.
+    """
     path = log_path(project_id)
     if path.exists():
         return json.loads(path.read_text(encoding="utf-8"))
@@ -80,6 +121,14 @@ def load_log(project_id: str) -> dict[str, Any]:
 
 
 def load_progress(project_id: str) -> dict[str, Any] | None:
+    """Read the live progress snapshot if it exists.
+
+    Args:
+        project_id: Slug or pipeline id.
+
+    Returns:
+        Progress dict, or ``None``.
+    """
     path = progress_path(project_id)
     if not path.exists():
         return None
@@ -87,6 +136,15 @@ def load_progress(project_id: str) -> dict[str, Any] | None:
 
 
 def save_log(project_id: str, data: dict[str, Any]) -> Path:
+    """Write ``pipeline.log.json`` and stamp ``updated_at``.
+
+    Args:
+        project_id: Slug or pipeline id.
+        data: Full log object.
+
+    Returns:
+        Path written.
+    """
     path = log_path(project_id)
     path.parent.mkdir(parents=True, exist_ok=True)
     data["updated_at"] = _now()
@@ -95,6 +153,15 @@ def save_log(project_id: str, data: dict[str, Any]) -> Path:
 
 
 def save_progress(project_id: str, data: dict[str, Any]) -> Path:
+    """Write ``pipeline.progress.json`` and stamp ``updated_at``.
+
+    Args:
+        project_id: Slug or pipeline id.
+        data: Progress snapshot.
+
+    Returns:
+        Path written.
+    """
     path = progress_path(project_id)
     path.parent.mkdir(parents=True, exist_ok=True)
     data["updated_at"] = _now()
@@ -103,12 +170,23 @@ def save_progress(project_id: str, data: dict[str, Any]) -> Path:
 
 
 def clear_progress(project_id: str) -> None:
+    """Delete the live progress snapshot if present.
+
+    Args:
+        project_id: Slug or pipeline id.
+    """
     path = progress_path(project_id)
     if path.exists():
         path.unlink()
 
 
 def append_timing_line(project_id: str, line: str) -> None:
+    """Append one line to the human timing log.
+
+    Args:
+        project_id: Slug or pipeline id.
+        line: Already-formatted line (newline added).
+    """
     path = timing_log_path(project_id)
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "a", encoding="utf-8") as f:
@@ -116,11 +194,28 @@ def append_timing_line(project_id: str, line: str) -> None:
 
 
 def _add_total(data: dict, stage: str, seconds: float) -> None:
+    """Add ``seconds`` into ``data["totals"][stage]``.
+
+    Args:
+        data: Log object (mutated).
+        stage: Stage name.
+        seconds: Elapsed to add.
+    """
     totals = data.setdefault("totals", {})
     totals[stage] = round(totals.get(stage, 0) + seconds, 1)
 
 
 def _estimate_eta(elapsed: float, current: int, total: int) -> float | None:
+    """Linear ETA from items done so far.
+
+    Args:
+        elapsed: Seconds since start.
+        current: Items finished.
+        total: Items in the batch.
+
+    Returns:
+        Remaining seconds, or ``None`` if not estimable.
+    """
     if current <= 0 or total <= 0 or current >= total:
         return None
     return elapsed / current * (total - current)
@@ -136,11 +231,19 @@ def log_stage(
     details: dict | None = None,
     duration_seconds: float | None = None,
 ) -> Path:
-    """
-    Append a stage entry and set current_stage.
+    """Append a stage entry and set ``current_stage``.
 
-    status: started | done | failed | skipped | progress
-    duration_seconds: set on done/failed/skipped to record elapsed time
+    Args:
+        project_id: Slug or pipeline id.
+        stage: Stage name (``transcribe``, ``render``, …).
+        status: ``started`` | ``done`` | ``failed`` | ``skipped`` | ``progress``.
+        message: Optional human note.
+        artifact: Optional output path string.
+        details: Optional extra dict stored on the entry.
+        duration_seconds: Elapsed time; added to totals on done/failed/skipped.
+
+    Returns:
+        Path to ``pipeline.log.json``.
     """
     data = load_log(project_id)
     entry: dict[str, Any] = {
@@ -190,7 +293,21 @@ def log_progress(
     message: str = "",
     started_at: float | None = None,
 ) -> dict[str, Any]:
-    """Write live progress snapshot + append timing line with % and ETA."""
+    """Write the live progress snapshot and a timing-log line with % and ETA.
+
+    Args:
+        project_id: Slug or pipeline id.
+        stage: Stage name.
+        current: Items finished.
+        total: Items in the batch.
+        unit: Label for the counter (``clip``, ``item``).
+        item: Current filename / id.
+        message: Optional note.
+        started_at: ``time.monotonic()`` start; defaults to now.
+
+    Returns:
+        Snapshot dict (also written to ``pipeline.progress.json``).
+    """
     if started_at is None:
         started_at = time.monotonic()
     elapsed = time.monotonic() - started_at
@@ -242,6 +359,15 @@ class ProgressTracker:
         unit: str = "item",
         message: str = "",
     ):
+        """Start a % tracker for one stage.
+
+        Args:
+            project_id: Slug or pipeline id.
+            stage: Stage name.
+            total: Item count (stored as at least 1).
+            unit: Counter label.
+            message: Optional note on the first tick.
+        """
         self.project_id = project_id
         self.stage = stage
         self.total = max(total, 1)
@@ -257,6 +383,16 @@ class ProgressTracker:
         item: str = "",
         message: str = "",
     ) -> dict[str, Any]:
+        """Set absolute progress and rewrite the snapshot.
+
+        Args:
+            current: Items finished.
+            item: Current filename / id.
+            message: Optional note.
+
+        Returns:
+            Progress snapshot.
+        """
         self._current = current
         return log_progress(
             self.project_id,
@@ -270,9 +406,23 @@ class ProgressTracker:
         )
 
     def step(self, *, item: str = "", message: str = "") -> dict[str, Any]:
+        """Advance by one item.
+
+        Args:
+            item: Current filename / id.
+            message: Optional note.
+
+        Returns:
+            Progress snapshot.
+        """
         return self.update(self._current + 1, item=item, message=message)
 
     def finish(self, *, message: str = "") -> None:
+        """Mark the tracker complete (100%).
+
+        Args:
+            message: Optional note (default ``complete``).
+        """
         log_progress(
             self.project_id,
             self.stage,
@@ -322,6 +472,16 @@ class StageTimer:
         total: int | None = None,
         unit: str = "item",
     ):
+        """Time a stage: log started → work → done/failed with elapsed seconds.
+
+        Args:
+            project_id: Slug or pipeline id.
+            stage: Stage name.
+            message: Note on start/done.
+            artifact: Optional output path stored on done.
+            total: If set, also open a ``ProgressTracker``.
+            unit: Progress counter label.
+        """
         self.project_id = project_id
         self.stage = stage
         self.message = message
@@ -374,6 +534,11 @@ class StageTimer:
 
 
 def print_status(project_id: str) -> None:
+    """Print current stage, live %, totals, and last 15 history rows.
+
+    Args:
+        project_id: Slug or pipeline id.
+    """
     data = load_log(project_id)
     print(f"Project: {project_id}")
     print(f"Current stage: {data.get('current_stage') or '—'}")

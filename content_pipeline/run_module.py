@@ -44,6 +44,11 @@ MODULES = {
 
 
 def main() -> None:
+    """CLI: run one named module (``concat``, ``srt_to_text``, …) and exit with its status.
+
+    Passes ``--project`` through when the child script accepts it. Honors
+    ``pipeline.json`` ``modules.{name}.enabled``.
+    """
     parser = argparse.ArgumentParser(description="Run one pipeline module")
     parser.add_argument("--module", required=True, choices=sorted(MODULES.keys()))
     parser.add_argument("--project", help="Project ID — loads projects/{id}/pipeline.json")
