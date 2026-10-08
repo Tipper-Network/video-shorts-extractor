@@ -37,6 +37,10 @@ THP defines *what* to say **when the video is a THP video**. Tipper and GAF have
 | 2026-09-21 | Faster render: copy concat, no 16:9 upscale, parallel shorts | Supercut `-c copy` (fallback re-encode). Chunks stay source size, cap 1920. Shorts `--jobs 4`. Sidecar `.srt` skips full-file Whisper. |
 | 2026-09-23 | Cheat-sheet influencer skills stay personal | `charsheet-soul`, `ugc-influencer-video`, `content-engine`, `digital-product` install to `~/.cursor/skills/`. Repo `skills/` stays the cut engine. |
 | 2026-09-23 | Viral finish ≠ `output/` | Step-2 writes captions/type/covers to `{job}/viral/`. Cut masters stay in `output/deliverables/`. |
+| 2026-09-24 | Pipeline code = cli / lib / config | Entry scripts in `content_pipeline/cli/`, shared in `lib/`, JSON in `config/`. Root `*.py` are shims. |
+| 2026-09-24 | Viral = captions then sounds only | Stage1 `viral_captions.py`, stage2 `viral_sounds.py`. Zoom cancelled. Approve → `viral/approved/`. |
+| 2026-10-07 | Step-3 = publish_order; stage alone ≠ order | `flywheel_stage` buckets; `publish_order` sequences. Queue JSON under `step-3-flywheel-organiser/{entity}/{series}/`. |
+| 2026-10-07 | Step-4 = one .md per short (YT/IG/TT) | Shelf `step-4-ready-to-post/{entity}/{series}/{nn-stage}/`. No auto-upload. Batch: `cli/batch_to_step4.py` for jobs 1–12. |
 
 ## Active Projects
 

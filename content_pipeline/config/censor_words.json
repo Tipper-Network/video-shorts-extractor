@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "source": "https://support.google.com/youtube/answer/6162278",
+  "policy": "tier_A_only",
+  "notes": "Always mute+beep audio and never spell these in burned captions. Tier B (shit/bitch/asshole) is off per operator lock.",
+  "match": "whole_word_case_insensitive",
+  "words": [
+    "fuck",
+    "fucking",
+    "fucked",
+    "fucker",
+    "fuckers",
+    "motherfucker",
+    "motherfucking",
+    "cunt",
+    "cunts",
+    "nigger",
+    "niggers",
+    "nigga",
+    "niggas",
+    "faggot",
+    "faggots",
+    "fag",
+    "fags",
+    "tranny"
+  ],
+  "caption_replacement": "****",
+  "audio": {
+    "action": "mute_and_beep",
+    "pad_ms_before": 40,
+    "pad_ms_after": 80
+  }
+}

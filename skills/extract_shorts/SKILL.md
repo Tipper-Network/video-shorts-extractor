@@ -5,9 +5,9 @@ description: Planner rules for cutting speech shorts — locate a 3–5 min them
 
 # Extract Shorts
 
-**Planner only. No ffmpeg.** Resolve the entity with [`entity_brand`](../entity_brand/SKILL.md) first (title = brand key). Themes come from `shorts_instructions.md` / `shorts_extraction.md`. Script cohesion is [`situation_resolve`](../situation_resolve/SKILL.md). Export stays in [`vertical_shorts`](../vertical_shorts/SKILL.md).
+**Planner only. No ffmpeg.** Resolve the entity with [`entity_brand`](../entity_brand/SKILL.md) first (title = brand key). Themes come from `shorts_instructions.md` / `shorts_extraction.md`. Optional storyline discovery: [`story_snippet`](../story_snippet/SKILL.md) → `output/plan/story_snippets.json` → theme rows. Script cohesion is [`situation_resolve`](../situation_resolve/SKILL.md). Export stays in [`vertical_shorts`](../vertical_shorts/SKILL.md).
 
-Read [`entity_brand`](../entity_brand/SKILL.md), then [`situation_resolve`](../situation_resolve/SKILL.md). Name the entity, then the situation. Then hunt timestamps.
+Read [`entity_brand`](../entity_brand/SKILL.md), then [`situation_resolve`](../situation_resolve/SKILL.md). Name the entity, then the situation. Then hunt timestamps. When hunting leftover story-shaped blocks, run [`story_snippet`](../story_snippet/SKILL.md) first — its 300–800 word window is the theme block, not the cut.
 
 **Origin Story lesson:** do not encode to find the argument. sh03 burned v2–v7 that way. Script `.md` first. Recap (businesses-first) is not a resolve. Last line inside a loop is not a resolve. “Keep track” without the payoff is not a finished resolve. Do not out mid-clause to dodge a pitch — if “right now” is the land, the next finished example of the move stays in (sh05: first stream). Never ship under 50s.
 
@@ -38,9 +38,9 @@ Hook may come from later in the block (`hook_source: later`). Do not force a spl
 ## Workflow
 
 0. Resolve `entity` from the video/folder name per [`entity_brand`](../entity_brand/SKILL.md). Read that entity's brand records. Write `entity` on `requirements.md`.
-1. Read the theme from `shorts_instructions.md` / `shorts_extraction.md` (title, idea, candidate neighborhood).
-2. Write `situation` (`type`, `statement`, `pressure`, `resolve`) per [`situation_resolve`](../situation_resolve/SKILL.md).
-3. Open `output/transcript/transcript.txt`. Find the 3–5 min block by **spoken content**, not by the brief's timestamps if they disagree.
+1. Read the theme from `shorts_instructions.md` / `shorts_extraction.md` (title, idea, candidate neighborhood). If the brief is thin or you are scanning leftovers for storyline candidates, run [`story_snippet`](../story_snippet/SKILL.md) and promote titles + clocks into that file first.
+2. Write `situation` (`type`, `statement`, `pressure`, `resolve`) per [`situation_resolve`](../situation_resolve/SKILL.md). Prefer the vignette's arc when a `story_snippets.json` entry seeded the theme.
+3. Open `output/transcript/transcript.txt`. Find the 3–5 min block by **spoken content**, not by the brief's timestamps if they disagree. If `source_start` / `source_end` exist on the snippet, start there — still re-verify against spoken content.
 4. Quote the beats with `start` / `end` / `text` — include pressure/hinge and the resolve closer, not just hook + setup.
 5. Paste into `coherence.spoken_as`. It must read [situation]. [pressure]. [resolve].
 6. Run the gate below *and* the situation-resolve test. Fail = do not write `segments[]`. Do not render.
@@ -50,7 +50,7 @@ Hook may come from later in the block (`hook_source: later`). Do not force a spl
    Theme, problem, context, resolve, then the playback script (actual transcript lines + clocks, in splice order).
 9. **Stop.** The user reads that file and tests the argument on paper. Do not ffmpeg until they approve the script (`script_approved: true`).
 10. Draft renders stay in `deliverables/shorts/`. After the user signs off the *video*, copy it to `deliverables/shorts_approved/` (`--promote`). Do not render into that folder.
-11. **After the instruction-file themes are scripted, scan the rest of the transcript.** The brief is a starting list, not a cap. Any leftover 3–5 min block that names a situation and resolves it is a candidate. Write it as a new `shNN` (or a leftover table) — do not silently drop it. Do not glue two leftover situations onto an existing short to “use the line.”
+11. **After the instruction-file themes are scripted, scan the rest of the transcript.** Prefer [`story_snippet`](../story_snippet/SKILL.md) for leftover storyline discovery, then promote into the instruction file. The brief is a starting list, not a cap. Any leftover 3–5 min block that names a situation and resolves it is a candidate. Write it as a new `shNN` (or a leftover table) — do not silently drop it. Do not glue two leftover situations onto an existing short to “use the line.”
 
 ## Coherence gate (hard fail)
 
@@ -126,7 +126,8 @@ Shared close: `34:32–35:08` (land on "better version of this life"). Do not mi
 
 ## Does not
 
-- Invent a theme the transcript doesn't support (themes live in `shorts_instructions.md`; leftover scan *adds* to that file)
+- Invent a theme the transcript doesn't support (themes live in `shorts_instructions.md`; leftover scan / [`story_snippet`](../story_snippet/SKILL.md) *adds* to that file)
+- Extract vignette prose itself (that's [`story_snippet`](../story_snippet/SKILL.md))
 - Set 9:16 / write the file (that's `vertical_shorts`)
 - Plan 11–15 min chunks (that's `chunks`)
 - Render

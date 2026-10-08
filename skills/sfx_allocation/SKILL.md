@@ -6,11 +6,11 @@ Detect keyword triggers in word-level transcripts and overlay sound effects at p
 ## Input Requirements
 - Source video path
 - Word-level transcript JSON (`*.words.json`) from Vosk — fields: `word`, `start`, `end`
-- Trigger config: `content_pipeline/sfx_triggers.json`
+- Trigger config: `content_pipeline/config/sfx_triggers.json`
 
 ## Resolution Strategy (no local asset library)
 
-SFX are resolved on demand via `content_pipeline/sfx_resolver.py`:
+SFX are resolved on demand via `content_pipeline/lib/sfx_resolver.py`:
 
 1. **Cache hit** — `content_pipeline/.cache/sfx/`
 2. **Freesound API** — if `FREESOUND_API_KEY` is set
@@ -28,10 +28,10 @@ SFX are resolved on demand via `content_pipeline/sfx_resolver.py`:
 
 ```bash
 # Word-level transcript (requires Vosk model)
-python3 content_pipeline/process_stream.py --mode transcribe --input clip.mp4 --vosk
+python3 content_pipeline/cli/process_stream.py --mode transcribe --input clip.mp4 --vosk
 
 # Apply SFX + zoom
-python3 content_pipeline/auto-edit.py \
+python3 content_pipeline/cli/auto_edit.py \
   --input projects/my-video/output/master/timeline_normalized.mp4 \
   --output projects/my-video/output/master/timeline_polished.mp4 \
   --words projects/my-video/output/transcript/words.json
@@ -39,7 +39,7 @@ python3 content_pipeline/auto-edit.py \
 
 ## Adding Triggers
 
-Edit `content_pipeline/sfx_triggers.json`:
+Edit `content_pipeline/config/sfx_triggers.json`:
 
 ```json
 {

@@ -39,7 +39,8 @@ Stable directives for content creation sessions. One directive per entry.
 <!-- observed: 2026-09-02 | status: active -->
 
 - **Outcome:** 2 types of deliverables: **Shorts** (9:16, up to 3 editorial versions) and **Chunks** (16:9, 11-15 min). Never render YouTube / TikTok / Reels copies of the same cut.
-- **Stage folders:** `step-1-projects/` (cut) → when shorts + chunks are done, move the job to `step-2-viral-edit/` → then `step-3-flywheel-organiser/` → `step-4-ready-to-post./`. Video-edits queue: `step-1-projects/VIDEO-EDITS.md`.
+- **Stage folders:** `step-1-projects/` (cut) → when shorts + chunks are done, move the job to `step-2-viral-edit/` → then `step-3-flywheel-organiser/` → `step-4-ready-to-post/`. Video-edits queue: `step-1-projects/VIDEO-EDITS.md`.
+- **Through folder 12 (2026-10-07):** batch viral→step-4 via `content_pipeline/cli/batch_to_step4.py`. After that run finishes → pause for new content + feedback. Program Future Ready stays paused until asked.
 - **Viral end results:** under `{job}/viral/{shorts,covers,approved}/` in step-2. Cut masters stay in `output/deliverables/`. Never overwrite `output/` with captioned/typed finishes.
 - Story-first usually wins when the elaboration is kept; put the punchline hook on the front of that cut. Level speech on the finished file (`level_speech`: compressor + dynaudnorm + limiter + loudnorm −16 / LRA 4) so live spikes don't jump.
 - Agent must not go silent on long ffmpeg/transcribe jobs — background them and keep responding.
@@ -67,6 +68,6 @@ Stable directives for content creation sessions. One directive per entry.
 - **Tipper The Change** (`projects/9. tipper the change/`) — extracted. 9 shorts + 3 chunks. Publish sh08→sh09→sh04→sh03→sh05→sh06→sh02→sh01→sh07. Do not re-transcribe.
 - **GAF Qualifications 1–3** (`10 qualifications 1`–`12 qualifications 3`) — extracted. Entity GAF. Plan from SRT. Do not Whisper. Do not close on Tipper. Pt 3 is 2 chunks (THP supercut skip; third under floor).
 - **Tipper The Origin Story** (`projects/2. tipper the origin story/`) — Entity Tipper. Shorts + chunks extracted. Scripts in `shorts_extraction.md` / `chunk_extraction.md`. Not founder Origin Story (`0.`).
-- **Program Future Ready** (`step-1-projects/program future ready vids/`) — GAF. On video-edits queue ([`step-1-projects/VIDEO-EDITS.md`](step-1-projects/VIDEO-EDITS.md)). Books done. `.srt` dropped in `lectures/`. Paused. When shorts + chunks are done → move whole folder to `step-2-viral-edit/`.
+- **The-GAF-program Future Ready** (`step-1-projects/The-GAF-program future ready vids/`) — GAF. Step-1 cut complete 2026-10-07: 30 shorts + 12 chunks rendered. Ready to move to `step-2-viral-edit/` on ask. Do not Whisper.
 - **Tipper The Story** (`projects/1. tipper the story/`) — Shorts: `shorts_extraction.md`. Chunks rendered: `ch01_common-ground.mp4`, `ch02_show-you-their-world.mp4`. Gemini unused.
 - **Origin Story** — Approved: sh01 story-first (100s), sh02 island-bum hook-first (64s), sh03 focus-vs-tunnel hook-first (58s), sh05 moving-house first-stream close (44s). Draft: sh04 Game WITH Life (28s). Chunks: ch01, ch02. Deferred: ch03.

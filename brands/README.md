@@ -16,6 +16,8 @@ See [`_template.md`](_template.md). Minimum: who it’s for, what a short may ke
 
 This workspace’s local operator pack (Tipper / THP / GAF) lives here on disk and stays local. Do not treat those books as part of the product.
 
+Viral caption colors, fonts, and marks: [`assets/`](assets/README.md) (`caption.json` + `fonts/` per entity).
+
 ## Website later
 
 Same contract: account uploads or selects a brand record; the agent loads it the way it loads `brands/{entity}.md` today.

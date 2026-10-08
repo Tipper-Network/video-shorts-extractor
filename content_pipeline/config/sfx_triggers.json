@@ -1,0 +1,18 @@
+{
+  "important": { "query": "pop notification ui", "synthetic": "pop" },
+  "money": { "query": "cash register coin", "synthetic": "cha_ching" },
+  "wrong": { "query": "buzzer wrong answer", "synthetic": "buzzer" },
+  "correct": { "query": "ding success correct", "synthetic": "ding" },
+  "stop": { "query": "whoosh transition sweep", "synthetic": "whoosh" },
+  "reveal": { "query": "curtain reveal swoosh", "synthetic": "whoosh" },
+  "surprise": { "query": "dramatic shock sting", "synthetic": "buzzer" },
+  "confused": { "query": "cartoon question wobble", "synthetic": "pop" },
+  "excited": { "query": "short crowd cheer", "synthetic": "ding" },
+  "sad": { "query": "sad trombone wah", "synthetic": "whoosh" },
+  "angry": { "query": "impact thud punch", "synthetic": "buzzer" },
+  "happy": { "query": "happy sparkle chime", "synthetic": "ding" },
+  "fearful": { "query": "horror sting short", "synthetic": "buzzer" },
+  "play": { "query": "game start button click", "synthetic": "pop" },
+  "disappointed": { "query": "fail buzz descending", "synthetic": "buzzer" },
+  "ring": { "query": "telephone bell ring", "synthetic": "ding" }
+}

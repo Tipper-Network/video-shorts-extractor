@@ -21,7 +21,7 @@ This workspace handles local video processing into multi-platform clips using Fa
 - **Transcripts & JSON:** `content_pipeline/subtitles/`
 - **Final Output:** `content_pipeline/output/`
 - **Series State:** `content_pipeline/series/`
-- **Execution Script:** `content_pipeline/process_stream.py`
+- **Execution Script:** `content_pipeline/cli/process_stream.py` (shim: `content_pipeline/process_stream.py`)
 
 ## Operational Routing
 
@@ -42,7 +42,7 @@ When receiving a request to process video:
 | `process_stream.py --mode transcribe` | Extract transcript |
 | `process_stream.py --mode render` | Cut from manifest or manual timestamps |
 | `render_manifest.py` | Batch render approved manifest |
-| `auto-edit.py` | SFX + zoom polish pass |
+| `auto-edit.py` | SFX + zoom polish pass (`cli/auto_edit.py`) |
 
 ## Planning Hub
 
@@ -67,6 +67,7 @@ Multi-clip pipeline (plan → review → render) is spec'd there. Current code (
 | [`skills/chunks/`](skills/chunks/SKILL.md) | 11–15 min mid-form chunks |
 | [`skills/entity_brand/`](skills/entity_brand/SKILL.md) | Title = brand key: Tipper / THP / GAF / founder |
 | [`skills/situation_resolve/`](skills/situation_resolve/SKILL.md) | One situation (problem/issue/struggle/intention) held until it resolves |
+| [`skills/story_snippet/`](skills/story_snippet/SKILL.md) | Story-shaped vignette discovery (300–800 words) → theme candidates |
 | [`skills/extract_shorts/`](skills/extract_shorts/SKILL.md) | Hook → Setup → Resolution + coherence gate |
 | [`skills/vertical_shorts/`](skills/vertical_shorts/SKILL.md) | 9:16 vertical shorts (editorial versions, not platforms) |
 | [`skills/lecture_ebook/`](skills/lecture_ebook/SKILL.md) | GAF lecture `plain.txt` → field book (`output/ebook/`) |

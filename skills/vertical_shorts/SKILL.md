@@ -88,7 +88,7 @@ Output:
 
 ## Agent Checklist
 
-1. Read `shorts_instructions.md` for themes
+1. Read `shorts_instructions.md` for themes (optional storyline hunt: [`story_snippet`](../story_snippet/SKILL.md) → `story_snippets.json`)
 2. Name the situation with [`situation_resolve`](../situation_resolve/SKILL.md), then cut with [`extract_shorts`](../extract_shorts/SKILL.md) — try hook-first, story-first, contiguous
 3. Validate timestamps against `output/transcript/transcript.txt`
 4. Write the script `.md` in `deliverables/shorts/` and wait for approval
