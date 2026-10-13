@@ -41,6 +41,9 @@ THP defines *what* to say **when the video is a THP video**. Tipper and GAF have
 | 2026-09-24 | Viral = captions then sounds only | Stage1 `viral_captions.py`, stage2 `viral_sounds.py`. Zoom cancelled. Approve → `viral/approved/`. |
 | 2026-10-07 | Step-3 = publish_order; stage alone ≠ order | `flywheel_stage` buckets; `publish_order` sequences. Queue JSON under `step-3-flywheel-organiser/{entity}/{series}/`. |
 | 2026-10-07 | Step-4 = one .md per short (YT/IG/TT) | Shelf `step-4-ready-to-post/{entity}/{series}/{nn-stage}/`. No auto-upload. Batch: `cli/batch_to_step4.py` for jobs 1–12. |
+| 2026-10-08 | Publish cadence pillars | fascinate=Mon, educate=Wed, invite=Thu, social_proof=Sat (every other Sat open for personalised). Catalog: `step-4-ready-to-post/publish_catalog.csv`. |
+| 2026-10-08 | Caption MarginV = 500 | All brand `caption.json` + `viral_captions` default. Reburn in place: `cli/reburn_caption_margin.py`. No `_marginv*` A/B leftovers. |
+| 2026-10-08 | Post from one ship file | Keep cut master + `viral/approved` (or step-4 pack). Trash stage1/stage2/shorts mirrors + margin experiments after sign-off. See `step-2-viral-edit/README.md`. |
 
 ## Active Projects
 

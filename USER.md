@@ -39,9 +39,10 @@ Stable directives for content creation sessions. One directive per entry.
 <!-- observed: 2026-09-02 | status: active -->
 
 - **Outcome:** 2 types of deliverables: **Shorts** (9:16, up to 3 editorial versions) and **Chunks** (16:9, 11-15 min). Never render YouTube / TikTok / Reels copies of the same cut.
-- **Stage folders:** `step-1-projects/` (cut) → when shorts + chunks are done, move the job to `step-2-viral-edit/` → then `step-3-flywheel-organiser/` → `step-4-ready-to-post/`. Video-edits queue: `step-1-projects/VIDEO-EDITS.md`.
+- **Stage folders:** `step-1-projects/` → `step-2-viral-edit/` → `step-3-flywheel-organiser/` → `step-4-ready-to-post/` → `step-5-google-sheets/` (catalog/schedule). Platforms (YT/IG/TT) upload from approved Sheet rows. Queue: `step-1-projects/VIDEO-EDITS.md`.
 - **Through folder 12 (2026-10-07):** batch viral→step-4 via `content_pipeline/cli/batch_to_step4.py`. After that run finishes → pause for new content + feedback. Program Future Ready stays paused until asked.
 - **Viral end results:** under `{job}/viral/{shorts,covers,approved}/` in step-2. Cut masters stay in `output/deliverables/`. Never overwrite `output/` with captioned/typed finishes.
+- **Caption height:** `margin_v` **500** on every captioned short (founder / tipper / gaf). Reburn with `content_pipeline/cli/reburn_caption_margin.py` — in place, no `_marginv*` copies. Post from `viral/approved/` or the step-4 pack only; stage1/stage2 are temp once approved is current.
 - Story-first usually wins when the elaboration is kept; put the punchline hook on the front of that cut. Level speech on the finished file (`level_speech`: compressor + dynaudnorm + limiter + loudnorm −16 / LRA 4) so live spikes don't jump.
 - Agent must not go silent on long ffmpeg/transcribe jobs — background them and keep responding.
 - Never overwrite a rendered clip the user can already play. Next pass writes `_v2`, `_v3`, … so both files stay for A/B. Only `--force` replaces in place. Never land on an existing `_vN`.

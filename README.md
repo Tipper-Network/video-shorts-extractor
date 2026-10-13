@@ -44,7 +44,13 @@ step-2-viral-edit/        VIRAL POLISH
 step-3-flywheel-organiser/   PUBLISH ORDER (attract → loop)
         │
         ▼
-step-4-ready-to-post/        FINAL PACK
+step-4-ready-to-post/        FINAL PACK (mp4 + .md)
+        │
+        ▼
+step-5-google-sheets/        CATALOG + SCHEDULE (Sheet sync)
+        │
+        ▼
+(platforms)                  YT / IG / TikTok when approved
 ```
 
 Queue + handoff rules: [`step-1-projects/VIDEO-EDITS.md`](step-1-projects/VIDEO-EDITS.md).
@@ -55,6 +61,7 @@ Queue + handoff rules: [`step-1-projects/VIDEO-EDITS.md`](step-1-projects/VIDEO-
 | 2 Viral | [`step-2-viral-edit/`](step-2-viral-edit/) | `viral/{shorts,covers,approved}/` |
 | 3 Flywheel | [`step-3-flywheel-organiser/`](step-3-flywheel-organiser/) | order / queue |
 | 4 Ready | [`step-4-ready-to-post/`](step-4-ready-to-post/) | publish pack |
+| 5 Sheet | [`step-5-google-sheets/`](step-5-google-sheets/) | catalog sync / credentials |
 
 **Entity** comes from the video/folder title (Tipper / THP / GAF / founder). Do not mix brands. Brand books live in local [`brands/`](brands/).
 
@@ -71,6 +78,8 @@ workspace/
 ├── step-2-viral-edit/    # Jobs after cut; viral/ end results
 ├── step-3-flywheel-organiser/
 ├── step-4-ready-to-post/
+├── step-5-google-sheets/ # Sheet catalog + schedule sync
+├── integrations/         # Platform API credential stubs (YT/IG/TT)
 └── (legacy) projects/    # Scripts still resolve here until retargeted
 ```
 

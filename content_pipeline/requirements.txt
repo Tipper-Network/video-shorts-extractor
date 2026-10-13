@@ -5,3 +5,4 @@ vosk
 requests
 numpy
 scipy
+boto3

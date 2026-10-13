@@ -1,0 +1,23 @@
+Instagram vs Facebook — two Graph calls
+
+ENV (integrations/.env) — token MUST start with EAA:
+  META_APP_ID=
+  META_APP_SECRET=
+  META_ACCESS_TOKEN=EAA…
+  FACEBOOK_PAGE_ID=
+  IG_BUSINESS_ID=
+  MEDIA_PUBLIC_BASE_URL=https://your-bucket…/folder
+  PUBLISH_DRY_RUN=true
+
+1) INSTAGRAM Reels (our script: cli/publish/ig_publish_reels.py)
+  POST /{IG_BUSINESS_ID}/media
+    media_type=REELS & video_url=… & caption=… & access_token=…
+  → poll GET /{creation_id}?fields=status_code until FINISHED
+  POST /{IG_BUSINESS_ID}/media_publish
+    creation_id=… & access_token=…
+
+2) FACEBOOK Page Reels (lib/publish/facebook.py) — optional
+  POST /{FACEBOOK_PAGE_ID}/video_reels
+    file_url=… & description=… & access_token=…
+
+Still need: real EAA token, FACEBOOK_PAGE_ID, MEDIA_PUBLIC_BASE_URL with mp4s online.

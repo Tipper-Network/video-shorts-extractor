@@ -84,10 +84,23 @@ def whisper_words(wav: Path, model_size: str = "small") -> list[dict]:
     return words
 
 
+# Whisper brand corrections (token core → replacement, case-insensitive).
+ASR_WORD_FIXES = {
+    "gaff": "GAF",
+}
+
+
 def display_word(raw: str, censor: set[str]) -> str:
     cleaned = re.sub(r"^[^\w']+|[^\w']+$", "", raw, flags=re.UNICODE)
     if cleaned.lower() in censor:
         return "****"
+    fix = ASR_WORD_FIXES.get(cleaned.lower())
+    if fix:
+        # Keep leading/trailing punctuation from the raw token.
+        s = raw.strip()
+        lead = re.match(r"^[^\w']*", s, flags=re.UNICODE).group(0)
+        trail = re.search(r"[^\w']*$", s, flags=re.UNICODE).group(0)
+        return f"{lead}{fix}{trail}"
     return raw.strip().upper()
 
 
@@ -124,7 +137,7 @@ def build_ass(words: list[dict], cfg: dict, censor: set[str], out_ass: Path) -> 
     stroke = hex_to_ass_bgr(cfg["stroke"])
     stroke_w = int(cfg.get("stroke_width", 4))
     font_size = int(cfg.get("font_size", DEFAULT_FONT_SIZE))
-    margin_v = int(cfg.get("margin_v", 200))
+    margin_v = int(cfg.get("margin_v", 500))
     family = font_family_name(cfg["_font_path"])
 
     header = f"""[Script Info]

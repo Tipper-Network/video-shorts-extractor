@@ -10,6 +10,7 @@ Operator queue for cut work. Session todos mirror this; this file survives resta
 | 2 | `step-2-viral-edit/` | Viral polish → **`viral/`** (cut stays in `output/`) |
 | 3 | `step-3-flywheel-organiser/` | Series / flywheel order |
 | 4 | `step-4-ready-to-post/` | Publish-ready pack |
+| 5 | `step-5-google-sheets/` | Catalog + schedule (Google Sheet sync) |
 
 **Handoff rule (1→2):** when a job’s shorts and chunks are done (scripts signed, drafts or approved renders in `output/deliverables/`), **move the whole job folder** from `step-1-projects/{name}/` → `step-2-viral-edit/{name}/`. Do not leave a half-cut job in step 2.
 

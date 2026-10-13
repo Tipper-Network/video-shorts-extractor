@@ -20,8 +20,34 @@ step-2-viral-edit/*
 step-3-flywheel-organiser/*
 !step-3-flywheel-organiser/README.md
 
-step-4-ready-to-post./*
-!step-4-ready-to-post./README.md
+step-4-ready-to-post/*
+!step-4-ready-to-post/README.md
+!step-4-ready-to-post/PLAN.md
+!step-4-ready-to-post/CATALOG.md
+!step-4-ready-to-post/publish_catalog.csv
+
+step-5-google-sheets/*
+!step-5-google-sheets/README.md
+!step-5-google-sheets/PLAN.md
+!step-5-google-sheets/config.example.env
+!step-5-google-sheets/credentials/
+!step-5-google-sheets/credentials/.gitkeep
+!step-5-google-sheets/sync/
+!step-5-google-sheets/sync/.gitkeep
+
+# Integrations + step-5 — credentials stay local
+integrations/**/credentials/**
+!integrations/**/credentials/.gitkeep
+step-5-google-sheets/credentials/**
+!step-5-google-sheets/credentials/.gitkeep
+integrations/**/token.json
+step-5-google-sheets/credentials/token.json
+integrations/**/*secret*
+integrations/**/*credentials*.json
+step-5-google-sheets/credentials/*.json
+!integrations/**/README.md
+!integrations/**/config.example.env
+!integrations/platforms/README.md
 
 # Brand books (per operator / per account)
 brands/*
