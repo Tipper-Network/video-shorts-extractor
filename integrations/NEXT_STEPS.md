@@ -57,7 +57,7 @@ Do not use `--ignore-schedule` except conscious “post now.”
 - [ ] Sheets API enabled; OAuth **or** service account JSON in `step-5-google-sheets/credentials/`
 - [ ] Sheet shared with that identity; `GOOGLE_SHEETS_ID` set
 - [ ] Sync scripts: push/pull `publish_catalog.csv` ↔ Sheet
-- [ ] Columns aligned: entity, series, id, flywheel_stage, publish_order, content_pillar, scheduled_date, scheduled_time, timezone, status, video_path, media_url, captions/titles, posted_at, instagram_url, youtube_url, tiktok_url
+- [ ] Columns aligned: entity, series, id, flywheel_stage, publish_order, content_pillar, scheduled_date, scheduled_time, timezone, status, video_path, media_url, captions/titles, collaborators, posted_at, instagram_url, youtube_url, tiktok_url
 - [ ] Filter views: by week / by entity / remaining (`status ≠ posted`)
 
 ### B. Scheduling discipline

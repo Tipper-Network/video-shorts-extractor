@@ -30,9 +30,21 @@ GOOGLE_SHEETS_CREDENTIALS=step-5-google-sheets/credentials/oauth-client.json
 ## What this step does
 
 1. Import / push `publish_catalog.csv` → your Google Sheet.  
-2. You edit schedule, titles, `status` in Sheets.  
+2. You edit schedule, titles, `status`, `collaborators` in Sheets.  
 3. Later: sync scripts keep Sheet ↔ local catalog aligned.  
 4. When `status=approved`, a **platform** adapter (not this folder) uploads the file.
+
+### Collaborators column
+
+Comma-separated YouTube handles **without** `@`:
+
+| Entity | Default |
+|--------|---------|
+| gaf / founder | `tippernetwork,Thehardport0` |
+| tipper | `Thehardport0` |
+
+Handles: Tipper `@tippernetwork`, Hard Port `@Thehardport0`.  
+Push: `python3 step-5-google-sheets/sync/push_catalog.py` (share the Sheet with the OAuth Google account as Editor).
 
 ## Setup checklist
 

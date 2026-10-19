@@ -55,6 +55,7 @@ Stable directives for content creation sessions. One directive per entry.
 - GAF prints as **Guilds, Adventurers, and Frontiers** (guild of guilds). Not “Guild of Adventurers and Frontiers.”
 - Future Ready voice locks: stretch = day he moved to the ocean / chose to buy the island not live as a bum (story is in GAF 9–12, not in this job yet). Restaurant chosen because financially liquid. Girlfriend = stacked ships (friendship + partnership + commitment), not a swapped work example. Cosmetic friend stays, anonymous. Lecture 16 cold open is not a hole. Ships = you go out of yourself and come back. Agents = feedback loop, mutual support, better instructions. The six lectures *are* the designed month. Two yous: whatever is internal reflects external — do not invent a me/self/I diagram he did not draw.
 - AI Influencer Cheat Sheet skills live in `~/.cursor/skills/` (`charsheet-soul`, `ugc-influencer-video`, `content-engine`, `digital-product`). Do not copy them into repo `skills/` — that tree is the cut engine. Source zips stay in `AI Influencer Cheat Sheet/skills/`.
+- **YouTube handles (collabs):** Tipper `@tippernetwork`, Hard Port `@Thehardport0`. Catalog/Sheet column `collaborators` (comma handles, no `@`). Defaults: GAF/founder → `tippernetwork,Thehardport0`; Tipper → `Thehardport0`. YouTube API has no collab invite — credit in description/tags; true collab badge = Studio. IG usernames stay in `IG_COLLABORATORS` (`tipper.network,thehardport`).
 
 ## Active Projects
 

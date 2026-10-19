@@ -15,6 +15,8 @@ Schedule starts **Monday 2026-10-12**. Dates are per **entity** (Tipper / GAF / 
 
 `status` starts as `ready`. Later: `drafted` → `approved` → `scheduled` → `posted`.
 
+`collaborators` — YouTube handles (no `@`), comma-separated. Defaults: GAF/founder → `tippernetwork,Thehardport0`; Tipper → `Thehardport0`. True YT collab badge is Studio-only; API uses this for description/tags credit.
+
 ## Import to Google Sheets
 
 1. Create a blank Sheet.

@@ -44,6 +44,7 @@ THP defines *what* to say **when the video is a THP video**. Tipper and GAF have
 | 2026-10-08 | Publish cadence pillars | fascinate=Mon, educate=Wed, invite=Thu, social_proof=Sat (every other Sat open for personalised). Catalog: `step-4-ready-to-post/publish_catalog.csv`. |
 | 2026-10-08 | Caption MarginV = 500 | All brand `caption.json` + `viral_captions` default. Reburn in place: `cli/reburn_caption_margin.py`. No `_marginv*` A/B leftovers. |
 | 2026-10-08 | Post from one ship file | Keep cut master + `viral/approved` (or step-4 pack). Trash stage1/stage2/shorts mirrors + margin experiments after sign-off. See `step-2-viral-edit/README.md`. |
+| 2026-10-18 | Catalog `collaborators` column | YouTube: `@tippernetwork`, `@Thehardport0`. Sheet/CSV field `collaborators`. YT Data API cannot invite collabs — Studio for badge; API = description/tags credit. |
 
 ## Active Projects
 
