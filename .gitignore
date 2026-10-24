@@ -1,4 +1,6 @@
 # Product (clone this). Operator data stays local — website will own jobs later.
+# Separate app (own repo). Do not ship it with the cut engine.
+/cron_posting/
 
 # Jobs (legacy path + staged folders)
 projects/*
