@@ -1,0 +1,19 @@
+---
+description: Close every reply with what this session learned and what is still adjustable
+alwaysApply: true
+---
+
+# Session report
+
+End every user-facing reply with two short lines, after the work:
+
+- **Learned:** the choice just made, in one or two sentences. Name the file or the clock when there is one. If this turn changed nothing, say the standing lesson that still applies.
+- **Could adjust:** one open knob. A duration, a land, a chain setting, or a file not yet recut. Do not invent a second project.
+
+When the choice should survive the chat, write it the same day into the skill it belongs to, `USER.md`, or `planning/instincts/` with the date. A reply is not a lesson until that write exists.
+
+Standing choices from 2026-10-26, until a later pass replaces them:
+
+- Same register. Do not splice a confession onto a later list. Lecture 13: 13-sh02 is 02:27–03:21. 13-sh12 is the clarity list, 05:06–06:00.
+- A change of vibe is not the missing context. Mom stays in the chapter.
+- Voice is de-esser, presence EQ, `loudnorm` −16 / LRA 11. No compressor, no `dynaudnorm`. Trim stays off while `auto-editor` will not start.

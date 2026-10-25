@@ -43,13 +43,8 @@ PRESENCE_AF = (
 )
 # Room tone only. A job opts in with ``room_tone: true``. It is not the default.
 ROOM_AF = "afftdn=nr=12:nf=-40"
-# Hard speech leveling — live yells need dynaudnorm + a tight LRA, not loudnorm alone.
-VOICE_AF = (
-    "acompressor=threshold=-24dB:ratio=8:attack=3:release=80:makeup=5,"
-    "dynaudnorm=f=75:g=25:p=0.6:m=12,"
-    "alimiter=limit=0.75:attack=3:release=30,"
-    "loudnorm=I=-16:TP=-1.5:LRA=4"
-)
+# Loudness only. A compressor here was riding the gap between words.
+VOICE_AF = "loudnorm=I=-16:TP=-1.5:LRA=11"
 
 
 def voice_chain(room_tone: bool = False) -> str:

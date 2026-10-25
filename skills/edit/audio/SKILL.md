@@ -16,13 +16,14 @@ Two passes. They do not duck a music bed. There is no music function.
 ```text
 deesser
 equalizer 220 Hz +2.5 dB, equalizer 3200 Hz +3 dB
-acompressor=threshold=-24dB:ratio=8:attack=3:release=80:makeup=5
-dynaudnorm=f=75:g=25:p=0.6:m=12
-alimiter=limit=0.75:attack=3:release=30
-loudnorm=I=-16:TP=-1.5:LRA=4
+loudnorm=I=-16:TP=-1.5:LRA=11
 ```
 
 `afftdn` is added in front of that chain only when the manifest entry sets `room_tone: true`.
+
+Do not put a compressor, a limiter, or `dynaudnorm` back in front of `loudnorm`. On lecture 13 the 75 ms gain rider plus LRA 4 lifted the gap between words and the file sounded cut. The choice on 2026-10-26 is loudness only: −16 LUFS, true peak −1.5, LRA 11. The de-esser and the two presence bands stay.
+
+`auto-editor`'s bundled binary does not start on glibc 2.35. Do not replace its 0.6 s margin with `silenceremove` at peak −40 dB. That pass chops inside words. Lecture 13 shorts were recut with trim off. Chunks may still use the 2.5 s light profile.
 
 ## Sounds — step 2, stage 2
 

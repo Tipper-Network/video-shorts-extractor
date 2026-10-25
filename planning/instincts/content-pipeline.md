@@ -38,6 +38,14 @@
 - **Never** cap a lecture at one short per stage, or at one short per named row. Repeat a stage for every new land.
 - **Never** invent a short to fill a stage the tape does not have. Referral is someone else's result. His own mistake is trust.
 - **Never** let a short fully replace its parent chapter — shorts tease, chapters deliver. On flywheel-episode, service is the chunk.
+
+## Same register
+
+<!-- added: 2026-10-26 | reason: lecture 13 sh02 jump and the word-gap leveler -->
+- **Never** splice a confession onto a later syllabus to supply context. If the second passage lands, it is another short. Lecture 13: making versus taking is 13-sh02 (02:27–03:21). Clarity in the process is 13-sh12 (05:06–06:00).
+- **Never** treat a change of vibe as the missing setup. The mom-and-friends scene is not the context for "I was making decisions instead of taking them." It stays in the chapter.
+- **Never** ride gain between words. No `dynaudnorm`, no compressor, no limiter in `voice_chain`. Loudness is −16 LUFS, LRA 11, after the de-esser and the presence EQ.
+- **Never** fake `auto-editor`'s 0.6 s margin with peak `silenceremove` when the binary will not start. Leave that short at trim off.
 - **Never** give two shorts the same land.
 - **Prefer** publishing attract / engage / trust before the chapter, then referral / loop after, skipping any stage that was not cut.
 - **Prefer** continuing the same theme across an episode's shorts and its chapter title.

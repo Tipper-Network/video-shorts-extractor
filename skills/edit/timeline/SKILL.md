@@ -25,11 +25,13 @@ In and out are the script clocks, on sentence edges. A join between segments is 
 | Level | Method | Used for |
 |-------|--------|----------|
 | `light` | ffmpeg, drop gaps longer than 2.5s at −40 dB, leave 0.2s before the next word | Chunks |
-| `moderate` | auto-editor, margin `0.6sec` | Shorts. A breath between clauses goes. The breath before the next word, including the land, stays. |
+| `moderate` | auto-editor, margin `0.6sec` | Shorts, only when that binary actually runs. A breath between clauses goes. The breath before the next word, including the land, stays. |
 | `aggressive` | auto-editor, margin `0.4sec` | Only if a clip sets `trim` to `aggressive`. Nothing selects it from a platform name. |
 | `off` | none | Trim was not turned on |
 
 When trim is on and the clip does not set `trim`, a short gets `moderate` and a chapter gets `light`. `resolve_trim_level(deliverable="short"|"chapter")`.
+
+If `auto-editor` exits on glibc, leave the short at `trim: off`. Do not substitute a peak `silenceremove`. See [`audio`](../audio/SKILL.md).
 
 Filler words are not a trim setting. "Sorry", "let's do this", and handwriting are left out of `segments[]` when the script is written.
 

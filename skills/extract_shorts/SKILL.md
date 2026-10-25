@@ -70,6 +70,8 @@ Reject if any of these are true:
 - Setup restates the hook instead of stating the problem
 - Resolution restates the hook instead of delivering the insight
 - Resolution needs a whiteboard list, earlier story, or name the viewer never heard
+- The splice changes register. A confession and a later syllabus are two shorts when each one lands. Lecture 13: "making decisions instead of taking them" (02:27–03:21) does not jump to "clarity in position, choice, process" (05:06–06:00). The list is 13-sh12. An illustration that changes the vibe is not the missing context. The mom-and-friends scene stayed in the chapter.
+- A second passage that can land on its own is a new short. Do not splice it on to hide a jump.
 - Brief timestamps land on handwriting, "sorry", "let's do this", or dead air — those are hard deletes, not beats
 - Punchline is clipped mid-sentence (search until the clause lands)
 - Denial and admission both appear (`I'm not` / `but what if I am`) but the spoken turn between them is missing

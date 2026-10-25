@@ -99,11 +99,11 @@ Five of six stages are already named. No referral. This table is not the cap. Af
 
 | Stage | Cuts | What |
 |-------|------|------|
-| attract | 2 | Who are we vs who we are (13-sh01, out on the difference, not "this is a series"). The million with no floor, only if 25:35–26:29 lands on its own above 50s. |
-| engage | 1 | 13-sh02. Mom, the phone, one minute. That land is not used again. |
-| trust | 3 | 13-sh03 comfort / the forgotten walk, without the mom land. 13-sh04 the France bus, re-clocked so it does not depend on the million open. 13-sh05 honest is the state. |
-| service | 2 | 13-ch01 walk a real room. 13-ch02 when the goal has no corridor. The bus may also be an example inside ch02. |
+| attract | 3 | 13-sh01 the difference (65s). 13-sh08 the million, 25:35–26:29 (54s). 13-sh09 the car that needed oil (52s). |
+| engage | 4 | 13-sh02 the world, then stuck, then making versus taking. 13-sh12 clarity in the process, its own short. 13-sh07 two whys at the party. 13-sh10 the steering wheel. |
+| trust | 4 | 13-sh03 the forgotten walk, no mom. 13-sh04 France, 28:46–30:01, no million. 13-sh05 one window, 38:48–39:48. 13-sh11 thicker grip. |
+| service | 2 | 13-ch01 walk a real room. 13-ch02 when the goal has no corridor. |
 | referral | 0 | Not on this tape. |
-| loop | 1 | 13-sh06 French out loud. Under 75s. Scribble stays out. |
+| loop | 1 | 13-sh06 French out loud, 73s. Scribble stays out. |
 
-Scripts stay unsigned until those outs are written. No ffmpeg on this slate yet.
+Scripts were rewritten 2026-10-25 and stay unsigned. No ffmpeg on this slate yet.

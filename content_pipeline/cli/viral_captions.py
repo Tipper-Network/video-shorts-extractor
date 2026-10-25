@@ -278,8 +278,14 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 def burn(video: Path, ass: Path, fonts_dir: Path, output: Path) -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
     # Escape for ffmpeg filter (colon / backslash)
-    ass_esc = str(ass).replace("\\", "/").replace(":", "\\:").replace("'", "\\'")
-    fonts_esc = str(fonts_dir).replace("\\", "/").replace(":", "\\:").replace("'", "\\'")
+    def _filter_path(path: Path) -> str:
+        # Commas split the filtergraph. Colons split filter options.
+        return (
+            str(path).replace("\\", "/").replace(":", "\\:").replace(",", "\\,").replace("'", "\\'")
+        )
+
+    ass_esc = _filter_path(ass)
+    fonts_esc = _filter_path(fonts_dir)
     vf = f"ass={ass_esc}:fontsdir={fonts_esc}"
     cmd = [
         "ffmpeg", "-y", "-i", str(video),
