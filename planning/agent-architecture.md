@@ -4,26 +4,19 @@ How this workspace actually edits, judges, and posts. Skills say how. Instincts 
 
 ## 1. Skills
 
-Installed under `skills/`. Read them in this order on a cut.
+Map: [`skills/CATALOG.md`](../skills/CATALOG.md). Three organizations. They do not nest.
 
-| Skill | Job |
-|-------|-----|
-| [`entity_brand`](../skills/entity_brand/SKILL.md) | Title picks Tipper, THP, GAF, or founder. Do not collapse them. |
-| [`situation_resolve`](../skills/situation_resolve/SKILL.md) | One situation, held through to a land. A short that states and does not resolve fails. |
-| [`extract_shorts`](../skills/extract_shorts/SKILL.md) | Pick the short. Script in markdown before any picture. |
-| [`vertical_shorts`](../skills/vertical_shorts/SKILL.md) | 9:16 export. One file per editorial version. No per-platform copies. |
-| [`chunks`](../skills/chunks/SKILL.md) | 11–15 min, 16:9. One followable job, 2–3 examples, then clocks. |
-| [`story_snippet`](../skills/story_snippet/SKILL.md) | Find the vignette. The stage is the brief. Several vignettes may share a stage. |
-| [`flywheel_series`](../skills/flywheel_series/SKILL.md) | One stage on each short. A lecture may repeat a stage. A missing stage is skipped. |
-| [`dynamic_zoom`](../skills/dynamic_zoom/SKILL.md) | Polish after the signed cut. Zoom on a turn in the speech, not on a timer. |
-| [`sfx_allocation`](../skills/sfx_allocation/SKILL.md) | Polish after the signed cut. A sound does not choose the moment. |
-| [`render_manifest`](../skills/render_manifest/SKILL.md) | ffmpeg from an approved `manifest.json`. |
-| [`lecture_ebook`](../skills/lecture_ebook/SKILL.md) | Field book from the plain transcript. Not a cut. |
-| [`publish_schedule`](../skills/publish_schedule/SKILL.md) | S3 + Sheet + Dokploy. Not part of the cut. |
+| Organization | Read when | Hub |
+|--------------|-----------|-----|
+| Brand | Whose queue this thought belongs to | [`entity_brand`](../skills/entity_brand/SKILL.md), `brands/` |
+| Selection | What gets cut from the tape | [`situation_resolve`](../skills/situation_resolve/SKILL.md), [`extract_shorts`](../skills/extract_shorts/SKILL.md), [`chunks`](../skills/chunks/SKILL.md) |
+| Posting strategies | Later. How signed videos take a slot | [`planning/flywheel-strategies.md`](flywheel-strategies.md). Draft: [`quota`](../skills/quota/SKILL.md). Live pipe: [`publish_schedule`](../skills/publish_schedule/SKILL.md) |
 
-Long-form work is semantic only in the sense that the agent reads the transcript and names one job. It does not score segments 0–100, and it does not invent a bridge with B-roll when the tape already holds the thought. Entry and exit are sentence edges, about 10 seconds of context before the point.
+On a cut, read brand, then selection. Edit subcategories (retention, timeline, type, audio, package) run after the land is chosen. Do not read a posting strategy to decide which moment to keep.
 
-Short-form work is one 9:16 file, 50–75 seconds. The reframe fits the 16:9 picture to 1080 wide and stacks it on a blurred vertical ground. Captions are kinetic, `margin_v` 500, burned in. The first line is the situation, not a separate 3-second hook factory.
+Long-form work names one job. It does not score segments 0–100, and it does not invent a bridge with B-roll when the tape already holds the thought. Entry and exit are sentence edges, about 10 seconds of context before the point.
+
+Short-form work is one 9:16 file, 50–75 seconds. The reframe fits the 16:9 picture to 1080 wide and stacks it on a blurred vertical ground. Captions are kinetic, `margin_v` 500, burned in. The first three seconds are the situation or its punchline, spoken, from this tape.
 
 ## 2. Instincts
 

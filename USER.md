@@ -18,7 +18,7 @@ Stable directives for content creation sessions. One directive per entry.
 
 <!-- observed: 2026-09-02 | status: active -->
 
-- Always consult `skills/entity_brand/`, then `skills/situation_resolve/`, then `skills/extract_shorts/`, `skills/vertical_shorts/`, `skills/chunks/` before making cut decisions. The video name picks the entity (Tipper / THP / GAF). A short that states a situation and does not resolve it fails. A resolved short that belongs to a different entity is leftover, not a ship.
+- Skills sit in three organizations ([`skills/CATALOG.md`](skills/CATALOG.md)). Brand (`entity_brand`, `brands/`) before a cut. Selection (`situation_resolve`, `extract_shorts`, `chunks`) decides the lands. Edit subcategories run after the land is chosen. Posting strategies are later and do not choose the cut. The video name picks the entity (Tipper / THP / GAF). A short that states a situation and does not resolve it fails. A resolved short that belongs to a different entity is leftover, not a ship.
 
 <!-- observed: 2026-09-02 | status: active -->
 

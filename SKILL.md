@@ -28,8 +28,8 @@ This workspace handles local video processing into multi-platform clips using Fa
 When receiving a request to process video:
 
 1. **Entity:** Resolve Tipper / THP / GAF / founder from the video or folder name. Read [`skills/entity_brand/`](skills/entity_brand/SKILL.md) and that entity's brand records before planning cuts.
-2. **Target Identification:** If the user specifies a platform (TikTok, Instagram, YouTube), defer to `skills/<platform>/SKILL.md`.
-3. **Default Fallback:** No platform specified → one **11-15 min mid-form chunk** (16:9) + **2 vertical shorts** (9:16).
+2. **Skill category:** Read [`skills/CATALOG.md`](skills/CATALOG.md). Brand, then selection. Edit runs after the land is chosen. Posting strategies are later. YouTube, Shorts, Reels, and TikTok are one file.
+3. **How many:** As many shorts as the tape can hold, plus the chunks the user names as service. Not a default of two shorts.
 4. **Storyline context:** Read `brands/{entity}` for the named job. Operator pack on this machine: THP → `the-hard-port-brief.md`, Tipper → `Tipper_Brand_Book.md`, GAF → brief + book.
 5. **Execution:** Run pipeline scripts — never expect scripts to plan cuts autonomously.
 6. **Leftover scan:** After instruction-file themes are scripted, read the rest of the transcript. The brief is not a cap. Note unused situation→resolve blocks before calling the job done.

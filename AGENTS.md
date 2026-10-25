@@ -83,6 +83,7 @@ Before building custom tooling, check for maintained open-source options (ffmpeg
 | **Flywheel visuals** | [`planning/flywheel-strategies-visual.md`](planning/flywheel-strategies-visual.md) |
 | Architecture | [`planning/pipeline-architecture.md`](planning/pipeline-architecture.md) |
 | **Agent skills, instincts, loop** | [`planning/agent-architecture.md`](planning/agent-architecture.md) |
+| **Skill categories** | [`skills/CATALOG.md`](skills/CATALOG.md) — brand, selection, posting strategies (later) |
 | **Entity brands (local)** | [`brands/`](brands/) — operator books; `_template.md` is what git ships |
 | THP OS (external, series/ops) | `~/Desktop/The-Hard-Port-stuff/The Hard Port/the-hard-port-os/` |
 | **Projects (one folder per job)** | [`projects/`](projects/README.md) — jobs gitignored; `_template/` ships |
