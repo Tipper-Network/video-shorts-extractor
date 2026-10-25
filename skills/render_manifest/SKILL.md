@@ -1,15 +1,15 @@
 ---
 name: render-manifest
 description: Batch-renders all chapters and shorts from an approved manifest.json using FFmpeg. Use after plan-stream or manual manifest edit, when user says render clips, or --mode render.
-version: "0.1.0"
-status: planned
+version: "1.0.0"
+status: active
 requires:
   bins: ["python3", "ffmpeg", "ffprobe"]
 ---
 
 # Render Manifest (Batch Renderer)
 
-**Status: planned** — script not yet implemented. See [planning/roadmap.md](../planning/roadmap.md) Phase 3.
+**Status: active.** Implementation is `content_pipeline/cli/render_manifest.py`. It calls `render_clip_entry` in `content_pipeline/lib/cut_utils.py`. Edit map: [`../edit/SKILL.md`](../edit/SKILL.md).
 
 ## When to Use
 
@@ -28,8 +28,9 @@ requires:
 ## Target Command
 
 ```bash
-python3 content_pipeline/render_manifest.py \
-  --manifest content_pipeline/output/{stem}/manifest.json
+python3 content_pipeline/cli/render_manifest.py \
+  --manifest "projects/{name}/output/plan/manifest.json" \
+  --project {project_id}
 ```
 
 ## Workflow
@@ -38,7 +39,7 @@ python3 content_pipeline/render_manifest.py \
 1. Validate manifest against planning/schemas/manifest.schema.json
 2. Abort if review.status != approved (unless --force)
 3. For each chapter → ffmpeg 16:9 cut → output/{stem}/chapters/
-4. For each short → ffmpeg 9:16 crop cut → output/{stem}/shorts/
+4. For each short → `aspect_filter("9:16")` blur stack, not a crop → `output/deliverables/shorts/`
 5. Update manifest rendered flags + output_file paths
 6. Generate publish_queue.csv from shorts publish_order + chapters
 ```
@@ -58,7 +59,7 @@ content_pipeline/output/{stem}/
 ## FFmpeg Filters
 
 - **16:9:** `scale='min(1920,iw)':-2` — never upscale
-- **9:16:** letterbox + blur canvas 1080×1920 (`cut_utils.aspect_filter`)
+- **9:16:** `aspect_filter` — blurred 1080×1920 ground, original scaled to 1080 wide and centered. Not a face crop.
 - **Supercut concat:** `-c copy` (re-encode only if streams mismatch)
 - **Shorts:** `--jobs 4` parallel ffmpeg. Chapters stay serial.
 

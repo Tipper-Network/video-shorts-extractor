@@ -1,25 +1,26 @@
 ---
 name: edit-type
-description: Kinetic captions and what may sit on the picture. Use on the polish pass of a signed short. Not for choosing the clip.
+description: Step 2 stage 1 kinetic captions. Use when burning brand type onto a cut master. Script is content_pipeline/cli/viral_captions.py.
 ---
 
 # Type
 
-The picture is the lecture. Type makes the land readable on a phone with the sound off. It does not replace the sentence.
+Step 2, stage 1. Script: `content_pipeline/cli/viral_captions.py`.
 
-## Captions
+Read the cut from `output/deliverables/` (prefer `shorts_approved/`). Write `viral/stage1/{stem}.mp4` plus the `.ass`. Do not write back into `output/`.
 
-- Kinetic, burned in, on the polish pass.
-- `margin_v` 500. Same on founder, Tipper, and GAF.
-- Emphasis on the land word. Not a color change on every word.
-- The caption is his words. Do not rewrite the line to be punchier.
+## What the burn does
 
-## What does not go on the picture
+1. Extract 16 kHz mono wav from the cut.
+2. Whisper `small`, word timestamps, on this file only.
+3. Load `brands/assets/{entity}/caption.json` and that entity's font.
+4. Build an ASS at 1080×1920. Four words a line. Each word's cue paints that word in `active` and the rest of the line in `body`. Stroke from `stroke` / `stroke_width`. Alignment bottom-center. `margin_v` from the json. House value is **500** for every entity.
+5. Burn with ffmpeg `ass=` filter, `crf` 18, audio copied.
 
-- Stock B-roll, historical clips, or a diagram he did not draw.
-- Lower thirds, tweet cards, search-bar animations, charts.
-- Green screen, rotoscope, or a new background.
+On-screen words are uppercased. `censor_words.json` prints as `****`. `gaff` is rewritten to `GAF` before the burn.
 
-If the board is in the shot, the board stays. A zoom that crops the board out of a lecture is a failed zoom. See [`dynamic_zoom`](../../dynamic_zoom/SKILL.md).
+Reburn height in place with `content_pipeline/cli/reburn_caption_margin.py --margin 500`. No `_marginv*` copies.
 
-After Effects, Blender, and a motion-graphics library are not this pipeline. A graphic we cannot burn with ffmpeg does not ship.
+## What this stage does not do
+
+No stock B-roll, no lower third, no tweet card, no chart, no green screen. Those have no script. The board in the 16:9 frame is the graphic.

@@ -1,32 +1,34 @@
 ---
 name: edit-retention
-description: Edit a signed short or chunk so a stranger stays. First three seconds, an ending that opens the next flywheel stage, and one 9:16 frame. Use after the land is chosen, before render.
+description: Open and frame of a signed short, as this repo renders them. Use when checking the first line and the 9:16 stack. Step 1 of the edit.
 ---
 
 # Retention
 
-The land is already chosen. This skill is the open, the hold, and the handoff to the next stage. It does not go looking for more shorts. That is [`extract_shorts`](../../extract_shorts/SKILL.md).
+Step 1, inside the cut. The function is `aspect_filter` in `content_pipeline/lib/cut_utils.py`. The first three seconds are decided earlier, in the signed script.
 
 ## First three seconds
 
-The first line a stranger hears is the situation or its punchline (`hook-first`). By three seconds they know what this film is. That line is speech from the tape. It is not a title card, a sound sting, or a zoom.
+`hook-first` plays the punchline, then the setup, then the land. `story-first` opens on the situation. `contiguous` is one window when the take already holds all three.
 
-`story-first` still opens on the situation, and the punchline is the turn, not a cold open from another story.
+That opening is his sentence from the tape. Stage 1 captions start with the first word. There is no pre-roll, sting, or zoom in those three seconds.
 
 ## Hold
 
-A short resolves its own situation. An open loop that never lands fails [`situation_resolve`](../../situation_resolve/SKILL.md).
+The splice is only the beats in `segments[]`. A new shot is the next beat of the same situation. `cli/viral_zoom.py` is cancelled because a zoom every few seconds was a timer, not a turn. Do not put that timer back with `cli/auto_edit.py`.
 
-The handoff is the last line plus the Sheet fields `viewer_state` and `next_stage`. The viewer got the land, and the next weekday post is the next state. Do not end on a subscribe line.
-
-A visual change marks a turn in that same situation: a [`dynamic_zoom`](../../dynamic_zoom/SKILL.md) on the admission, a caption emphasis on the land word, or the next splice of the same story. A change every two to four seconds is not the rule. A timer is not a cut.
+YouTube retention is not read. If a cut dies in the middle, change the script and render `_v2`.
 
 ## Frame
 
-16:9 is fitted to 1080 wide and stacked on a blurred 9:16 ground. The speaker and the board stay in frame. There is no face tracker and no per-platform crop. One file fills Shorts, Reels, and TikTok. Canvas rules: [`vertical_shorts`](../../vertical_shorts/SKILL.md).
+`aspect_filter("9:16")`:
 
-Chunks stay 16:9. They are the sit. They do not get the short-form open.
+- Split the frame.
+- Background: scale up, crop to 1080×1920, `boxblur=20:10`.
+- Foreground: scale the original to 1080 wide, keep the height, center it.
 
-## Graphs
+The whole 16:9 picture stays, including the board. Nothing tracks a face.
 
-YouTube retention is not pulled. A drop shows up when a person watches the file. The fix is a new out or a new turn, written into the script, then `_v2`.
+Chunks call `aspect_filter("16:9")`: `scale='min(1920,iw)':-2`. 720p stays 720p.
+
+One file. Shorts, Reels, and TikTok do not get their own frame.

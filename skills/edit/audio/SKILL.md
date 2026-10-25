@@ -1,26 +1,33 @@
 ---
 name: edit-audio
-description: Speech level, music, and one sound effect for a signed cut. Use after the picture exists.
+description: Voice leveling on the step 1 cut, then step 2 stage 2 sounds. Use when checking loudness or SFX. Functions level_speech and cli/viral_sounds.py.
 ---
 
 # Audio
 
-Speech is the track. The chain runs after the picture is cut.
+Two passes. They do not duck a music bed. There is no music function.
 
-## Voice
+## Voice — step 1, always
 
-`level_speech()` on every short and chunk:
+`level_speech` in `content_pipeline/lib/cut_utils.py` re-encodes audio on the finished cut. Video is copied.
 
-compressor, then `dynaudnorm`, then a limiter, then `loudnorm` at −16 LUFS, LRA 4.
+`VOICE_AF`:
 
-That is the broadcast pass. There is no Audition session and no spectral repair step. If a window is mushy, Whisper that window. Do not re-process the whole lecture to chase one name.
+```text
+acompressor=threshold=-24dB:ratio=8:attack=3:release=80:makeup=5
+dynaudnorm=f=75:g=25:p=0.6:m=12
+alimiter=limit=0.75:attack=3:release=30
+loudnorm=I=-16:TP=-1.5:LRA=4
+```
 
-## Music
+That is the noise control, the compression, and the loudness. There is no separate de-esser and no Audition session.
 
-No bed unless the user asks for one on that file. A bed does not cover a weak land. If a bed is signed, the voice stays the loudest thing in the file. There is no house duck number.
+## Sounds — step 2, stage 2
 
-## Effects
+Script: `content_pipeline/cli/viral_sounds.py`. Input is `viral/stage1/`. Output is `viral/stage2/`.
 
-One effect on the land, after sign-off. Cooldown 0.8s. A keyword list does not fire through the whole lecture. Rules: [`sfx_allocation`](../../sfx_allocation/SKILL.md).
+- A censor word from `content_pipeline/config/censor_words.json` is muted and replaced with a beep (`BEEP_VOLUME` 0.55). The caption already printed `****`.
+- Other trigger words come from `sfx_triggers.json`. The hit is mixed at `SFX_VOLUME` 0.4. Next hit waits `SFX_COOLDOWN` 0.8s.
+- Resolver order in `lib/sfx_resolver.py`: cache, then Freesound if a key exists, then Pixabay, then a synthetic wav.
 
-Do not put a zoom and an effect on the same word. Pick one.
+`cli/auto_edit.py` is the old MoviePy path. It zooms every 4 seconds and layers the same SFX. Do not run it. Stage 2 is `viral_sounds.py` only.

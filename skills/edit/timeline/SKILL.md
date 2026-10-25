@@ -1,30 +1,36 @@
 ---
 name: edit-timeline
-description: Cut rhythm for a signed speech edit. Sentence edges, which breaths stay, hard cuts. Use when marking in and out on a short or chunk.
+description: How a signed script becomes a timeline in ffmpeg. Use when rendering step 1. Covers cut_video, cut_montage, and apply_trim.
 ---
 
 # Timeline
 
-One camera, one voice. The timeline is the transcript with dead air removed. It is not a multicam assembly.
+Step 1. `render_clip_entry` in `content_pipeline/lib/cut_utils.py`, called from `content_pipeline/cli/render_manifest.py`.
 
-## In and out
+## The cut
 
-- Cut on a sentence edge. Never mid-word, never mid-clause.
-- A chunk starts about ten seconds into the same thought, before the point.
-- A short's out is the land. Eighty seconds means the out is late. Under fifty seconds is not a short. Hold more of the same thought. Do not splice a second story to reach the floor.
-- Delete "sorry", "let's do this", handwriting, and a stream glitch. Keep the breath that carries the admission.
+| `cut_mode` | Function | What it does |
+|------------|----------|----------------|
+| `contiguous` | `cut_video` | `-ss` start, `-t` duration, video and audio together. |
+| `supercut` | `cut_montage` | One temp mp4 per segment, then concat. Copy concat first. Re-encode only if the streams differ. |
 
-## Rhythm
+In and out are the script clocks, on sentence edges. A join between segments is a hard cut. There is no J-cut, no L-cut, no second angle, and no speed ramp in this code.
 
-Shorts are tight speech. Chunks keep a conversational sit. Silence trimming is not the editor. A pause that is the point stays.
+`script_approved: false` skips the short unless `--allow-unapproved`. An existing file is not overwritten. The next pass is `_v2`.
 
-A splice is two beats of one situation. The join is a hard cut. Mouth and audio stay locked.
+## Silence
 
-J-cuts and L-cuts are for a picture that is not the mouth saying the line. This shop's lectures are the mouth. Do not overlap audio across a talking-head cut to make it feel "edited."
+`apply_trim` runs only when trim is enabled for that render.
 
-## Not on these tapes
+| Level | Method | Used for |
+|-------|--------|----------|
+| `light` | ffmpeg, drop gaps longer than 2.5s at −40 dB | Chunks (`target` youtube) |
+| `moderate` | auto-editor, margin `0.6sec` | Shorts, one profile |
+| `aggressive` | auto-editor, margin `0.4sec` | Defined in `trim_profiles.py` for a TikTok target. Do not set it. One file, one short trim. |
+| `off` | none | Trim was not turned on |
 
-- No second angle, no eye-line match, no screen direction.
-- No speed ramp and no slow motion on a punchline. The emphasis is the cut and the caption, not a time remap.
+`trim_profiles.TARGET_DEFAULTS` still maps `tiktok` → `aggressive`. The short renderer passes `clip_target="short"`, which is not in that map, so a short gets the manifest or project trim, not the TikTok preset.
 
-Render from the signed `segments[]`. [`render_manifest`](../../render_manifest/SKILL.md).
+Filler words are not a trim setting. "Sorry", "let's do this", and handwriting are left out of `segments[]` when the script is written.
+
+After the trim, `level_speech` always runs. See [`audio`](../audio/SKILL.md).

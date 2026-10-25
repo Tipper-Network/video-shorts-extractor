@@ -36,17 +36,19 @@ What gets cut. Take as many lands as the tape holds. A named list is not a cap.
 | Chunk | [`chunks`](chunks/SKILL.md) | 11–15 min. One job. On an episode, this is the service. |
 | Script | the `.md` next to the deliverable | Signed before ffmpeg. |
 
-Edit is how that selected land becomes a file. Read the subcategory the pass needs. Do not read them to find another land.
+Edit is how that selected land becomes a file. Map: [`edit`](edit/SKILL.md). Step 1 cuts. Step 2 has two stages, captions then sounds. Do not read these to find another land.
 
-| Subcategory | Skill |
-|-------------|-------|
-| Retention | [`edit/retention`](edit/retention/SKILL.md) |
-| Timeline | [`edit/timeline`](edit/timeline/SKILL.md) |
-| Type | [`edit/type`](edit/type/SKILL.md) |
-| Audio | [`edit/audio`](edit/audio/SKILL.md) |
-| Package | [`edit/package`](edit/package/SKILL.md) |
+| Step | Skill |
+|------|-------|
+| Hub | [`edit`](edit/SKILL.md) |
+| 1 — open and frame | [`edit/retention`](edit/retention/SKILL.md) |
+| 1 — timeline and trim | [`edit/timeline`](edit/timeline/SKILL.md) |
+| 1 — voice | [`edit/audio`](edit/audio/SKILL.md) |
+| 2 stage 1 — type | [`edit/type`](edit/type/SKILL.md) |
+| 2 stage 2 — sounds | [`sfx_allocation`](sfx_allocation/SKILL.md) |
+| Brand on the burn | [`edit/package`](edit/package/SKILL.md) |
 
-Shared polish: [`dynamic_zoom`](dynamic_zoom/SKILL.md), [`sfx_allocation`](sfx_allocation/SKILL.md), [`humaniser`](humaniser/SKILL.md).
+[`dynamic_zoom`](dynamic_zoom/SKILL.md) is cancelled. [`humaniser`](humaniser/SKILL.md) is for pack copy, which is later.
 
 Canvas and render, after the script is signed: [`vertical_shorts`](vertical_shorts/SKILL.md) (one 9:16 file), [`render_manifest`](render_manifest/SKILL.md).
 

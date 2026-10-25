@@ -1,32 +1,20 @@
 ---
 name: edit-package
-description: Brand, thumbnail frame, and the call to action that rides a video into the weekday quota. Use when writing the post pack for a signed cut.
+description: What the edit enforces from the brand, and what it leaves for later. Use when checking caption.json, covers, or a CTA on a cut.
 ---
 
 # Package
 
-The file is done. The package is what makes the weekday post look like the same brand as the last one, and what points at the next stage.
+During the edit, the brand shows up in one place: `brands/assets/{entity}/caption.json`, burned in step 2 stage 1. Font file, `body`, `active`, `stroke`, `stroke_width`, `font_size`, `margin_v`. Founder, Tipper, and GAF each have their own file. Do not borrow another entity's font or colors onto this cut.
 
-## Brand
-
-Read the entity book before the title and the description. [`entity_brand`](../../entity_brand/SKILL.md). Founder spoken style stays on every entity. Do not close a GAF film on Tipper, THP, or a hustle line.
-
-Colors, fonts, and an audio logo are the book when the book names them. Do not invent a palette in the edit.
-
-Descriptions that sound like a model wrote them go through [`humaniser`](../../humaniser/SKILL.md). The story stays his.
+Spoken brand rules (what the line is allowed to say) are [`entity_brand`](../../entity_brand/SKILL.md). They are applied when the script is written, not in ffmpeg.
 
 ## Frame
 
-The thumbnail frame is the land: his face, or the board, at the sentence a stranger can read. Grab it from the signed cut. Do not stage a separate photo shoot in this pipeline.
+`viral/covers/` is the folder for a still. No script picks the frame. If a cover is needed, it is the land frame from the signed cut, saved by hand.
 
 ## Call to action
 
-The CTA is the next stage, not a sticker.
+No mid-roll card, no end screen, no subscribe pop-up in step 1 or step 2.
 
-- `viewer_state` is what this video just did to them.
-- `next_stage` is the next post in the wheel.
-- Description and the last spoken line point there. No mid-roll subscribe card. No end-screen template.
-
-Lengths when the row is written: YouTube title 100 characters, YouTube description 5000, Instagram caption 2200. Collaborators go in the description (`@tippernetwork`, `@Thehardport0`). The Sheet column `collaborators` is the handles without `@`.
-
-The row joins the quota in [`quota`](../../quota/SKILL.md). A human sets `scheduled`.
+The next stage of the wheel is written later, when a job is in step 3 and step 4 (`viewer_state`, `next_stage`, the pack markdown). That is the posting side. It is not an edit stage. [`humaniser`](../../humaniser/SKILL.md) is for that pack copy when it is written.
