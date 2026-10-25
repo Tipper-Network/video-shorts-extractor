@@ -146,4 +146,5 @@ Same source video can produce **two manifests** if you want both strategies — 
 
 - [`playbooks.md`](playbooks.md) — full playbook catalog
 - [`vision.md`](vision.md) — flywheel stage definitions
+- [`marketing.md`](marketing.md) — viewer states, the short's theme, and what a future strategy has to name
 - [`skills/flywheel_series/`](../skills/flywheel_series/SKILL.md) — series continuity

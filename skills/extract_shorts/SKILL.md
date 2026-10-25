@@ -7,7 +7,9 @@ description: Planner rules for cutting speech shorts — locate a 3–5 min them
 
 **Planner only. No ffmpeg.** Resolve the entity with [`entity_brand`](../entity_brand/SKILL.md) first (title = brand key). Themes come from `shorts_instructions.md` / `shorts_extraction.md`. Optional storyline discovery: [`story_snippet`](../story_snippet/SKILL.md) → `output/plan/story_snippets.json` → theme rows. Script cohesion is [`situation_resolve`](../situation_resolve/SKILL.md). Export stays in [`vertical_shorts`](../vertical_shorts/SKILL.md).
 
-Read [`entity_brand`](../entity_brand/SKILL.md), then [`situation_resolve`](../situation_resolve/SKILL.md). Name the entity, then the stage, then the situation. Then hunt timestamps.
+Read [`entity_brand`](../entity_brand/SKILL.md), then [`situation_resolve`](../situation_resolve/SKILL.md). Name the entity, the stage, the theme, then the situation. Then hunt timestamps.
+
+The theme is the chance the audience is given. Write it on the script before the clocks. Lecture 13, 13-sh02 (02:27–03:21): the chance to consider making a decision against taking one. The short names the pair and stops. The definition of that pair is 13-sh13. The 3–5 minute block stays the search window.
 
 ## Stage brief
 
@@ -70,7 +72,7 @@ Reject if any of these are true:
 - Setup restates the hook instead of stating the problem
 - Resolution restates the hook instead of delivering the insight
 - Resolution needs a whiteboard list, earlier story, or name the viewer never heard
-- The splice changes register. A confession and a later syllabus are two shorts when each one lands. Lecture 13: "making decisions instead of taking them" (02:27–03:21) does not jump to "clarity in position, choice, process" (05:06–06:00). The list is 13-sh12. An illustration that changes the vibe is not the missing context. The mom-and-friends scene stayed in the chapter.
+- The splice changes register. A confession and a later syllabus are two shorts when each one lands. Lecture 13: "making decisions instead of taking them" (02:27–03:21) does not jump to "clarity in position, choice, process" (05:06–06:00). The list is 13-sh12. The definition of the pair is a third short, 13-sh13 (11:01–12:04): the decision is taken from the environment. Mom is the example in that short. She is not the setup for the confession.
 - A second passage that can land on its own is a new short. Do not splice it on to hide a jump.
 - Brief timestamps land on handwriting, "sorry", "let's do this", or dead air — those are hard deletes, not beats
 - Punchline is clipped mid-sentence (search until the clause lands)

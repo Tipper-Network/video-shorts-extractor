@@ -58,7 +58,7 @@ The human gates are: which jobs are chapters, the playback script, and the Sheet
 
 ## 4. How a stage finds the short
 
-Every plan takes **as many shorts as the tape can hold**. The stage names the job. It is not a quota, and it is not a cap. One short does one stage. The same stage repeats for every new land. A stage that is not on the tape is skipped. Do not collage two stories to manufacture one more file. Do not stop because a tidy set already exists.
+Every plan takes **as many shorts as the tape can hold**. The stage names the job. The theme names the chance the audience is given. One short does one stage and one theme. The same stage repeats for every new land. A stage that is not on the tape is skipped. Do not collage two stories to manufacture one more file. Do not stop because a tidy set already exists.
 
 Future Ready is **flywheel-episode**. The chapter is the service. Shorts are everything else that resolves.
 
@@ -100,7 +100,7 @@ Five of six stages are already named. No referral. This table is not the cap. Af
 | Stage | Cuts | What |
 |-------|------|------|
 | attract | 3 | 13-sh01 the difference (65s). 13-sh08 the million, 25:35–26:29 (54s). 13-sh09 the car that needed oil (52s). |
-| engage | 4 | 13-sh02 the world, then stuck, then making versus taking. 13-sh12 clarity in the process, its own short. 13-sh07 two whys at the party. 13-sh10 the steering wheel. |
+| engage | 5 | 13-sh02 the chance to consider making a decision against taking one (02:27–03:21). 13-sh12 clarity in the process. 13-sh13 the decision is taken from the environment. 13-sh07 two whys at the party. 13-sh10 the steering wheel. |
 | trust | 4 | 13-sh03 the forgotten walk, no mom. 13-sh04 France, 28:46–30:01, no million. 13-sh05 one window, 38:48–39:48. 13-sh11 thicker grip. |
 | service | 2 | 13-ch01 walk a real room. 13-ch02 when the goal has no corridor. |
 | referral | 0 | Not on this tape. |

@@ -24,6 +24,7 @@ Cross-reference THP media docs (`THP-MEDIA-001`, `THP-MEDIA-003`) for storyline 
 | Path | Purpose |
 |------|---------|
 | [vision.md](vision.md) | North star: goals, flywheel, success criteria |
+| [marketing.md](marketing.md) | Psychology, themes, and what a future strategy has to say |
 | [pipeline-architecture.md](pipeline-architecture.md) | Technical design: plan → review → render |
 | [roadmap.md](roadmap.md) | Phased build order and current status |
 | [capability-matrix.md](capability-matrix.md) | Platform scripts/skills — test status per project |

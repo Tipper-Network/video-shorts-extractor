@@ -80,6 +80,7 @@ Before building custom tooling, check for maintained open-source options (ffmpeg
 | Orchestrator | [`SKILL.md`](SKILL.md) |
 | **Playbooks (visuals + design)** | [`planning/playbooks.md`](planning/playbooks.md) |
 | **Flywheel strategies (2 models)** | [`planning/flywheel-strategies.md`](planning/flywheel-strategies.md) |
+| **Marketing, psychology, themes** | [`planning/marketing.md`](planning/marketing.md) — the layer future strategies are built on |
 | **Flywheel visuals** | [`planning/flywheel-strategies-visual.md`](planning/flywheel-strategies-visual.md) |
 | Architecture | [`planning/pipeline-architecture.md`](planning/pipeline-architecture.md) |
 | **Agent skills, instincts, loop** | [`planning/agent-architecture.md`](planning/agent-architecture.md) |

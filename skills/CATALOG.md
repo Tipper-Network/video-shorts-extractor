@@ -60,7 +60,7 @@ Canvas and render, after the script is signed: [`vertical_shorts`](vertical_shor
 
 Later. Do not organize a cut around this section.
 
-Two strategies are already written and not yet the way a project is chosen: [`planning/flywheel-strategies.md`](../planning/flywheel-strategies.md).
+Two strategies are already written and not yet the way a project is chosen: [`planning/flywheel-strategies.md`](../planning/flywheel-strategies.md). The psychology and the theme rules they sit on: [`planning/marketing.md`](../planning/marketing.md).
 
 | Strategy | What the queue is |
 |----------|-------------------|

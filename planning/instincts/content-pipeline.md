@@ -39,11 +39,17 @@
 - **Never** invent a short to fill a stage the tape does not have. Referral is someone else's result. His own mistake is trust.
 - **Never** let a short fully replace its parent chapter — shorts tease, chapters deliver. On flywheel-episode, service is the chunk.
 
+## Short theme
+
+<!-- added: 2026-10-26 | reason: lecture 13 sh02 is the chance to consider, not the definition -->
+- **Always** name the theme before the clocks. The theme is the chance the audience is given. The stage is the wheel slot. The 3–5 minute block is the search window. The full account is [`planning/marketing.md`](../marketing.md).
+- **13-sh02** (02:27–03:21) gives the audience a chance to consider making a decision against taking one. It names the pair and stops. The definition of that pair is 13-sh13.
+
 ## Same register
 
 <!-- added: 2026-10-26 | reason: lecture 13 sh02 jump and the word-gap leveler -->
 - **Never** splice a confession onto a later syllabus to supply context. If the second passage lands, it is another short. Lecture 13: making versus taking is 13-sh02 (02:27–03:21). Clarity in the process is 13-sh12 (05:06–06:00).
-- **Never** treat a change of vibe as the missing setup. The mom-and-friends scene is not the context for "I was making decisions instead of taking them." It stays in the chapter.
+- **Never** treat a change of vibe as the missing setup for a different short. Mom is not the context for 13-sh02. She is the example inside 13-sh13, whose land is "the decision is taken from the environment" (11:01–12:04).
 - **Never** ride gain between words. No `dynaudnorm`, no compressor, no limiter in `voice_chain`. Loudness is −16 LUFS, LRA 11, after the de-esser and the presence EQ.
 - **Never** fake `auto-editor`'s 0.6 s margin with peak `silenceremove` when the binary will not start. Leave that short at trim off.
 - **Never** give two shorts the same land.
@@ -87,6 +93,7 @@
 - **Prefer** one post per weekday (five a week). Do not stack several videos on the same date.
 - **Never** put `YOUTUBE_TOKEN_PATH` or `GOOGLE_OAUTH_TOKEN_PATH` on the server. Tokens are Dokploy API env vars.
 - **Never** reschedule the ten founder + GAF chunks already public on The G.A.F.
+- **Prefer** a pair on lecture-cut posts: one prescheduled file from the long video, then a live he does right after to elaborate and reflect. The live is the connection. It is not a second Sheet row and not a second cut. See [`planning/marketing.md`](../marketing.md).
 
 ## Human Gate
 
