@@ -25,7 +25,7 @@ Step 2 stage 2. Input is `viral/stage1/`. Output is `viral/stage2/`. A trigger d
 python3 content_pipeline/cli/viral_sounds.py
 ```
 
-Censor words mute and beep (`BEEP_VOLUME` 0.55) so the sound matches the `****` from stage 1. Other hits come from `sfx_triggers.json` at `SFX_VOLUME` 0.4, cooldown 0.8s.
+Censor words mute and beep (`BEEP_VOLUME` 0.55) so the sound matches the `****` from stage 1. `--land` is the only other hit, and only if that word is also in `sfx_triggers.json`. Volume 0.4, cooldown 0.8s.
 
 Do not run `content_pipeline/cli/auto_edit.py`. It still zooms every 4 seconds. Zoom is cancelled.
 

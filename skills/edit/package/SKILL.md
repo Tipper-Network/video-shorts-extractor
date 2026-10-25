@@ -11,7 +11,7 @@ Spoken brand rules (what the line is allowed to say) are [`entity_brand`](../../
 
 ## Frame
 
-`viral/covers/` is the folder for a still. No script picks the frame. If a cover is needed, it is the land frame from the signed cut, saved by hand.
+`content_pipeline/cli/cover_still.py` writes `viral/covers/{stem}.jpg` from the signed cut at the land segment. A black frame steps forward half a second, up to four tries. `batch_to_step4.py` calls it.
 
 ## Call to action
 

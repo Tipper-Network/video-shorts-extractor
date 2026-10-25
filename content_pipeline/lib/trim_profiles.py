@@ -36,14 +36,13 @@ PROFILES: dict[TrimLevel, TrimProfile | None] = {
         method="ffmpeg",
         min_silence=2.5,
         threshold_db=-40.0,
-        description="YouTube chapters — strip long pauses only",
+        description="Chunks. Drop gaps longer than 2.5s. Leave 0.2s so the next word is not clipped.",
     ),
-    # youtube-shorts: gaps > 0.6s
     "moderate": TrimProfile(
         level="moderate",
         method="auto-editor",
         margin="0.6sec",
-        description="YouTube Shorts / Reels — moderate pacing",
+        description="Shorts. 0.6s margin drops a breath between clauses and keeps the breath before the next word, including the land.",
     ),
     # tiktok-shorts: gaps > 0.4s, aggressive
     "aggressive": TrimProfile(
@@ -54,29 +53,21 @@ PROFILES: dict[TrimLevel, TrimProfile | None] = {
     ),
 }
 
-# Default trim level per platform target when not specified on clip/manifest
-TARGET_DEFAULTS: dict[str, TrimLevel] = {
-    "youtube": "light",
-    "yt-shorts": "moderate",
-    "tiktok": "aggressive",
-    "instagram": "moderate",
-    "reels": "moderate",
-}
-
-
 def resolve_trim_level(
     *,
-    clip_target: str | None = None,
+    deliverable: str,
     clip_override: str | None = None,
     manifest_default: str | None = None,
     project_default: str | None = None,
 ) -> TrimLevel:
     """Pick how hard to trim silence on a clip.
 
-    Precedence: clip override → manifest default → platform target → project default → ``off``.
+    Precedence: clip override → manifest default → project default → deliverable.
+    A short defaults to ``moderate``. A chapter defaults to ``light``.
+    Platform names do not choose a trim.
 
     Args:
-        clip_target: Manifest platform key (``youtube``, ``yt-shorts``, ``tiktok``, …).
+        deliverable: ``short`` or ``chapter``.
         clip_override: Per-clip ``trim`` value if the planner set one.
         manifest_default: Manifest-wide default trim.
         project_default: ``pipeline.json`` project default.
@@ -84,9 +75,13 @@ def resolve_trim_level(
     Returns:
         One of ``off``, ``light``, ``moderate``, ``aggressive``.
     """
-    for value in (clip_override, manifest_default, TARGET_DEFAULTS.get(clip_target or "", ""), project_default):
+    for value in (clip_override, manifest_default, project_default):
         if value and value in PROFILES:
             return value  # type: ignore[return-value]
+    if deliverable == "short":
+        return "moderate"
+    if deliverable == "chapter":
+        return "light"
     return "off"
 
 

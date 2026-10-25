@@ -24,12 +24,12 @@ In and out are the script clocks, on sentence edges. A join between segments is 
 
 | Level | Method | Used for |
 |-------|--------|----------|
-| `light` | ffmpeg, drop gaps longer than 2.5s at −40 dB | Chunks (`target` youtube) |
-| `moderate` | auto-editor, margin `0.6sec` | Shorts, one profile |
-| `aggressive` | auto-editor, margin `0.4sec` | Defined in `trim_profiles.py` for a TikTok target. Do not set it. One file, one short trim. |
+| `light` | ffmpeg, drop gaps longer than 2.5s at −40 dB, leave 0.2s before the next word | Chunks |
+| `moderate` | auto-editor, margin `0.6sec` | Shorts. A breath between clauses goes. The breath before the next word, including the land, stays. |
+| `aggressive` | auto-editor, margin `0.4sec` | Only if a clip sets `trim` to `aggressive`. Nothing selects it from a platform name. |
 | `off` | none | Trim was not turned on |
 
-`trim_profiles.TARGET_DEFAULTS` still maps `tiktok` → `aggressive`. The short renderer passes `clip_target="short"`, which is not in that map, so a short gets the manifest or project trim, not the TikTok preset.
+When trim is on and the clip does not set `trim`, a short gets `moderate` and a chapter gets `light`. `resolve_trim_level(deliverable="short"|"chapter")`.
 
 Filler words are not a trim setting. "Sorry", "let's do this", and handwriting are left out of `segments[]` when the script is written.
 

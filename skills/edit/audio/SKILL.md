@@ -11,23 +11,25 @@ Two passes. They do not duck a music bed. There is no music function.
 
 `level_speech` in `content_pipeline/lib/cut_utils.py` re-encodes audio on the finished cut. Video is copied.
 
-`VOICE_AF`:
+`voice_chain()` runs in this order, then the same loudness on every file:
 
 ```text
+deesser
+equalizer 220 Hz +2.5 dB, equalizer 3200 Hz +3 dB
 acompressor=threshold=-24dB:ratio=8:attack=3:release=80:makeup=5
 dynaudnorm=f=75:g=25:p=0.6:m=12
 alimiter=limit=0.75:attack=3:release=30
 loudnorm=I=-16:TP=-1.5:LRA=4
 ```
 
-That is the noise control, the compression, and the loudness. There is no separate de-esser and no Audition session.
+`afftdn` is added in front of that chain only when the manifest entry sets `room_tone: true`.
 
 ## Sounds — step 2, stage 2
 
 Script: `content_pipeline/cli/viral_sounds.py`. Input is `viral/stage1/`. Output is `viral/stage2/`.
 
 - A censor word from `content_pipeline/config/censor_words.json` is muted and replaced with a beep (`BEEP_VOLUME` 0.55). The caption already printed `****`.
-- Other trigger words come from `sfx_triggers.json`. The hit is mixed at `SFX_VOLUME` 0.4. Next hit waits `SFX_COOLDOWN` 0.8s.
+- A hit from `sfx_triggers.json` plays only when the word is the script's land (`--land`, the Resolve line). Volume 0.4. Cooldown 0.8s. Every other trigger key stays silent.
 - Resolver order in `lib/sfx_resolver.py`: cache, then Freesound if a key exists, then Pixabay, then a synthetic wav.
 
 `cli/auto_edit.py` is the old MoviePy path. It zooms every 4 seconds and layers the same SFX. Do not run it. Stage 2 is `viral_sounds.py` only.

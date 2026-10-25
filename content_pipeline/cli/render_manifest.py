@@ -22,7 +22,54 @@ from _root import PIPELINE_ROOT, WORKSPACE_ROOT  # noqa: E402
 from cut_utils import render_clip_entry  # noqa: E402
 from project_config import load_pipeline  # noqa: E402
 from project_paths import load_project_paths  # noqa: E402
+from script_fields import opening_failure, parse_script  # noqa: E402
 from trim_profiles import resolve_trim_level  # noqa: E402
+
+
+def script_markdown(short: dict, clip: dict, deliverables_dir: Path) -> Path | None:
+    """Script `.md` for this short, if one was written next to the deliverable."""
+    for raw in (clip.get("script_file"), short.get("script_file")):
+        if not raw:
+            continue
+        path = Path(raw)
+        if not path.is_absolute():
+            path = WORKSPACE_ROOT / path
+        if path.exists():
+            return path
+    shorts = deliverables_dir / "shorts"
+    if not shorts.is_dir():
+        return None
+    version = str(clip.get("version_id") or "")
+    output_name = str(clip.get("output_name") or short.get("output_name") or "")
+    if output_name:
+        exact = shorts / (output_name if output_name.endswith(".md") else f"{Path(output_name).stem}.md")
+        if exact.exists():
+            return exact
+    sid = str(short.get("id") or "")
+    hits = sorted(shorts.glob(f"{sid}*.md")) if sid else []
+    for hit in hits:
+        if version and version in hit.name:
+            return hit
+    if len(hits) == 1:
+        return hits[0]
+    return None
+
+
+def first_line_error(short: dict, clip: dict, deliverables_dir: Path) -> str | None:
+    """Fail when the opening line is neither the punchline nor the situation."""
+    path = script_markdown(short, clip, deliverables_dir)
+    if path is None:
+        spoken = ((clip.get("coherence") or {}).get("spoken_as") or "").strip()
+        if not spoken:
+            return f"{short.get('id')}: no script for the opening three seconds"
+        fields = parse_script(f"## spoken_as\n\n{spoken}\n")
+        # spoken_as alone has an opening and no separate punchline. Require the script file.
+        return f"{short.get('id')}: no script markdown for the opening line"
+    fields = parse_script(path.read_text(encoding="utf-8", errors="replace"))
+    reason = opening_failure(fields)
+    if reason:
+        return f"{short.get('id')} [{clip.get('version_id') or short.get('id')}]: {reason} ({path.name})"
+    return None
 
 
 def resolve_short_versions(short: dict) -> list[dict]:
@@ -187,7 +234,7 @@ def render_manifest(
 
     Args:
         manifest_path: ``output/plan/manifest.json``.
-        polish: Run auto-edit (SFX + zoom) after the cut.
+        polish: Ignored. The 4-second zoom timer is cancelled.
         only: Render this clip id only (``sh01``, ``ch01``, …).
         project_id: Pipeline defaults / path root.
         skip_trim: Do not apply silence trim even if the pipeline wants it.
@@ -197,6 +244,10 @@ def render_manifest(
     Returns:
         Deliverables directory used.
     """
+    if polish:
+        print(" --polish is cancelled. auto_edit.py exits. Stage 2 is viral_sounds.py.")
+        sys.exit(1)
+
     with open(manifest_path, encoding="utf-8") as f:
         manifest = json.load(f)
 
@@ -280,7 +331,7 @@ def render_manifest(
             trim_level = "off"
             if trim_enabled:
                 trim_level = resolve_trim_level(
-                    clip_target=chapter.get("target", "youtube"),
+                    deliverable="chapter",
                     clip_override=chapter.get("trim"),
                     manifest_default=manifest_trim_default,
                     project_default=chapter_defaults.get("default_trim"),
@@ -299,6 +350,7 @@ def render_manifest(
             rendered.append(out_file)
 
         short_jobs: list[dict] = []
+        opening_errors: list[str] = []
         for short in manifest.get("shorts") or []:
             if only and short["id"] != only:
                 continue
@@ -336,10 +388,15 @@ def render_manifest(
                 )
                 if out_file.exists() and not overwrite:
                     out_file = compare_output_path(out_file, overwrite=False)
+                opening_error = first_line_error(short, clip, deliverables_dir)
+                if opening_error:
+                    print(f" Fail {opening_error}")
+                    opening_errors.append(opening_error)
+                    continue
                 trim_level = "off"
                 if trim_enabled:
                     trim_level = resolve_trim_level(
-                        clip_target="short",
+                        deliverable="short",
                         clip_override=clip.get("trim"),
                         manifest_default=manifest_trim_default,
                         project_default=short_defaults.get("default_trim"),
@@ -405,25 +462,12 @@ def render_manifest(
                 short["rendered"] = True
                 short["output_file"] = next(iter(short["output_files"].values()))
 
-    if polish:
-        import importlib.util
-
-        spec = importlib.util.spec_from_file_location("auto_edit", PIPELINE_ROOT / "cli" / "auto_edit.py")
-        auto_edit = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(auto_edit)
-
-        words_path = PIPELINE_ROOT / "subtitles" / f"{stem}.words.json"
-        for clip in rendered:
-            polished = clip.with_name(clip.stem + "_polished.mp4")
-            auto_edit.process_video(
-                clip,
-                polished,
-                words_json_path=words_path if words_path.exists() else None,
-            )
-
     manifest_out = plan_dir / "manifest.json"
     manifest_out.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     print(f" Done → {deliverables_dir.relative_to(WORKSPACE_ROOT)} ({len(rendered)} clips)")
+    if opening_errors:
+        print(f" {len(opening_errors)} short(s) failed the opening line")
+        sys.exit(1)
     return out_dir
 
 

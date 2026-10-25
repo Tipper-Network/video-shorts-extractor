@@ -168,6 +168,22 @@ def ordered_entries(job: Path) -> list[dict]:
     return entries
 
 
+def ensure_cover(job: Path, entry: dict) -> None:
+    """One still at the land clock of the signed cut. Skip if a real frame is already there."""
+    dest = job / "viral" / "covers" / f"{entry['stem']}.jpg"
+    if dest.exists() and dest.stat().st_size > 4000:
+        return
+    cli = WORKSPACE / "content_pipeline" / "cli"
+    if str(cli) not in sys.path:
+        sys.path.insert(0, str(cli))
+    from cover_still import land_offset, segments_for_stem, write_cover
+
+    short = load_manifest_shorts(job).get(entry["id"], {})
+    segments = segments_for_stem(short, entry["stem"]) if short else []
+    at = land_offset(segments) if segments else 1.0
+    write_cover(Path(entry["mp4"]), dest, at)
+
+
 def run_viral_one(job: Path, entity: str, entry: dict) -> Path:
     stem = entry["stem"]
     s1 = job / "viral" / "stage1"
@@ -175,6 +191,7 @@ def run_viral_one(job: Path, entity: str, entry: dict) -> Path:
     ap = job / "viral" / "approved"
     for d in (s1, s2, ap):
         d.mkdir(parents=True, exist_ok=True)
+    ensure_cover(job, entry)
 
     out2 = s2 / f"{stem}.mp4"
     approved = ap / f"{stem}.mp4"
@@ -188,6 +205,7 @@ def run_viral_one(job: Path, entity: str, entry: dict) -> Path:
 
     words = s1 / f"{entry['id']}_words.json"
     out1 = s1 / f"{stem}.mp4"
+    script = job / "output" / "deliverables" / "shorts" / f"{stem}.md"
     if not out1.exists() or out1.stat().st_size < 1000:
         print(f"  stage1 captions: {stem}")
         cmd = [
@@ -202,6 +220,13 @@ def run_viral_one(job: Path, entity: str, entry: dict) -> Path:
             "--words-out",
             str(words),
         ]
+        if words.exists():
+            cmd.extend(["--words-in", str(words)])
+        alt_words = s1 / f"{stem}_words.json"
+        if not words.exists() and alt_words.exists():
+            cmd.extend(["--words-in", str(alt_words)])
+        if script.exists():
+            cmd.extend(["--script", str(script)])
         subprocess.run(cmd, check=True)
     else:
         print(f"  stage1 exists: {stem}")
@@ -212,6 +237,14 @@ def run_viral_one(job: Path, entity: str, entry: dict) -> Path:
                 words = alt
 
     print(f"  stage2 sounds: {stem}")
+    land = ""
+    if script.exists():
+        lib = WORKSPACE / "content_pipeline" / "lib"
+        if str(lib) not in sys.path:
+            sys.path.insert(0, str(lib))
+        from script_fields import parse_script
+
+        land = parse_script(script.read_text(encoding="utf-8", errors="replace")).get("land") or ""
     cmd = [
         sys.executable,
         str(SND),
@@ -221,6 +254,8 @@ def run_viral_one(job: Path, entity: str, entry: dict) -> Path:
         str(out2),
         "--words",
         str(words),
+        "--land",
+        land,
     ]
     subprocess.run(cmd, check=True)
     shutil.copy2(out2, approved)

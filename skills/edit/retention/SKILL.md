@@ -21,13 +21,15 @@ YouTube retention is not read. If a cut dies in the middle, change the script an
 
 ## Frame
 
+`cut_video` seeks one second early, then `-ss` after `-i` trims to the script clock. The first frame is the punchline's first phoneme, not the previous keyframe. Stage 1's first cue is that word. There is no second graphic.
+
 `aspect_filter("9:16")`:
 
 - Split the frame.
-- Background: scale up, crop to 1080×1920, `boxblur=20:10`.
-- Foreground: scale the original to 1080 wide, keep the height, center it.
+- Background: scale up, crop to 1080×1920, `boxblur=20:10`. Ungraded.
+- Foreground: the whole 16:9 frame at 1080 wide, centered, board included.
 
-The whole 16:9 picture stays, including the board. Nothing tracks a face.
+`flat: true` on the manifest entry adds one grade on that foreground only: `eq` contrast 1.06, saturation 1.08, and a small warm `colorbalance`. Nothing tracks a face.
 
 Chunks call `aspect_filter("16:9")`: `scale='min(1920,iw)':-2`. 720p stays 720p.
 

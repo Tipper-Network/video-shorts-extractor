@@ -35,6 +35,14 @@ def run_cmd(cmd: list[str], *, fatal: bool = True) -> subprocess.CompletedProces
     return result
 
 
+# Presence and de-ess sit in front of the leveler. Loudness stays one number for every file.
+PRESENCE_AF = (
+    "deesser=i=0.5:m=0.5:f=0.5:s=o,"
+    "equalizer=f=220:t=q:w=1:g=2.5,"
+    "equalizer=f=3200:t=q:w=1.2:g=3"
+)
+# Room tone only. A job opts in with ``room_tone: true``. It is not the default.
+ROOM_AF = "afftdn=nr=12:nf=-40"
 # Hard speech leveling — live yells need dynaudnorm + a tight LRA, not loudnorm alone.
 VOICE_AF = (
     "acompressor=threshold=-24dB:ratio=8:attack=3:release=80:makeup=5,"
@@ -44,30 +52,42 @@ VOICE_AF = (
 )
 
 
+def voice_chain(room_tone: bool = False) -> str:
+    """De-esser and presence EQ, then ``VOICE_AF``. ``afftdn`` only when the job has room tone."""
+    head = f"{ROOM_AF}," if room_tone else ""
+    return f"{head}{PRESENCE_AF},{VOICE_AF}"
+
+
+# One grade for a flat lecture. Foreground only. The 16:9 frame stays whole.
+GRADE_AF = "eq=contrast=1.06:saturation=1.08:gamma=1.02,colorbalance=rs=0.03:gs=0.01:bs=-0.03,"
+
+
 CHUNK_MAX_W = 1920
 
 
-def aspect_filter(aspect: str) -> str:
+def aspect_filter(aspect: str, *, grade: bool = False) -> str:
     """ffmpeg ``-vf`` graph for the deliverable aspect.
 
     Args:
         aspect: ``9:16`` (blurred fill + centered 16:9) or ``16:9`` (cap width 1920, never upscale).
+        grade: Apply one color step on the picture. The blur ground stays ungraded. No crop.
 
     Returns:
         Filter string for ``-vf``.
     """
+    grade_f = GRADE_AF if grade else ""
     if aspect == "9:16":
-        # Full 16:9 frame placed inside 1080x1920 vertical canvas
-        # Background: fills 1080x1920 (blurred)
-        # Foreground: scales 16:9 original to 1080 width (unblurred)
+        # Full 16:9 frame placed inside 1080x1920 vertical canvas.
+        # Background fills the vertical frame and is blurred. It is not a face crop.
+        # Foreground keeps the whole 16:9 frame at 1080 wide, board included.
         return (
             "split[v1][v2];"
             "[v1]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=20:10,setsar=1[v1out];"
-            "[v2]scale=1080:trunc(1080*ih/iw/2)*2,setsar=1[v2out];"
+            f"[v2]{grade_f}scale=1080:trunc(1080*ih/iw/2)*2,setsar=1[v2out];"
             "[v1out][v2out]overlay=(W-w)/2:(H-h)/2"
         )
     # 16:9 chunks: never upscale. 1280×720 stays 1280×720. 4K caps at 1920 wide.
-    return f"scale='min({CHUNK_MAX_W},iw)':-2"
+    return f"{grade_f}scale='min({CHUNK_MAX_W},iw)':-2"
 
 
 def cut_video(
@@ -78,8 +98,14 @@ def cut_video(
     output_path: Path,
     *,
     level_audio: bool = False,
+    room_tone: bool = False,
+    grade: bool = False,
 ) -> None:
     """Cut ``[start, end)`` from ``source`` with the aspect filter.
+
+    The in-point is sample-accurate. A fast seek lands one second early, then
+    ``-ss`` after ``-i`` trims to the script clock so the first phoneme is not
+    the previous keyframe.
 
     Args:
         source: Master / source video.
@@ -87,10 +113,13 @@ def cut_video(
         end: Out-point seconds.
         aspect: ``16:9`` or ``9:16``.
         output_path: Destination mp4.
-        level_audio: If True, apply ``VOICE_AF`` during the cut (usually level after instead).
+        level_audio: If True, apply the voice chain during the cut (usually level after instead).
+        room_tone: Add ``afftdn`` in front of the voice chain.
+        grade: One color step on a flat picture. Full frame stays.
     """
     duration = end - start
     output_path.parent.mkdir(parents=True, exist_ok=True)
+    pre = 1.0
     cmd = [
         "ffmpeg",
         "-y",
@@ -98,17 +127,21 @@ def cut_video(
         "-hide_banner",
         "-loglevel",
         "warning",
-        "-ss",
-        str(start),
-        "-i",
-        str(source),
-        "-t",
-        str(duration),
-        "-vf",
-        aspect_filter(aspect),
     ]
+    if start > pre:
+        cmd.extend(["-ss", f"{start - pre:.3f}", "-i", str(source), "-ss", f"{pre:.3f}"])
+    else:
+        cmd.extend(["-i", str(source), "-ss", f"{start:.3f}"])
+    cmd.extend(
+        [
+            "-t",
+            f"{duration:.3f}",
+            "-vf",
+            aspect_filter(aspect, grade=grade),
+        ]
+    )
     if level_audio:
-        cmd.extend(["-af", VOICE_AF])
+        cmd.extend(["-af", voice_chain(room_tone)])
     cmd.extend(
         [
             "-c:v",
@@ -171,11 +204,12 @@ def concat_parts(parts: list[Path], output_path: Path) -> None:
     list_file.unlink(missing_ok=True)
 
 
-def level_speech(input_path: Path) -> None:
+def level_speech(input_path: Path, *, room_tone: bool = False) -> None:
     """Re-encode audio on the finished file so spikes hit the leveler.
 
     Args:
         input_path: Rendered mp4 (replaced in place).
+        room_tone: Run ``afftdn`` before the de-esser. Off unless this job recorded room tone.
     """
     tmp = input_path.with_name(input_path.stem + ".level.mp4")
     cmd = [
@@ -190,7 +224,7 @@ def level_speech(input_path: Path) -> None:
         "-c:v",
         "copy",
         "-af",
-        VOICE_AF,
+        voice_chain(room_tone),
         "-c:a",
         "aac",
         "-movflags",
@@ -268,6 +302,8 @@ def cut_montage(
     segments: list[dict],
     aspect: str,
     output_path: Path,
+    *,
+    grade: bool = False,
 ) -> None:
     """Render each video/image segment, concat them, delete temp parts.
 
@@ -286,7 +322,7 @@ def cut_montage(
         if seg.get("type") == "image":
             still_to_video(Path(seg["path"]), segment_duration(seg), aspect, part)
         else:
-            cut_video(source, seg["start"], seg["end"], aspect, part)
+            cut_video(source, seg["start"], seg["end"], aspect, part, grade=grade)
         parts.append(part)
 
     concat_parts(parts, output_path)
@@ -343,6 +379,8 @@ def render_clip_entry(
     *,
     default_cut_mode: str = "contiguous",
     trim_level: TrimLevel = "off",
+    room_tone: bool = False,
+    grade: bool = False,
 ) -> None:
     """Render one manifest chapter or short, then level speech.
 
@@ -353,20 +391,24 @@ def render_clip_entry(
         output_path: Destination mp4.
         default_cut_mode: Used when the entry has no ``cut_mode``.
         trim_level: Silence trim after the cut; ``off`` skips trim.
+        room_tone: ``afftdn`` before the voice chain.
+        grade: One color step. Set from the entry when this call's flags are omitted.
     """
     cut_mode = entry.get("cut_mode", default_cut_mode)
     segments = entry.get("segments") or []
+    room_tone = room_tone or bool(entry.get("room_tone"))
+    grade = grade or bool(entry.get("flat"))
 
     if cut_mode == "supercut" and segments:
-        cut_montage(source, segments, aspect, output_path)
+        cut_montage(source, segments, aspect, output_path, grade=grade)
     elif segments and "start" not in entry:
-        cut_montage(source, segments, aspect, output_path)
+        cut_montage(source, segments, aspect, output_path, grade=grade)
     elif "start" in entry and "end" in entry:
-        cut_video(source, entry["start"], entry["end"], aspect, output_path)
+        cut_video(source, entry["start"], entry["end"], aspect, output_path, grade=grade)
     else:
         raise ValueError(f"Clip {entry.get('id')}: need start/end or segments[]")
 
     if trim_level != "off":
         apply_trim(output_path, output_path, trim_level)
 
-    level_speech(output_path)
+    level_speech(output_path, room_tone=room_tone)

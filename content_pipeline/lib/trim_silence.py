@@ -76,6 +76,7 @@ def trim_long_pauses_ffmpeg(
     output_path: Path,
     min_silence: float,
     threshold_db: float,
+    keep_attack: float = 0.2,
 ) -> None:
     """Remove silences ≥ ``min_silence`` seconds (re-encode keeps A/V in sync).
 
@@ -84,11 +85,12 @@ def trim_long_pauses_ffmpeg(
         output_path: Trimmed destination.
         min_silence: Minimum pause length to drop (seconds).
         threshold_db: Peak threshold in dB (e.g. ``-40``).
+        keep_attack: Silence left in front of the next word so the cut is not on a phoneme.
     """
     output_path.parent.mkdir(parents=True, exist_ok=True)
     af = (
         f"silenceremove=stop_periods=-1:stop_duration={min_silence}"
-        f":stop_threshold={threshold_db}dB:detection=peak"
+        f":stop_threshold={threshold_db}dB:stop_silence={keep_attack}:detection=peak"
     )
     cmd = [
         "ffmpeg", "-y", "-nostdin", "-hide_banner", "-loglevel", "warning",

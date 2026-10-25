@@ -12,9 +12,9 @@ Read the cut from `output/deliverables/` (prefer `shorts_approved/`). Write `vir
 ## What the burn does
 
 1. Extract 16 kHz mono wav from the cut.
-2. Whisper `small`, word timestamps, on this file only.
+2. Reuse `*_words.json` when it is already next to the cut or the output. Whisper `small` only when that file is missing. If `--script` is passed, a token that disagrees with the script is replaced by the script's word (`gaff` → `GAF` is the same rule). Timestamps stay.
 3. Load `brands/assets/{entity}/caption.json` and that entity's font.
-4. Build an ASS at 1080×1920. Four words a line. Each word's cue paints that word in `active` and the rest of the line in `body`. Stroke from `stroke` / `stroke_width`. Alignment bottom-center. `margin_v` from the json. House value is **500** for every entity.
+4. Build an ASS at 1080×1920. Four words a line. The spoken word is `active`. The land word (the last content words of the script's resolve) is also `active`, bold, and scaled to 118, inside that same line. Stroke from `stroke` / `stroke_width`. Alignment bottom-center. `margin_v` must be **500** or the burn refuses. No second title.
 5. Burn with ffmpeg `ass=` filter, `crf` 18, audio copied.
 
 On-screen words are uppercased. `censor_words.json` prints as `****`. `gaff` is rewritten to `GAF` before the burn.

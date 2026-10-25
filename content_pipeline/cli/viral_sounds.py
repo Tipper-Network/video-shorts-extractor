@@ -51,15 +51,29 @@ def make_beep(duration: float, freq: float = 1000.0, sr: int = 44100) -> AudioAr
     return AudioArrayClip(arr, fps=sr)
 
 
+def _land_tokens(land: str) -> list[str]:
+    return [clean_token(part) for part in re.split(r"\s+", land) if clean_token(part)]
+
+
+def _at_land(tokens: list[str], index: int, land: list[str]) -> bool:
+    if not land or index < len(land) - 1:
+        return False
+    window = tokens[index - len(land) + 1 : index + 1]
+    return window == land
+
+
 def apply_sounds(
     video_path: Path,
     words: list[dict],
     output: Path,
+    land: str = "",
 ) -> None:
     censor, audio_cfg = load_censor()
     pad_before = float(audio_cfg.get("pad_ms_before", 40)) / 1000.0
     pad_after = float(audio_cfg.get("pad_ms_after", 80)) / 1000.0
     triggers = load_triggers()
+    land_tokens = _land_tokens(land)
+    seen: list[str] = []
 
     clip = VideoFileClip(str(video_path))
     if clip.audio is None:
@@ -90,7 +104,11 @@ def apply_sounds(
             beep_count += 1
             continue
 
+        seen.append(token)
+        if not _at_land(seen, len(seen) - 1, land_tokens):
+            continue
         if token not in triggers:
+            print(f"  land word {token!r} has no sfx trigger — beep path is censor only")
             continue
         if (start - last_sfx) <= SFX_COOLDOWN:
             continue
@@ -130,6 +148,7 @@ def main() -> None:
     p.add_argument("--input", required=True, type=Path, help="Usually stage1 captioned mp4")
     p.add_argument("--output", required=True, type=Path)
     p.add_argument("--words", required=True, type=Path, help="words.json from stage1")
+    p.add_argument("--land", default="", help="Land phrase from the signed script. Only this fires SFX.")
     args = p.parse_args()
 
     if not args.input.exists():
@@ -138,7 +157,7 @@ def main() -> None:
         raise SystemExit(f"Missing words: {args.words}")
 
     words = json.loads(args.words.read_text(encoding="utf-8"))
-    apply_sounds(args.input, words, args.output)
+    apply_sounds(args.input, words, args.output, land=args.land)
 
 
 if __name__ == "__main__":

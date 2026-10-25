@@ -19,13 +19,14 @@ for _d in (_PIPELINE / "lib", _PIPELINE / "cli", _PIPELINE):
 
 from faster_whisper import WhisperModel  # noqa: E402
 
-from _root import CONFIG_DIR, PIPELINE_ROOT, WORKSPACE_ROOT  # noqa: E402
+from _root import CONFIG_DIR, WORKSPACE_ROOT  # noqa: E402
+from script_fields import parse_script  # noqa: E402
 
 ASSETS = WORKSPACE_ROOT / "brands" / "assets"
 CENSOR_PATH = CONFIG_DIR / "censor_words.json"
 
-WORDS_PER_LINE = 4
 DEFAULT_FONT_SIZE = 72
+WORDS_PER_LINE = 4
 
 
 def load_censor() -> set[str]:
@@ -40,6 +41,11 @@ def resolve_caption(entity: str) -> dict:
     if not path.exists():
         raise SystemExit(f"Missing caption config: {path}")
     cfg = json.loads(path.read_text(encoding="utf-8"))
+    for key in ("font_file", "body", "active", "stroke"):
+        if not cfg.get(key):
+            raise SystemExit(f"{path} missing {key}")
+    if int(cfg.get("margin_v", 0)) != 500:
+        raise SystemExit(f"{path} margin_v must be 500, got {cfg.get('margin_v')!r}")
     font = ASSETS / entity / cfg["font_file"]
     if not font.exists():
         fallback = ASSETS / entity / cfg.get("font_fallback", "")
@@ -131,7 +137,92 @@ def font_family_name(font_path: Path) -> str:
     return font_path.stem.split("-")[0].replace("SourceSans3", "Source Sans 3").replace("WorkSans", "Work Sans")
 
 
-def build_ass(words: list[dict], cfg: dict, censor: set[str], out_ass: Path) -> None:
+def clause_groups(words: list[dict]) -> list[list[dict]]:
+    """Break caption lines on a clause, not on a fixed word count."""
+    groups: list[list[dict]] = []
+    current: list[dict] = []
+    for word in words:
+        current.append(word)
+        raw = word["word"].strip()
+        ended = bool(re.search(r"[.!?…][\"']*$", raw))
+        comma = bool(re.search(r"[,;:][\"']*$", raw)) and len(current) >= 3
+        if ended or comma or len(current) >= MAX_CLAUSE_WORDS:
+            groups.append(current)
+            current = []
+    if current:
+        groups.append(current)
+    return groups
+
+
+def existing_words_json(video: Path, output: Path, explicit: Path | None) -> Path | None:
+    """Reuse a words file already written for this cut. Do not Whisper again."""
+    if explicit and explicit.exists():
+        return explicit
+    candidates = [
+        output.with_name(f"{output.stem}_words.json"),
+        video.with_name(f"{video.stem}_words.json"),
+    ]
+    ident = re.match(r"(sh\d+)", output.stem)
+    if ident:
+        candidates.append(output.with_name(f"{ident.group(1)}_words.json"))
+    for path in candidates:
+        if path.exists():
+            return path
+    return None
+
+
+def prefer_script_wording(words: list[dict], script_text: str) -> list[dict]:
+    """Where Whisper and the script disagree, the script's word wins. Timestamps stay."""
+    import difflib
+
+    fields = parse_script(script_text)
+    script_words = re.findall(r"[A-Za-z0-9']+", fields.get("wording") or "")
+    if not script_words:
+        return words
+    whisper = [
+        re.sub(r"^[^\w']+|[^\w']+$", "", w["word"], flags=re.UNICODE) for w in words
+    ]
+    matcher = difflib.SequenceMatcher(
+        a=[token.lower() for token in whisper],
+        b=[token.lower() for token in script_words],
+    )
+    replace: dict[int, str] = {}
+    for tag, i1, i2, j1, j2 in matcher.get_opcodes():
+        if tag == "equal":
+            for index, script_index in zip(range(i1, i2), range(j1, j2)):
+                if whisper[index] != script_words[script_index]:
+                    replace[index] = script_words[script_index]
+        elif tag == "replace" and (i2 - i1) == 1 and (j2 - j1) == 1:
+            replace[i1] = script_words[j1]
+    if not replace:
+        return words
+    out: list[dict] = []
+    for index, word in enumerate(words):
+        if index in replace:
+            out.append({**word, "word": replace[index]})
+        else:
+            out.append(word)
+    print(f"  script wording replaced {len(replace)} token(s)")
+    return out
+
+
+def land_cores(phrase: str) -> set[str]:
+    """Last few content words of the land line. A whole sentence would mark the short."""
+    tokens = [t for t in re.findall(r"[A-Za-z0-9']+", phrase.lower()) if len(t) > 3]
+    return set(tokens[-3:])
+
+
+def word_core(raw: str) -> str:
+    return re.sub(r"^[^\w']+|[^\w']+$", "", raw, flags=re.UNICODE).lower()
+
+
+def build_ass(
+    words: list[dict],
+    cfg: dict,
+    censor: set[str],
+    out_ass: Path,
+    land_phrase: str = "",
+) -> None:
     body = hex_to_ass_bgr(cfg["body"])
     active = hex_to_ass_bgr(cfg["active"])
     stroke = hex_to_ass_bgr(cfg["stroke"])
@@ -154,17 +245,20 @@ Style: Body,{family},{font_size},{body},{active},{stroke},&H80000000,-1,0,0,0,10
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
     lines: list[str] = [header]
-    n = WORDS_PER_LINE
-    for i in range(0, len(words), n):
-        chunk = words[i : i + n]
+    lands = land_cores(land_phrase)
+    for i in range(0, len(words), WORDS_PER_LINE):
+        chunk = words[i : i + WORDS_PER_LINE]
         if not chunk:
             continue
         texts = [display_word(w["word"], censor) for w in chunk]
+        cores = [word_core(w["word"]) for w in chunk]
         for j, w in enumerate(chunk):
             parts = []
             for k, t in enumerate(texts):
-                if k == j:
-                    parts.append(f"{{\\c{active}}}{t}{{\\c{body}}}")
+                is_land = cores[k] in lands
+                if k == j or is_land:
+                    scale = r"\fscx118\fscy118\b1" if is_land else ""
+                    parts.append(f"{{\\c{active}{scale}}}{t}{{\\c{body}\\fscx100\\fscy100\\b0}}")
                 else:
                     parts.append(t)
             line = " ".join(parts)
@@ -209,6 +303,7 @@ def main() -> None:
     p.add_argument("--model", default="small")
     p.add_argument("--words-out", type=Path, help="Optional words.json path")
     p.add_argument("--words-in", type=Path, help="Reuse existing words.json (skip Whisper)")
+    p.add_argument("--script", type=Path, help="Signed script. Its wording wins over Whisper.")
     args = p.parse_args()
 
     if not args.input.exists():
@@ -220,9 +315,10 @@ def main() -> None:
     with tempfile.TemporaryDirectory(prefix="viral_s1_") as tmp:
         tmp_p = Path(tmp)
         ass = tmp_p / "captions.ass"
-        if args.words_in and args.words_in.exists():
-            words = json.loads(args.words_in.read_text(encoding="utf-8"))
-            print(f"  reused {len(words)} words from {args.words_in}")
+        found = existing_words_json(args.input, args.output, args.words_in)
+        if found is not None:
+            words = json.loads(found.read_text(encoding="utf-8"))
+            print(f"  reused {len(words)} words from {found}")
         else:
             wav = tmp_p / "audio.wav"
             extract_audio(args.input, wav)
@@ -231,7 +327,12 @@ def main() -> None:
                 args.words_out.parent.mkdir(parents=True, exist_ok=True)
                 args.words_out.write_text(json.dumps(words, indent=2), encoding="utf-8")
                 print(f"  words → {args.words_out}")
-        build_ass(words, cfg, censor, ass)
+        land_phrase = ""
+        if args.script and args.script.exists():
+            script_text = args.script.read_text(encoding="utf-8", errors="replace")
+            words = prefer_script_wording(words, script_text)
+            land_phrase = parse_script(script_text).get("land") or ""
+        build_ass(words, cfg, censor, ass, land_phrase=land_phrase)
         # Keep a copy of ASS next to output for debug
         ass_keep = args.output.with_suffix(".ass")
         ass_keep.parent.mkdir(parents=True, exist_ok=True)
