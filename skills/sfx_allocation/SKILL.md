@@ -19,7 +19,9 @@ SFX are resolved on demand via `content_pipeline/lib/sfx_resolver.py`:
 
 ## Rules & Principles
 
-1. **Trigger Word Detection**: Match words against `sfx_triggers.json` keys.
+SFX is polish on a **signed** picture. A trigger word does not choose the short. Do not run this on a lecture to manufacture energy. One effect on a land, then the cooldown. Do not stack a zoom on the same word (`dynamic_zoom`).
+
+1. **Trigger Word Detection**: Match words against `sfx_triggers.json` keys. Only the words that are the land of this cut, not every key in the file.
 2. **Audio Overlay Precision**: Align SFX start to the word's `start` timestamp.
 3. **Volume Balancing**: Attenuate SFX to 40% (`SFX_VOLUME = 0.4`).
 4. **Debounce / Cooldown**: Minimum 0.8s between triggered SFX.

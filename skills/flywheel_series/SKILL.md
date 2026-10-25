@@ -60,4 +60,7 @@ Require output shorts to:
 
 - Never start a new series without explicit `series_id` from user
 - Never reset episode counter without user approval
-- Prefer advancing one flywheel stage per short, not skipping trust for a hard sell
+- Take as many shorts as the tape can hold. A short carries one stage. Repeat the stage for every new land.
+- Do not invent a short to fill a missing stage. Skip it. Do not stop early because each stage already has one.
+- On flywheel-episode, service is the chapter (`chunks`), not a short.
+- Do not skip a real trust beat in order to hard-sell. Do not manufacture trust when the tape has none.

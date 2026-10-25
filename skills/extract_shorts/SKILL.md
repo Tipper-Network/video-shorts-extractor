@@ -7,7 +7,13 @@ description: Planner rules for cutting speech shorts — locate a 3–5 min them
 
 **Planner only. No ffmpeg.** Resolve the entity with [`entity_brand`](../entity_brand/SKILL.md) first (title = brand key). Themes come from `shorts_instructions.md` / `shorts_extraction.md`. Optional storyline discovery: [`story_snippet`](../story_snippet/SKILL.md) → `output/plan/story_snippets.json` → theme rows. Script cohesion is [`situation_resolve`](../situation_resolve/SKILL.md). Export stays in [`vertical_shorts`](../vertical_shorts/SKILL.md).
 
-Read [`entity_brand`](../entity_brand/SKILL.md), then [`situation_resolve`](../situation_resolve/SKILL.md). Name the entity, then the situation. Then hunt timestamps. When hunting leftover story-shaped blocks, run [`story_snippet`](../story_snippet/SKILL.md) first — its 300–800 word window is the theme block, not the cut.
+Read [`entity_brand`](../entity_brand/SKILL.md), then [`situation_resolve`](../situation_resolve/SKILL.md). Name the entity, then the stage, then the situation. Then hunt timestamps.
+
+## Stage brief
+
+Name `flywheel_stage` before clocks. The plan takes as many shorts as the tape can hold. One short does one stage. Repeat the stage for every new land. On flywheel-episode, `service` is the chunk in [`chunks`](../chunks/SKILL.md), not a short. If a stage is not on the tape, skip it. Do not collage two stories to manufacture one more file. Two shorts may not land on the same sentence. A named list is not a cap — after it is scripted, scan the rest. Stage jobs: [`planning/agent-architecture.md`](../../planning/agent-architecture.md).
+
+When hunting leftover story-shaped blocks, run [`story_snippet`](../story_snippet/SKILL.md) first — its 300–800 word window is the theme block, not the cut.
 
 **Origin Story lesson:** do not encode to find the argument. sh03 burned v2–v7 that way. Script `.md` first. Recap (businesses-first) is not a resolve. Last line inside a loop is not a resolve. “Keep track” without the payoff is not a finished resolve. Do not out mid-clause to dodge a pitch — if “right now” is the land, the next finished example of the move stays in (sh05: first stream). Never ship under 50s.
 

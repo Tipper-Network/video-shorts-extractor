@@ -123,7 +123,7 @@ def render(rows: list[dict[str, str]], source: str, error: str, day: date) -> by
   <h2>Due now ({len(due)})</h2>
   {table(due)}
   <h2>Still to post</h2>
-  {table(upcoming[:40])}
+  {table(upcoming[0:40])}
 </main>
 </body>
 </html>

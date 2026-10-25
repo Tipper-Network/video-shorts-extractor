@@ -32,7 +32,7 @@ RULES:
 2. Ensure the snippet has a clear narrative arc: a beginning hook, a core moment or conflict, and a satisfying ending or Beat.
 3. Keep the extracted text between [300 - 800] words. You may trim minor fluff or bridge two consecutive paragraphs for cohesion, but keep original phrasing intact.
 4. Generate a compelling, contextually relevant Title (3–6 words) for the extracted snippet — earned from the prose, not clickbait.
-5. Assign one `flywheel_stage` and write pack metadata for virality **without lying about the story** (see Pack metadata below).
+5. Assign one `flywheel_stage` and write pack metadata for virality **without lying about the story** (see Pack metadata below). Take as many vignettes as the source holds. Several may share a stage. Do not write a vignette to fill a stage the tape does not have, and do not stop because each stage already has one. On flywheel-episode, service is the chunk, not a vignette.
 
 OUTPUT FORMAT (JSON):
 ```json
@@ -145,6 +145,7 @@ Stay as close as possible to viral short **form** (mute-first hook in the descri
 ### Selection instincts
 
 - Prefer **lived scenes** (a bet, a denial, a night, a storm, a decision) over abstract lists or framework lectures.
+- One stage per vignette. Repeat the stage when the next scene is a different land. Two vignettes that land on the same sentence are one vignette.
 - One vignette = one arc. Do not glue two unrelated stories to hit the word floor.
 - Trim filler ("um", "sorry", "let's do this", handwriting asides) — that is fluff, not paraphrase.
 - Bridging consecutive paragraphs is allowed only to keep flow; do not rewrite voice.

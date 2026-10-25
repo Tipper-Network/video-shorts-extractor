@@ -32,10 +32,14 @@
 ## Flywheel
 
 <!-- added: 2026-09-01 | reason: user flywheel strategy -->
+<!-- updated: 2026-10-25 | reason: any plan takes as many shorts as the tape holds -->
+- **Always** take as many shorts as the tape can hold. A finished stage set is not a reason to stop scanning.
 - **Always** tag every short with exactly one flywheel stage.
-- **Never** let a short fully replace its parent chapter — shorts tease, chapters deliver.
-- **Prefer** sequencing shorts attract → engage → trust → service before publishing the chapter, then referral → loop after.
-- **Always** write a CTA that points toward the parent chapter or next episode for attract, service, and loop stages.
+- **Never** cap a lecture at one short per stage, or at one short per named row. Repeat a stage for every new land.
+- **Never** invent a short to fill a stage the tape does not have. Referral is someone else's result. His own mistake is trust.
+- **Never** let a short fully replace its parent chapter — shorts tease, chapters deliver. On flywheel-episode, service is the chunk.
+- **Never** give two shorts the same land.
+- **Prefer** publishing attract / engage / trust before the chapter, then referral / loop after, skipping any stage that was not cut.
 - **Prefer** continuing the same theme across an episode's shorts and its chapter title.
 
 ## Rendering
@@ -65,6 +69,16 @@
 - **Always** load `skills/lecture_ebook` before writing a book from GAF lectures.
 - **Never** ship the linearized `plain.txt` dump as the book.
 - **Prefer** dropping stream wreckage and keeping the example that proves the move.
+
+## Publish
+
+<!-- added: 2026-10-25 | reason: Dokploy cron is the poster; laptop stays the cutter -->
+- **Never** post from this machine. Upload the mp4 to S3, write the Sheet row, set `status=scheduled`.
+- **Never** treat `ready` or `approved` as due. Due is `scheduled` and `scheduled_date` ≤ today in Asia/Beirut.
+- **Always** keep the Sheet header on row 1. Sort data by `scheduled_date`.
+- **Prefer** one post per weekday (five a week). Do not stack several videos on the same date.
+- **Never** put `YOUTUBE_TOKEN_PATH` or `GOOGLE_OAUTH_TOKEN_PATH` on the server. Tokens are Dokploy API env vars.
+- **Never** reschedule the ten founder + GAF chunks already public on The G.A.F.
 
 ## Human Gate
 

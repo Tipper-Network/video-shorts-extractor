@@ -45,6 +45,12 @@ THP defines *what* to say **when the video is a THP video**. Tipper and GAF have
 | 2026-10-08 | Caption MarginV = 500 | All brand `caption.json` + `viral_captions` default. Reburn in place: `cli/reburn_caption_margin.py`. No `_marginv*` A/B leftovers. |
 | 2026-10-08 | Post from one ship file | Keep cut master + `viral/approved` (or step-4 pack). Trash stage1/stage2/shorts mirrors + margin experiments after sign-off. See `step-2-viral-edit/README.md`. |
 | 2026-10-18 | Catalog `collaborators` column | YouTube: `@tippernetwork`, `@Thehardport0`. Sheet/CSV field `collaborators`. YT Data API cannot invite collabs — Studio for badge; API = description/tags credit. |
+| 2026-10-25 | Poster is `cron_posting` on Dokploy | Local cut engine does not post. Nest API ticks every 15 min, one due row, IG + YouTube. Next page is read-only. Parent git ignores `/cron_posting/`. Skill: `skills/publish_schedule/`. |
+| 2026-10-25 | Due = `scheduled` and Beirut date | `ready` and `approved` stay parked. No `scheduled_time`. Sheet sorted by `scheduled_date`; header stays row 1. |
+| 2026-10-25 | Cadence = 5 posts/week, Mon–Fri | Replaces the Mon/Wed/Thu/Sat pillar calendar for the live queue. 99 rows: 2026-10-26 → 2027-03-11. One video per date. |
+| 2026-10-25 | S3 key drops `step-4-ready-to-post/` | Server reads `socials/{rest of video_path}`. It does not upload from the laptop. |
+| 2026-10-25 | YouTube channel The G.A.F. | `UCKUS5W72IDOrWnhh-4wOxSw`. Refresh token on Dokploy. Testing-mode OAuth refresh tokens die in 7 days. Ten founder+GAF chunks already public — do not reschedule. |
+| 2026-10-25 | IG token expired 2026-10-13 | Also issued by a different Meta app than `META_APP_ID`. YouTube can post; Instagram cannot until replaced. |
 
 ## Active Projects
 

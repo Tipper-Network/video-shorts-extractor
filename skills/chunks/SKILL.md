@@ -9,6 +9,8 @@ description: Plans 11–15 min 16:9 mid-form YouTube chapters. Name one followab
 
 A short is one situation that lands. A chunk is **one job someone can follow** — same situation, more examples, more elaboration, a structure they can replay tomorrow.
 
+On **flywheel-episode**, this file is the **service** stage. A 70s taste of the same job is not a second service. Shorts around it are attract, engage, trust, referral, or loop, and several of those may repeat. The chapter may reuse an example a trust short already told. The short keeps the mistake. The chapter keeps the job.
+
 Do not dump a clock list. The user names which jobs are chapters. Clocks are last.
 
 ## Hats (all four, in this order)
@@ -143,6 +145,10 @@ After the named jobs are scripted, scan the rest. Write `deferred_chapters` or a
 ## Tool execution (after approval)
 
 `render_manifest.py --type chapters`
+
+## Publish
+
+Uploading a finished chunk is [`publish_schedule`](../publish_schedule/SKILL.md). This skill stops at the signed script and the render. Ten founder + GAF chunks are already public on The G.A.F. channel; do not schedule those again.
 
 ## Does not
 

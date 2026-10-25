@@ -12,7 +12,7 @@ One short concept → one file, unless the planner kept more than one **editoria
 
 ## Content Goal
 
-High-value vertical snippets. Same file is the short — platform upload is a publish step, not a render step.
+High-value vertical snippets. Same file is the short — platform upload is [`publish_schedule`](../publish_schedule/SKILL.md), not a second render.
 
 ## Shared Planning Rules
 
@@ -21,7 +21,7 @@ High-value vertical snippets. Same file is the short — platform upload is a pu
 - **Cut modes:** `contiguous` (single window) or `supercut` (`segments[]` montage)
 - **Audio:** After the picture is cut, `level_speech()` always re-encodes audio: compressor + `dynaudnorm` + limiter + `loudnorm` (−16 LUFS, LRA 4). First pass on concat was too soft and still spiked.
 - **Captions:** Kinetic subtitles on polish pass
-- **Flywheel:** Tag each short with `flywheel_stage`; set `publish_order`
+- **Flywheel:** Tag each short with one `flywheel_stage`. Take as many shorts as the tape can hold. Several may share a stage. Set `publish_order`. Service on an episode is the chunk, not a second short of the same job.
 
 ## Three editorial versions (not platforms)
 
