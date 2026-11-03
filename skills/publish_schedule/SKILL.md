@@ -5,7 +5,7 @@ description: How finished shorts get onto the live poster. Use when uploading to
 
 # Publish schedule
 
-Cutting stays on this machine. Posting runs on Dokploy in the nested repo `cron_posting/` (its own git repo; the parent `.gitignore` hides it). The website only reads the schedule. It does not sign in and it does not post.
+Cutting stays on this machine. Posting runs on Dokploy in the nested repo `cron_posting/` (its own git repo; the parent `.gitignore` hides it). The website reads the schedule and hosts **Connect** for YouTube / Instagram. It does not post.
 
 ## Handoff
 
@@ -19,29 +19,40 @@ S3 key drops the `step-4-ready-to-post/` prefix. `video_path` in the Sheet is wh
 
 Asia/Beirut calendar day. A row is due when `status` is `scheduled` and `scheduled_date` is today or earlier. No time-of-day column. The API ticks every 15 minutes and posts **one** due row (oldest date, then `publish_order`) to Instagram and YouTube. `status` becomes `posted` only after both URLs are filled. A failed platform stays `scheduled` and is retried; the one that already has a URL is skipped.
 
-Cadence as of 2026-10-25: **five posts a week, one per weekday** (Mon–Fri). Weekends empty. 99 scheduled rows run 2026-10-26 through 2027-03-11.
+Cadence as of 2026-10-25: **five posts a week, one per weekday** (Mon–Fri). Weekends empty.
 
 ## Credentials
 
-Dokploy **API** environment only. Not in git. Not in the browser. Not on the web service.
+Dokploy **API** environment only. Not in git. Not in the browser bundle. Not on the web service except `API_URL` / `NEXT_PUBLIC_API_URL`.
 
 | Need | Variables |
 |------|-----------|
-| Sheet write | `GOOGLE_SHEETS_ID`, `GOOGLE_SHEETS_TAB=publish_catalog`, `GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET`, `GOOGLE_OAUTH_REFRESH_TOKEN` |
-| S3 read | `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION=eu-north-1`, `S3_BUCKET` or `S3_BUCKET_NAME`, prefix defaults to `socials` |
-| YouTube | `YOUTUBE_CLIENT_ID`, `YOUTUBE_CLIENT_SECRET`, `YOUTUBE_REFRESH_TOKEN`, `YOUTUBE_CHANNEL_ID=UCKUS5W72IDOrWnhh-4wOxSw` |
-| Instagram | `META_ACCESS_TOKEN`, `IG_BUSINESS_ID`, `IG_COLLABORATORS=tipper.network,thehardport`, `IG_SHARE_TO_FEED=false` |
+| Sheet write | `GOOGLE_SHEETS_ID`, `GOOGLE_SHEETS_TAB=publish_catalog`, **`GOOGLE_SERVICE_ACCOUNT_JSON`** (preferred). Share the Sheet with the service-account email. |
+| S3 read + token store | `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION=eu-north-1`, `S3_BUCKET`, prefix `socials` |
+| OAuth Connect | `OAUTH_GATE`, `PUBLIC_API_URL=https://api.cron-posting.psyferblock.io`, `PUBLIC_WEB_URL=https://cron-posting.psyferblock.io` |
+| YouTube client | `YOUTUBE_CLIENT_ID`, `YOUTUBE_CLIENT_SECRET`, `YOUTUBE_CHANNEL_ID=UCKUS5W72IDOrWnhh-4wOxSw` — refresh token from Connect, stored in S3 |
+| Instagram client | `META_APP_ID`, `META_APP_SECRET`, `IG_BUSINESS_ID`, `IG_COLLABORATORS=tipper.network,thehardport`, `IG_SHARE_TO_FEED=false` — long-lived token from Connect, stored in S3 |
 
-Do not set `YOUTUBE_TOKEN_PATH` or `GOOGLE_OAUTH_TOKEN_PATH` on the server. Those paths exist only on this laptop. `GOOGLE_CLIENT_ID` is not the name the API reads.
+Do not set `YOUTUBE_TOKEN_PATH` or `GOOGLE_OAUTH_TOKEN_PATH` on the server. `GOOGLE_CLIENT_ID` is not the name the API reads.
 
-YouTube access tokens last one hour. The refresh token is what stays on the server; the library renews the hour by itself. A Cloud OAuth app left in **Testing** kills that refresh token after 7 days. Publish the consent screen, sign in once, and do not run the login script again.
+### Cloud Connect
 
-Instagram user tokens last about 60 days and do not refresh themselves. The token in env expired **2026-10-13**. It was also issued by a different Meta app than `META_APP_ID`. Replace it before an Instagram post can succeed.
+1. YouTube OAuth client type **Web**. Redirect: `{PUBLIC_API_URL}/oauth/youtube/callback`. Consent screen **In production** (Testing kills refresh tokens in ~7 days).
+2. Meta app Valid OAuth Redirect URIs: `{PUBLIC_API_URL}/oauth/instagram/callback`.
+3. Board → Connect → paste `OAUTH_GATE` → Connect YouTube / Connect Instagram.
+4. Tokens: `s3://…/socials/secrets/oauth-tokens.json`. Instagram auto-extends when under 14 days remain.
+5. Check `GET /oauth/status` and `GET /health`.
+
+Env `YOUTUBE_REFRESH_TOKEN` / `META_ACCESS_TOKEN` remain fallbacks until Connect writes S3.
 
 Web service env: `API_URL` and `NEXT_PUBLIC_API_URL` = `https://api.cron-posting.psyferblock.io` (scheme required). Container ports: API `3001`, web `3000`.
 
+## Docker note
+
+API image must `rm -f tsconfig.tsbuildinfo` before `nest build` and `test -f dist/main.js`. Host incremental buildinfo makes Nest exit 0 with no `dist`.
+
 ## Already posted
 
-Ten founder + GAF chunks are public on The G.A.F. channel (see `integrations/platforms/youtube/credentials/chunk_upload_log.json`). Do not schedule them again. `yt_publish_videos.py` is a placeholder, not that uploader.
+Ten founder + GAF chunks are public on The G.A.F. channel. Do not schedule them again.
 
 Four founder shorts (`origin-story` sh01, sh02, sh03, sh05) have no mp4 in step-4. They stayed `ready`.

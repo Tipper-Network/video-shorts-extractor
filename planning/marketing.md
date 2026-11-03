@@ -93,5 +93,5 @@ Still open, on purpose:
 - The posting-strategy skill is not in force. [`quota`](../skills/quota/SKILL.md) is a draft. [`publish_schedule`](../skills/publish_schedule/SKILL.md) is the pipe.
 - Series state (`series.theme`, episode, last stage) is planned in [`flywheel_series`](../skills/flywheel_series/SKILL.md). It does not run yet.
 - A bad cut is fixed by a dated line in [`instincts/content-pipeline.md`](instincts/content-pipeline.md) or the skill it belongs to. Analytics, when they exist, do not gate the cut.
-- Lecture 13 has the theme written on 13-sh02. The other cuts on that tape still need their chance named the same way.
+- Every lecture 13 short now has its chance named on the script. 13-sh03 through 13-sh11 were recut 2026-10-26 from the lecture with loudness only, because the earlier pass still had the compressor.
 - The website will call this same manifest. It does not get a second cut language.
