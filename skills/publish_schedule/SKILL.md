@@ -21,6 +21,8 @@ Asia/Beirut calendar day. A row is due when `status` is `scheduled` and `schedul
 
 Cadence as of 2026-10-25: **five posts a week, one per weekday** (Mon–Fri). Weekends empty.
 
+YouTube always gets Sheet `youtube_title` (title) and `description` (details), plus `hashtags` as tags and in the description body, plus collaborator `@handles`. Do not upload a silent/untitled file.
+
 ## Credentials
 
 Dokploy **API** environment only. Not in git. Not in the browser bundle. Not on the web service except `API_URL` / `NEXT_PUBLIC_API_URL`.

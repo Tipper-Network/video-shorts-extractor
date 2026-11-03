@@ -128,8 +128,26 @@ def main() -> None:
     print(f"Saved: {TOKEN_OUT}")
     has_refresh = bool(credentials.refresh_token)
     print(f"Refresh token: {'yes' if has_refresh else 'NO — re-run with prompt=consent'}")
+
+    # Brand Account must be selected during consent or mine=True is empty and uploads 401.
+    try:
+        from googleapiclient.discovery import build
+
+        youtube = build("youtube", "v3", credentials=credentials)
+        items = youtube.channels().list(part="snippet", mine=True).execute().get("items") or []
+        if not items:
+            print("CHANNEL: NONE — you did not pick The G.A.F. Brand Account.")
+            print("Re-run and choose The G.A.F. (Guilds Adventurers and Frontiers) when Google asks.")
+            print("Uploads will fail with youtubeSignupRequired until that happens.")
+        else:
+            for item in items:
+                title = (item.get("snippet") or {}).get("title")
+                print(f"CHANNEL: {item.get('id')} — {title}")
+            print("Ready for headless uploads.")
+    except Exception as exc:  # noqa: BLE001
+        print(f"CHANNEL check failed: {exc}")
     print("=" * 40 + "\n")
-    print("Keep youtube-token.json private (gitignored). Ready for headless uploads.")
+    print("Keep youtube-token.json private (gitignored).")
 
 
 if __name__ == "__main__":
